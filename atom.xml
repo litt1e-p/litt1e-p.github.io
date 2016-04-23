@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-01-05T03:32:00.000Z</updated>
+  <updated>2016-04-23T05:48:23.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[regex]]></title>
+    <link href="https://litt1e-p.github.io/2016/04/23/regex/"/>
+    <id>https://litt1e-p.github.io/2016/04/23/regex/</id>
+    <published>2016-04-23T05:48:14.000Z</published>
+    <updated>2016-04-23T05:48:23.000Z</updated>
+    <content type="html"><![CDATA[<h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[\s\<span class="type">S</span>]*</span><br><span class="line">[\d\<span class="type">D</span>]*</span><br><span class="line">[\w\<span class="type">W</span>]*</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre>]]>
+    </summary>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[commit to cocoapods]]></title>
