@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>escape &amp; unescape html character code symbol | little p</title>
+  <title>adjust text font for rect | little p</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="extension for swift 2+1234567891011121314151617func unEscapeHtml() -&amp;gt; String &amp;#123;        return  self.stringByReplacingOccurrencesOfString(&quot;&amp;amp;lt;&quot;, withString: &quot;&amp;lt;&quot;)                    .stri">
+  <meta name="description" content="for Objective-C123456789101112131415161718192021- (void)adjustsFontSizeToFitRect:(CGRect)rect&amp;#123;    CGSize maxSize          = CGSizeMake(rect.size.width, rect.size.height);    CGFloat currentFontSi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="escape & unescape html character code symbol">
-<meta property="og:url" content="https://litt1e-p.github.io/2016/04/24/escape_html/index.html">
+<meta property="og:title" content="adjust text font for rect">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/index.html">
 <meta property="og:site_name" content="little p">
-<meta property="og:description" content="extension for swift 2+1234567891011121314151617func unEscapeHtml() -&amp;gt; String &amp;#123;        return  self.stringByReplacingOccurrencesOfString(&quot;&amp;amp;lt;&quot;, withString: &quot;&amp;lt;&quot;)                    .stri">
-<meta property="og:updated_time" content="2016-04-24T03:32:17.000Z">
+<meta property="og:description" content="for Objective-C123456789101112131415161718192021- (void)adjustsFontSizeToFitRect:(CGRect)rect&amp;#123;    CGSize maxSize          = CGSizeMake(rect.size.width, rect.size.height);    CGFloat currentFontSi">
+<meta property="og:updated_time" content="2016-05-10T12:57:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="escape & unescape html character code symbol">
-<meta name="twitter:description" content="extension for swift 2+1234567891011121314151617func unEscapeHtml() -&amp;gt; String &amp;#123;        return  self.stringByReplacingOccurrencesOfString(&quot;&amp;amp;lt;&quot;, withString: &quot;&amp;lt;&quot;)                    .stri">
+<meta name="twitter:title" content="adjust text font for rect">
+<meta name="twitter:description" content="for Objective-C123456789101112131415161718192021- (void)adjustsFontSizeToFitRect:(CGRect)rect&amp;#123;    CGSize maxSize          = CGSizeMake(rect.size.width, rect.size.height);    CGFloat currentFontSi">
   
     <link rel="alternative" href="/atom.xml" title="little p" type="application/atom+xml">
   
@@ -113,11 +113,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-escape_html" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-adjust-text-font-for-rect" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/04/24/escape_html/" class="article-date">
-  	<time datetime="2016-04-24T03:24:10.000Z" itemprop="datePublished">2016-04-24</time>
+      <a href="/2016/05/10/adjust-text-font-for-rect/" class="article-date">
+  	<time datetime="2016-05-10T12:54:32.000Z" itemprop="datePublished">2016-05-10</time>
 </a>
     </div>
   
@@ -130,7 +130,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      escape &amp; unescape html character code symbol
+      adjust text font for rect
     </h1>
   
 
@@ -146,7 +146,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">unEscapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span>  <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;lt;"</span>, withString: <span class="string">"&lt;"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;gt;"</span>, withString: <span class="string">"&gt;"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;quot;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\t"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\r"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\n"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;apos;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">escapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;"</span>, withString: <span class="string">"&amp;amp;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"\""</span>, withString: <span class="string">"&amp;quot;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"'"</span>, withString: <span class="string">"&amp;#39;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&lt;"</span>, withString: <span class="string">"&amp;lt;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&gt;"</span>, withString: <span class="string">"&amp;gt;"</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+        <p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustsFontSizeToFitRect:(<span class="type">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">CGSize</span> maxSize          = <span class="type">CGSizeMake</span>(rect.size.width, rect.size.height);</span><br><span class="line">    <span class="type">CGFloat</span> currentFontSize = <span class="number">17</span>.f;</span><br><span class="line">    <span class="type">NSString</span> *str           = <span class="keyword">self</span>.text;</span><br><span class="line">    <span class="type">CGSize</span> requiredSize     = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    <span class="keyword">if</span>(requiredSize.height &lt;= maxSize.height) &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &lt;= maxSize.height &amp;&amp; requiredSize.width &lt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize++;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &gt; maxSize.height || requiredSize.width &gt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize--;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">        requiredSize=[str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.font = [<span class="keyword">self</span>.font fontWithSize:currentFontSize];</span><br><span class="line">    <span class="keyword">self</span>.adjustsFontSizeToFitWidth = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -156,18 +156,9 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/05/10/adjust-text-font-for-rect/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          adjust text font for rect
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/04/23/regex/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">regex</div>
+    <a href="/2016/04/24/escape_html/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">escape &amp; unescape html character code symbol</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -196,7 +187,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="escape_html" data-title="escape &amp; unescape html character code symbol" data-url="https://litt1e-p.github.io/2016/04/24/escape_html/"></div>
+	<div class="ds-thread" data-thread-key="adjust-text-font-for-rect" data-title="adjust text font for rect" data-url="https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">

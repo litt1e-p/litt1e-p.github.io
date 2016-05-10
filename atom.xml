@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-04-24T03:32:17.000Z</updated>
+  <updated>2016-05-10T12:57:19.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[adjust text font for rect]]></title>
+    <link href="https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/"/>
+    <id>https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/</id>
+    <published>2016-05-10T12:54:32.000Z</published>
+    <updated>2016-05-10T12:57:19.000Z</updated>
+    <content type="html"><![CDATA[<p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustsFontSizeToFitRect:(<span class="type">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">CGSize</span> maxSize          = <span class="type">CGSizeMake</span>(rect.size.width, rect.size.height);</span><br><span class="line">    <span class="type">CGFloat</span> currentFontSize = <span class="number">17</span>.f;</span><br><span class="line">    <span class="type">NSString</span> *str           = <span class="keyword">self</span>.text;</span><br><span class="line">    <span class="type">CGSize</span> requiredSize     = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    <span class="keyword">if</span>(requiredSize.height &lt;= maxSize.height) &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &lt;= maxSize.height &amp;&amp; requiredSize.width &lt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize++;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &gt; maxSize.height || requiredSize.width &gt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize--;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">        requiredSize=[str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.font = [<span class="keyword">self</span>.font fontWithSize:currentFontSize];</span><br><span class="line">    <span class="keyword">self</span>.adjustsFontSizeToFitWidth = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2]]>
+    </summary>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[escape & unescape html character code symbol]]></title>
