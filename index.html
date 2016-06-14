@@ -114,6 +114,59 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-log-json-with-pretty-unescape-character-string" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/09/log-json-with-pretty-unescape-character-string/" class="article-date">
+  	<time datetime="2016-06-09T00:19:35.000Z" itemprop="datePublished">2016-06-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/09/log-json-with-pretty-unescape-character-string/">log json with pretty &amp; unescape character string</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>In swift 2.+, printing json object in Xcode debug console window will show the escape special character string, and it is difficult to read.<br>so this is a func for printing pretty &amp; unescape character string</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">LogJson</span><span class="params">(data: NSData, <span class="number">_</span> file: String = #file , <span class="number">_</span> function: String = #function, <span class="number">_</span> line: Int = #line)</span></span> &#123;</span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> dataAsJSON = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(data, options: [])</span><br><span class="line">            <span class="keyword">let</span> prettyData =  <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.dataWithJSONObject(dataAsJSON, options: .<span class="type">PrettyPrinted</span>)</span><br><span class="line">            <span class="keyword">let</span> ss = <span class="type">NSString</span>(data: prettyData, encoding: <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> name = (file <span class="keyword">as</span> <span class="type">NSString</span>).lastPathComponent</span><br><span class="line">            <span class="keyword">let</span> fileArray = name.componentsSeparatedByString(<span class="string">"."</span>)</span><br><span class="line">            <span class="keyword">let</span> fileName = fileArray[<span class="number">0</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="type">Logger</span>.log(.<span class="type">Debug</span>, fileName + <span class="string">"-<span class="subst">\(line)</span>-"</span> + function, ss)</span><br><span class="line">        &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">            <span class="type">Log</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Notice">Notice</h3><p>there is a dependency lib named <a href="https://github.com/litt1e-p/Logger" target="_blank" rel="external">Logger</a>, which will be release in my <a href="https://github.com/litt1e-p" target="_blank" rel="external">github</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-swift-debug-flag" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
