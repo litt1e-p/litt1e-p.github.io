@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-06-21T12:48:43.000Z</updated>
+  <updated>2016-06-21T13:02:32.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -19,11 +19,11 @@
     <link href="https://litt1e-p.github.io/2016/06/21/typealias-closure-in-Swift/"/>
     <id>https://litt1e-p.github.io/2016/06/21/typealias-closure-in-Swift/</id>
     <published>2016-06-21T12:44:59.000Z</published>
-    <updated>2016-06-21T12:48:43.000Z</updated>
+    <updated>2016-06-21T13:02:32.000Z</updated>
     <content type="html"><![CDATA[<p>typealias closure in Swift</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = ((isLimit: <span class="type">Bool</span>, data: <span class="type">AnyObject</span>)-&gt;<span class="type">Void</span>)?</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = (() -&gt; <span class="type">Void</span>)?</span><br></pre></td></tr></table></figure>
 <p>typealias closure in OC</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">typedef void(^<span class="type">IsLimited</span>)(<span class="type">BOOL</span> isLimit, id data);</span><br><span class="line"></span><br><span class="line">typedef void(^<span class="type">IsLimited</span>)()</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;typedef void(^IsLimited)(BOOL isLimit, id data);&#10;&#10;typedef void(^IsLimited)()</span><br></pre></td></tr></table></figure>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>typealias closure in Swift</p>
