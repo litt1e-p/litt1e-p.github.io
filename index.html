@@ -143,8 +143,7 @@
         <blockquote>
 <p> as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height</p>
 </blockquote>
-<h3 id="There_are_2_solutions_to_break_it_out">There are 2 solutions to break it out</h3><hr>
-<ul>
+<h3 id="There_are_2_solutions_to_break_it_out">There are 2 solutions to break it out</h3><ul>
 <li>Method 01: <code>get its constraint IBOutlet and modify with animation</code></li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// </span></span><br><span class="line">separateLineCst.constant = <span class="number">0.5</span></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.02</span>) &#123; </span><br><span class="line">     <span class="keyword">self</span>.layoutIfNeeded()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
