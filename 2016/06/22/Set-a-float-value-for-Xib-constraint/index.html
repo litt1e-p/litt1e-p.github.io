@@ -3,27 +3,35 @@
 <head>
   <meta charset="utf-8">
   
-  <title>typealias closure in Swift | little p</title>
+  <title>Set a float value for Xib constraint | little p</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="typealias closure in Swift
-1234typealias IsLimited = ((isLimit: Bool, data: AnyObject)-&amp;gt;Void)?typealias IsLimited = (() -&amp;gt; Void)?
-typealias closure in OC
-1&amp;#10;typedef void(^IsLimited)(BOOL isLi">
+  <meta name="description" content="as we all knows, it is impossible setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height
+
+There are 2 solutions to fix it out
+
+Method 01: get it">
 <meta property="og:type" content="article">
-<meta property="og:title" content="typealias closure in Swift">
-<meta property="og:url" content="https://litt1e-p.github.io/2016/06/21/typealias-closure-in-Swift/index.html">
+<meta property="og:title" content="Set a float value for Xib constraint">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/06/22/Set-a-float-value-for-Xib-constraint/index.html">
 <meta property="og:site_name" content="little p">
-<meta property="og:description" content="typealias closure in Swift
-1234typealias IsLimited = ((isLimit: Bool, data: AnyObject)-&amp;gt;Void)?typealias IsLimited = (() -&amp;gt; Void)?
-typealias closure in OC
-1&amp;#10;typedef void(^IsLimited)(BOOL isLi">
-<meta property="og:updated_time" content="2016-06-21T13:04:26.000Z">
+<meta property="og:description" content="as we all knows, it is impossible setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height
+
+There are 2 solutions to fix it out
+
+Method 01: get it">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545z4256aj31kw0hh0wo.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/005wcR5Jgw1f545zfgpn5j31a20gsjx7.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005wcR5Jgw1f545zu8qmkj31by0pmh6u.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/005wcR5Jgw1f54602mvmxj311g09q441.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg">
+<meta property="og:updated_time" content="2016-06-22T12:06:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="typealias closure in Swift">
-<meta name="twitter:description" content="typealias closure in Swift
-1234typealias IsLimited = ((isLimit: Bool, data: AnyObject)-&amp;gt;Void)?typealias IsLimited = (() -&amp;gt; Void)?
-typealias closure in OC
-1&amp;#10;typedef void(^IsLimited)(BOOL isLi">
+<meta name="twitter:title" content="Set a float value for Xib constraint">
+<meta name="twitter:description" content="as we all knows, it is impossible setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height
+
+There are 2 solutions to fix it out
+
+Method 01: get it">
   
     <link rel="alternative" href="/atom.xml" title="little p" type="application/atom+xml">
   
@@ -122,11 +130,11 @@ typealias closure in OC
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-typealias-closure-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Set-a-float-value-for-Xib-constraint" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/06/21/typealias-closure-in-Swift/" class="article-date">
-  	<time datetime="2016-06-21T12:44:59.000Z" itemprop="datePublished">2016-06-21</time>
+      <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" class="article-date">
+  	<time datetime="2016-06-22T12:05:43.000Z" itemprop="datePublished">2016-06-22</time>
 </a>
     </div>
   
@@ -139,7 +147,7 @@ typealias closure in OC
         
   
     <h1 class="article-title" itemprop="name">
-      typealias closure in Swift
+      Set a float value for Xib constraint
     </h1>
   
 
@@ -155,10 +163,27 @@ typealias closure in OC
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>typealias closure in Swift</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = ((isLimit: <span class="type">Bool</span>, data: <span class="type">AnyObject</span>)-&gt;<span class="type">Void</span>)?</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = (() -&gt; <span class="type">Void</span>)?</span><br></pre></td></tr></table></figure>
-<p>typealias closure in OC</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;typedef void(^IsLimited)(BOOL isLimit, id data);&#10;&#10;typedef void(^IsLimited)();</span><br></pre></td></tr></table></figure>
+        <blockquote>
+<p> as we all knows, it is impossible setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height</p>
+</blockquote>
+<h3 id="There_are_2_solutions_to_fix_it_out">There are 2 solutions to fix it out</h3><hr>
+<ul>
+<li>Method 01: <code>get its constraint IBOutlet and modify with animation</code></li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// </span></span><br><span class="line">separateLineCst.constant = <span class="number">0.5</span></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.02</span>) &#123; </span><br><span class="line">     <span class="keyword">self</span>.layoutIfNeeded()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li>Method 02: <code>trick way!</code></li>
+</ul>
+<p>1.open your xib as souceCode</p>
+<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545z4256aj31kw0hh0wo.jpg" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005wcR5Jgw1f545zfgpn5j31a20gsjx7.jpg" alt=""></p>
+<p>2.find your target view’s constraint and modify it</p>
+<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f545zu8qmkj31by0pmh6u.jpg" alt=""></p>
+<p>3.save and reopen it as interface builder document</p>
+<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f54602mvmxj311g09q441.jpg" alt=""></p>
+<p>4.see what happen! 🎉🎉</p>
+<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg" alt=""></p>
 
       
     </div>
@@ -168,18 +193,9 @@ typealias closure in OC
     
 <nav id="article-nav">
   
-    <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Set a float value for Xib constraint
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Build a custom xib class in Swift</div>
+    <a href="/2016/06/21/typealias-closure-in-Swift/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">typealias closure in Swift</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -208,7 +224,7 @@ typealias closure in OC
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="typealias-closure-in-Swift" data-title="typealias closure in Swift" data-url="https://litt1e-p.github.io/2016/06/21/typealias-closure-in-Swift/"></div>
+	<div class="ds-thread" data-thread-key="Set-a-float-value-for-Xib-constraint" data-title="Set a float value for Xib constraint" data-url="https://litt1e-p.github.io/2016/06/22/Set-a-float-value-for-Xib-constraint/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
