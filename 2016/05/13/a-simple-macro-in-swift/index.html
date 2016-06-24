@@ -1,132 +1,143 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   
   <title>a simple macro in swift | litt1e-p</title>
-  <meta name="author" content="litt1e-p">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="a simple macro func example for check whether a string is empty 
-1234567891011let IsEmptyStr: (String?) -&amp;gt; Bool = &amp;#123;    (ref: String?) -&amp;gt; Bo">
+1234567891011let IsEmptyStr: (String?) -&amp;gt; Bool = &amp;#123;    (ref: String?) -&amp;gt; Bool in    return ref == nil || ref!.isEqual(NSNull(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="a simple macro in swift">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/05/13/a-simple-macro-in-swift/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="a simple macro func example for check whether a string is empty 
+1234567891011let IsEmptyStr: (String?) -&amp;gt; Bool = &amp;#123;    (ref: String?) -&amp;gt; Bool in    return ref == nil || ref!.isEqual(NSNull(">
+<meta property="og:updated_time" content="2016-05-13T15:35:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="a simple macro in swift">
+<meta name="twitter:description" content="a simple macro func example for check whether a string is empty 
+1234567891011let IsEmptyStr: (String?) -&amp;gt; Bool = &amp;#123;    (ref: String?) -&amp;gt; Bool in    return ref == nil || ref!.isEqual(NSNull(">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
   
   
-
-  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-  <meta property="og:title" content="a simple macro in swift"/>
-  <meta property="og:site_name" content="litt1e-p"/>
-
+    <link rel="icon" href="/favicon.png">
   
-    <meta property="og:image" content="undefined"/>
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
   
 
-  <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 </head>
-
-
 <body>
-<div id="page" class="site">
-  <div id="primary" class="content-area">
-
-    <header id="header" class="inner"><div class="site-branding">
-  <h1 class="site-title">
-    <a href="/">litt1e-p</a>
-  </h1>
-  <p class="site-description"></p>
-</div>
-<nav id="site-navigation" class="main-navigation" role="navigation">
-  <ul>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-a-simple-macro-in-swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
     
-      <li><a href="/">主页</a></li>
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      a simple macro in swift
+    </h1>
+  
+
+      </header>
     
-      <li><a href="/archives">归档</a></li>
-    
-  </ul>
-</nav></header>
-
-    <main id="main" class="site-main posts-loop" role="main">
-      <article class="post article">
-
-  
-  
-    <h3 class="article-title"><span>a simple macro in swift</span></h3>
-  
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/05/13/a-simple-macro-in-swift/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-05-13T15:31:43.000Z">
-          2016-05-13
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
+    <div class="article-meta">
+      <a href="/2016/05/13/a-simple-macro-in-swift/" class="article-date">
+  <time datetime="2016-05-13T15:31:43.000Z" itemprop="datePublished">2016-05-13</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>a simple macro func example for check whether a string is empty </p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">IsEmptyStr</span>: (<span class="type">String</span>?) -&gt; <span class="type">Bool</span> = &#123;</span><br><span class="line">    (ref: <span class="type">String</span>?) -&gt; <span class="type">Bool</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> ref == <span class="literal">nil</span> || ref!.isEqual(<span class="type">NSNull</span>()) || ref == <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// usage</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="type">IsEmptyStr</span>(<span class="string">""</span>) &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"empty"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
-    </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
+
+      
         
-    </footer>
+    </div>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/06/03/swift-debug-flag/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          swift debug flag
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/10/adjust-text-font-for-rect/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">adjust text font for rect</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
   
-	<div id="comment">
-	
-	
-	<!-- 多说评论框 start -->
-	 <div class="ds-thread" data-thread-key="/2016/05/13/a-simple-macro-in-swift/" data-title="a simple macro in swift" data-url="https://litt1e-p.github.io/2016/05/13/a-simple-macro-in-swift/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"little-d"};
-	  (function() {
-	    var ds = document.createElement('script');
-	    ds.type = 'text/javascript';ds.async = true;
-	    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-	    ds.charset = 'UTF-8';
-	    (document.getElementsByTagName('head')[0] 
-	     || document.getElementsByTagName('body')[0]).appendChild(ds);
-	  })();
-	  </script>
-	<!-- 多说公共JS代码 end -->
-	
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
 	</div>
-
-
-
-
-    </main>
-
-    <footer id="colophon" class="site-footer" role="contentinfo"><p class="site-info">
-  Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
-  Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
-  </br>
-  
-  &copy; 2016 litt1e-p
-  
-</p>
 </footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
     
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
   </div>
-</div>
 </body>
 </html>

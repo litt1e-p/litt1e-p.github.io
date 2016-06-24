@@ -1,75 +1,57 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   
   <title>litt1e-p</title>
-  <meta name="author" content="litt1e-p">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="litt1e-p">
+<meta property="og:url" content="https://litt1e-p.github.io/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="litt1e-p">
+<meta name="twitter:description">
   
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
   
 
-  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-  
-  <meta property="og:site_name" content="litt1e-p"/>
-
-  
-    <meta property="og:image" content="undefined"/>
-  
-
-  <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 </head>
-
-
 <body>
-<div id="page" class="site">
-  <div id="primary" class="content-area">
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Selector-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/24/Selector-in-Swift/">Selector in Swift</a>
+    </h1>
+  
 
-    <header id="header" class="inner"><div class="site-branding">
-  <h1 class="site-title">
-    <a href="/">litt1e-p</a>
-  </h1>
-  <p class="site-description"></p>
-</div>
-<nav id="site-navigation" class="main-navigation" role="navigation">
-  <ul>
+      </header>
     
-      <li><a href="/">主页</a></li>
-    
-      <li><a href="/archives">归档</a></li>
-    
-  </ul>
-</nav></header>
-
-    <main id="main" class="site-main posts-loop" role="main">
+    <div class="article-meta">
+      <a href="/2016/06/24/Selector-in-Swift/" class="article-date">
+  <time datetime="2016-06-24T15:47:13.000Z" itemprop="datePublished">2016-06-24</time>
+</a>
       
-  <article class="post article">
-
-  
-  
-    <h3 class="article-title"><a href="/2016/06/24/Selector-in-Swift/"><span>Selector in Swift</span></a></h3>
-  
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/06/24/Selector-in-Swift/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-06-24T15:47:13.000Z">
-          2016-06-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>#selector in Swift.md</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// func</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">optional</span> <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">collectionView</span><span class="params">(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">CGSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// selector</span></span><br><span class="line"></span><br><span class="line">#selector(<span class="type">UICollectionViewDelegateFlowLayout</span>.collectionView(<span class="number">_</span>:layout:sizeForItemAtIndexPath:))</span><br><span class="line"></span><br><span class="line"><span class="comment">// in a word</span></span><br><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>(<span class="type">ParamA</span>:<span class="type">ParamB</span>:...))</span><br></pre></td></tr></table></figure>
@@ -77,51 +59,37 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>)</span><br></pre></td></tr></table></figure>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/06/24/Selector-in-Swift/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-Set-a-float-value-for-Xib-constraint" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/"><span>Set a float value for Xib constraint</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-06-22T12:05:43.000Z">
-          2016-06-22
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/22/Set-a-float-value-for-Xib-constraint/">Set a float value for Xib constraint</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" class="article-date">
+  <time datetime="2016-06-22T12:05:43.000Z" itemprop="datePublished">2016-06-22</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <blockquote>
 <p> as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height</p>
@@ -145,51 +113,37 @@
 <p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg" alt=""></p>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/06/22/Set-a-float-value-for-Xib-constraint/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-typealias-closure-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/06/21/typealias-closure-in-Swift/"><span>typealias closure in Swift</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/06/21/typealias-closure-in-Swift/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-06-21T12:44:59.000Z">
-          2016-06-21
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/21/typealias-closure-in-Swift/">typealias closure in Swift</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/21/typealias-closure-in-Swift/" class="article-date">
+  <time datetime="2016-06-21T12:44:59.000Z" itemprop="datePublished">2016-06-21</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>typealias closure in Swift</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = ((isLimit: <span class="type">Bool</span>, data: <span class="type">AnyObject</span>)-&gt;<span class="type">Void</span>)?</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = (() -&gt; <span class="type">Void</span>)?</span><br></pre></td></tr></table></figure>
@@ -197,51 +151,37 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;typedef void(^IsLimited)(BOOL isLimit, id data);&#10;&#10;typedef void(^IsLimited)();</span><br></pre></td></tr></table></figure>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/06/21/typealias-closure-in-Swift/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-Build-a-custom-xib-class-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/"><span>Build a custom xib class in Swift</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-06-16T14:43:41.000Z">
-          2016-06-16
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/16/Build-a-custom-xib-class-in-Swift/">Build a custom xib class in Swift</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" class="article-date">
+  <time datetime="2016-06-16T14:43:41.000Z" itemprop="datePublished">2016-06-16</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <h3 id="First_check,_if_you_have_your_class_name_declared_in_the_view_itself,_not_in_the_file_owner-">First check, if you have your class name declared in the view itself, not in the file owner.</h3><p><img src="http://i.stack.imgur.com/j70PR.png" alt=""></p>
 <h3 id="If_not,_do_it-_Then_try_it_again-">If not, do it. Then try it again.</h3><h3 id="Another_option_is_to_create_IBOutlet_in_your_AddProgramView-swift">Another option is to create IBOutlet in your AddProgramView.swift</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
@@ -251,347 +191,286 @@
 <h3 id="And_now_you_can_use_the_AddProgramView_wherever_you_want-_Either_by_init(frame:)">And now you can use the AddProgramView wherever you want. Either by init(frame:)</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> addProgramView = <span class="type">AddProgramView</span>.<span class="keyword">init</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">30</span>))</span><br></pre></td></tr></table></figure>
 <h3 id="done">done</h3>
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/06/16/Build-a-custom-xib-class-in-Swift/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-log-json-with-pretty-unescape-character-string" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/06/09/log-json-with-pretty-unescape-character-string/"><span>log json with pretty &amp; unescape character string</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/06/09/log-json-with-pretty-unescape-character-string/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-06-09T00:19:35.000Z">
-          2016-06-09
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/09/log-json-with-pretty-unescape-character-string/">log json with pretty &amp; unescape character string</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/09/log-json-with-pretty-unescape-character-string/" class="article-date">
+  <time datetime="2016-06-09T00:19:35.000Z" itemprop="datePublished">2016-06-09</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>In swift 2.+, printing json object in Xcode debug console window will show the escape special character string, and it is difficult to read.<br>so this is a func for printing pretty &amp; unescape character string</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">LogJson</span><span class="params">(data: NSData, <span class="number">_</span> file: String = #file , <span class="number">_</span> function: String = #function, <span class="number">_</span> line: Int = #line)</span></span> &#123;</span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> dataAsJSON = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(data, options: [])</span><br><span class="line">            <span class="keyword">let</span> prettyData =  <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.dataWithJSONObject(dataAsJSON, options: .<span class="type">PrettyPrinted</span>)</span><br><span class="line">            <span class="keyword">let</span> ss = <span class="type">NSString</span>(data: prettyData, encoding: <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> name = (file <span class="keyword">as</span> <span class="type">NSString</span>).lastPathComponent</span><br><span class="line">            <span class="keyword">let</span> fileArray = name.componentsSeparatedByString(<span class="string">"."</span>)</span><br><span class="line">            <span class="keyword">let</span> fileName = fileArray[<span class="number">0</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="type">Logger</span>.log(.<span class="type">Debug</span>, fileName + <span class="string">"-<span class="subst">\(line)</span>-"</span> + function, ss)</span><br><span class="line">        &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">            <span class="type">Log</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="Notice">Notice</h3><p>there is a dependency lib named <a href="https://github.com/litt1e-p/Logger" target="_blank" rel="external">Logger</a>, which will be release in my <a href="https://github.com/litt1e-p" target="_blank" rel="external">github</a></p>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/06/09/log-json-with-pretty-unescape-character-string/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-swift-debug-flag" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/06/03/swift-debug-flag/"><span>swift debug flag</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/06/03/swift-debug-flag/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-06-03T13:48:23.000Z">
-          2016-06-03
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/03/swift-debug-flag/">swift debug flag</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/03/swift-debug-flag/" class="article-date">
+  <time datetime="2016-06-03T13:48:23.000Z" itemprop="datePublished">2016-06-03</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">PROJECT</span> -&gt; <span class="type">Build</span> <span class="type">Settings</span> -&gt; <span class="type">Swift</span> <span class="type">Compiler</span> - <span class="type">Custom</span> <span class="type">Flags</span> -&gt; <span class="type">Other</span> <span class="type">Swift</span> <span class="type">Flags</span> -&gt; <span class="type">Debug</span> </span><br><span class="line"></span><br><span class="line">click +</span><br><span class="line"></span><br><span class="line">add  -<span class="type">D</span> <span class="type">DEBUG</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f4hujelcspj31k01467de.jpg" alt=""></p>
 <h3 id="usage">usage</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> kApiDomain = <span class="string">"http://192.168.2.8"</span></span><br><span class="line"></span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> kApiDomain = <span class="string">"http://192.168.2.9"</span></span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/06/03/swift-debug-flag/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-a-simple-macro-in-swift" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/05/13/a-simple-macro-in-swift/"><span>a simple macro in swift</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/05/13/a-simple-macro-in-swift/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-05-13T15:31:43.000Z">
-          2016-05-13
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/13/a-simple-macro-in-swift/">a simple macro in swift</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/05/13/a-simple-macro-in-swift/" class="article-date">
+  <time datetime="2016-05-13T15:31:43.000Z" itemprop="datePublished">2016-05-13</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>a simple macro func example for check whether a string is empty </p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">IsEmptyStr</span>: (<span class="type">String</span>?) -&gt; <span class="type">Bool</span> = &#123;</span><br><span class="line">    (ref: <span class="type">String</span>?) -&gt; <span class="type">Bool</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> ref == <span class="literal">nil</span> || ref!.isEqual(<span class="type">NSNull</span>()) || ref == <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// usage</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="type">IsEmptyStr</span>(<span class="string">""</span>) &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"empty"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/05/13/a-simple-macro-in-swift/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-adjust-text-font-for-rect" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/05/10/adjust-text-font-for-rect/"><span>adjust text font for rect</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/05/10/adjust-text-font-for-rect/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-05-10T12:54:32.000Z">
-          2016-05-10
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/10/adjust-text-font-for-rect/">adjust text font for rect</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/05/10/adjust-text-font-for-rect/" class="article-date">
+  <time datetime="2016-05-10T12:54:32.000Z" itemprop="datePublished">2016-05-10</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustsFontSizeToFitRect:(<span class="type">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">CGSize</span> maxSize          = <span class="type">CGSizeMake</span>(rect.size.width, rect.size.height);</span><br><span class="line">    <span class="type">CGFloat</span> currentFontSize = <span class="number">17</span>.f;</span><br><span class="line">    <span class="type">NSString</span> *str           = <span class="keyword">self</span>.text;</span><br><span class="line">    <span class="type">CGSize</span> requiredSize     = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    <span class="keyword">if</span>(requiredSize.height &lt;= maxSize.height) &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &lt;= maxSize.height &amp;&amp; requiredSize.width &lt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize++;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &gt; maxSize.height || requiredSize.width &gt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize--;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">        requiredSize=[str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.font = [<span class="keyword">self</span>.font fontWithSize:currentFontSize];</span><br><span class="line">    <span class="keyword">self</span>.adjustsFontSizeToFitWidth = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-escape_html" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/04/24/escape_html/"><span>escape &amp; unescape html character code symbol</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/04/24/escape_html/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-04-24T03:24:10.000Z">
-          2016-04-24
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/24/escape_html/">escape &amp; unescape html character code symbol</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/04/24/escape_html/" class="article-date">
+  <time datetime="2016-04-24T03:24:10.000Z" itemprop="datePublished">2016-04-24</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <p>extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">unEscapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span>  <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;lt;"</span>, withString: <span class="string">"&lt;"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;gt;"</span>, withString: <span class="string">"&gt;"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;quot;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\t"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\r"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\n"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;apos;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">escapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;"</span>, withString: <span class="string">"&amp;amp;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"\""</span>, withString: <span class="string">"&amp;quot;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"'"</span>, withString: <span class="string">"&amp;#39;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&lt;"</span>, withString: <span class="string">"&amp;lt;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&gt;"</span>, withString: <span class="string">"&amp;gt;"</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/04/24/escape_html/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-  <article class="post article">
-
   
+    <article id="post-regex" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <h3 class="article-title"><a href="/2016/04/23/regex/"><span>regex</span></a></h3>
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
-
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2016/04/23/regex/" rel="bookmark">
-        <time class="entry-date published" datetime="2016-04-23T05:48:14.000Z">
-          2016-04-23
-        </time>
-      </a>
-    </span>
-  </div>
-
-
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/23/regex/">regex</a>
+    </h1>
   
 
-  <div class="article-content">
-    <div class="entry">
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/04/23/regex/" class="article-date">
+  <time datetime="2016-04-23T05:48:14.000Z" itemprop="datePublished">2016-04-23</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
       
         <h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[\s\<span class="type">S</span>]*</span><br><span class="line">[\d\<span class="type">D</span>]*</span><br><span class="line">[\w\<span class="type">W</span>]*</span><br></pre></td></tr></table></figure>
 
       
+
+      
+        
     </div>
-    <footer class="article-footer">
-        <div class="article-meta pull-left">
-          
-          
-        </div>
-        
-        <div class="article-meta pull-right">
-          <span>
-            <i class="icon-comments"></i>
-            <span>
-              <a href="https://litt1e-p.github.io/2016/04/23/regex/#comment">评论</a>
-            </span>
-          </span>
-        </div>
-        
-    </footer>
   </div>
+  
 </article>
 
 
-
-
-<nav class="pagination">
   
   
-  <a href="/page/2/" class="pagination-next">下一页</a>
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
+  
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
   
 </nav>
-    </main>
-
-    <footer id="colophon" class="site-footer" role="contentinfo"><p class="site-info">
-  Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
-  Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
-  </br>
-  
-  &copy; 2016 litt1e-p
-  
-</p>
-</footer>
     
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
   </div>
-</div>
 </body>
 </html>
