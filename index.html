@@ -114,6 +114,60 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Selector-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/24/Selector-in-Swift/" class="article-date">
+  	<time datetime="2016-06-24T15:47:13.000Z" itemprop="datePublished">2016-06-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/24/Selector-in-Swift/">Selector in Swift</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#selector in Swift.md</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// func</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">optional</span> <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">collectionView</span><span class="params">(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">CGSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// selector</span></span><br><span class="line"></span><br><span class="line">#selector(<span class="type">UICollectionViewDelegateFlowLayout</span>.collectionView(<span class="number">_</span>:layout:sizeForItemAtIndexPath:))</span><br><span class="line"></span><br><span class="line"><span class="comment">// in a word</span></span><br><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>(<span class="type">ParamA</span>:<span class="type">ParamB</span>:...))</span><br></pre></td></tr></table></figure>
+<h4 id="Notice">Notice</h4><p>if method does not have params</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-Set-a-float-value-for-Xib-constraint" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -590,68 +644,6 @@
       
       
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-commit-to-cocoapods" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/05/commit-to-cocoapods/" class="article-date">
-  	<time datetime="2016-01-05T02:52:09.000Z" itemprop="datePublished">2016-01-05</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/05/commit-to-cocoapods/">commit to cocoapods</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>you must register a cocoapods account before push your pod lib 。<br>prepare your：</p>
-<blockquote>
-<ul>
-<li>email : abc@abc.com</li>
-<li>username: abc</li>
-<li>description: I am description</li>
-</ul>
-</blockquote>
-<p><code>use your real custom info</code></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/01/05/commit-to-cocoapods/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>

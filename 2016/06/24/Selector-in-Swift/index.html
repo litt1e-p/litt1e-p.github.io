@@ -3,32 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Set a float value for Xib constraint | little p</title>
+  <title>Selector in Swift | little p</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height
-
-There are 2 solutions to break it out
-Method 01:">
+  <meta name="description" content="#selector in Swift.md
+123456789101112// funcoptional public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Set a float value for Xib constraint">
-<meta property="og:url" content="https://litt1e-p.github.io/2016/06/22/Set-a-float-value-for-Xib-constraint/index.html">
+<meta property="og:title" content="Selector in Swift">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/06/24/Selector-in-Swift/index.html">
 <meta property="og:site_name" content="little p">
-<meta property="og:description" content="as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height
-
-There are 2 solutions to break it out
-Method 01:">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545z4256aj31kw0hh0wo.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/005wcR5Jgw1f545zfgpn5j31a20gsjx7.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005wcR5Jgw1f545zu8qmkj31by0pmh6u.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/005wcR5Jgw1f54602mvmxj311g09q441.jpg">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg">
-<meta property="og:updated_time" content="2016-06-22T12:34:11.000Z">
+<meta property="og:description" content="#selector in Swift.md
+123456789101112// funcoptional public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath:">
+<meta property="og:updated_time" content="2016-06-24T15:48:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Set a float value for Xib constraint">
-<meta name="twitter:description" content="as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height
-
-There are 2 solutions to break it out
-Method 01:">
+<meta name="twitter:title" content="Selector in Swift">
+<meta name="twitter:description" content="#selector in Swift.md
+123456789101112// funcoptional public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath:">
   
     <link rel="alternative" href="/atom.xml" title="little p" type="application/atom+xml">
   
@@ -127,11 +116,11 @@ Method 01:">
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Set-a-float-value-for-Xib-constraint" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Selector-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" class="article-date">
-  	<time datetime="2016-06-22T12:05:43.000Z" itemprop="datePublished">2016-06-22</time>
+      <a href="/2016/06/24/Selector-in-Swift/" class="article-date">
+  	<time datetime="2016-06-24T15:47:13.000Z" itemprop="datePublished">2016-06-24</time>
 </a>
     </div>
   
@@ -144,7 +133,7 @@ Method 01:">
         
   
     <h1 class="article-title" itemprop="name">
-      Set a float value for Xib constraint
+      Selector in Swift
     </h1>
   
 
@@ -160,26 +149,10 @@ Method 01:">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p> as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height</p>
-</blockquote>
-<h3 id="There_are_2_solutions_to_break_it_out">There are 2 solutions to break it out</h3><ul>
-<li>Method 01: <code>get its constraint IBOutlet and modify with animation</code></li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// </span></span><br><span class="line">separateLineCst.constant = <span class="number">0.5</span></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.02</span>) &#123; </span><br><span class="line">     <span class="keyword">self</span>.layoutIfNeeded()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<ul>
-<li>Method 02: <code>trick way!</code></li>
-</ul>
-<p>1.open your xib as souceCode</p>
-<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545z4256aj31kw0hh0wo.jpg" alt=""></p>
-<p><img src="http://ww2.sinaimg.cn/large/005wcR5Jgw1f545zfgpn5j31a20gsjx7.jpg" alt=""></p>
-<p>2.find your target view’s constraint and modify it</p>
-<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f545zu8qmkj31by0pmh6u.jpg" alt=""></p>
-<p>3.save and reopen it as interface builder document</p>
-<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f54602mvmxj311g09q441.jpg" alt=""></p>
-<p>4.see what happen! 🎉🎉</p>
-<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg" alt=""></p>
+        <p>#selector in Swift.md</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// func</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">optional</span> <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">collectionView</span><span class="params">(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">CGSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// selector</span></span><br><span class="line"></span><br><span class="line">#selector(<span class="type">UICollectionViewDelegateFlowLayout</span>.collectionView(<span class="number">_</span>:layout:sizeForItemAtIndexPath:))</span><br><span class="line"></span><br><span class="line"><span class="comment">// in a word</span></span><br><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>(<span class="type">ParamA</span>:<span class="type">ParamB</span>:...))</span><br></pre></td></tr></table></figure>
+<h4 id="Notice">Notice</h4><p>if method does not have params</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -189,18 +162,9 @@ Method 01:">
     
 <nav id="article-nav">
   
-    <a href="/2016/06/24/Selector-in-Swift/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Selector in Swift
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/06/21/typealias-closure-in-Swift/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">typealias closure in Swift</div>
+    <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Set a float value for Xib constraint</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -229,7 +193,7 @@ Method 01:">
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Set-a-float-value-for-Xib-constraint" data-title="Set a float value for Xib constraint" data-url="https://litt1e-p.github.io/2016/06/22/Set-a-float-value-for-Xib-constraint/"></div>
+	<div class="ds-thread" data-thread-key="Selector-in-Swift" data-title="Selector in Swift" data-url="https://litt1e-p.github.io/2016/06/24/Selector-in-Swift/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
