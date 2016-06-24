@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="little p">
 <meta property="og:description" content="#selector in Swift.md
 123456789101112// funcoptional public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath:">
-<meta property="og:updated_time" content="2016-06-24T15:48:06.000Z">
+<meta property="og:updated_time" content="2016-06-24T15:52:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Selector in Swift">
 <meta name="twitter:description" content="#selector in Swift.md
@@ -151,7 +151,7 @@
       
         <p>#selector in Swift.md</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// func</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">optional</span> <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">collectionView</span><span class="params">(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">CGSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// selector</span></span><br><span class="line"></span><br><span class="line">#selector(<span class="type">UICollectionViewDelegateFlowLayout</span>.collectionView(<span class="number">_</span>:layout:sizeForItemAtIndexPath:))</span><br><span class="line"></span><br><span class="line"><span class="comment">// in a word</span></span><br><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>(<span class="type">ParamA</span>:<span class="type">ParamB</span>:...))</span><br></pre></td></tr></table></figure>
-<h4 id="Notice">Notice</h4><p>if method does not have params</p>
+<h4 id="Notice">Notice</h4><p>if func does not have params</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>)</span><br></pre></td></tr></table></figure>
 
       
