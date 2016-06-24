@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title><![CDATA[little p]]></title>
+  <title><![CDATA[litt1e p]]></title>
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
@@ -8,7 +8,7 @@
   <id>https://litt1e-p.github.io/</id>
   
   <author>
-    <name><![CDATA[little p]]></name>
+    <name><![CDATA[litt1e p]]></name>
     
   </author>
   
