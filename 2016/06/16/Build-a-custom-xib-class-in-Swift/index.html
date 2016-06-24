@@ -1,156 +1,77 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
   <meta charset="utf-8">
   
   <title>Build a custom xib class in Swift | litt1e-p</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="author" content="litt1e-p">
+  
   <meta name="description" content="First check, if you have your class name declared in the view itself, not in the file owner.
-If not, do it. Then try it again.Another option is to create IBOutlet in your AddProgramView.swift1@IBOutle">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Build a custom xib class in Swift">
-<meta property="og:url" content="https://litt1e-p.github.io/2016/06/16/Build-a-custom-xib-class-in-Swift/index.html">
-<meta property="og:site_name" content="litt1e-p">
-<meta property="og:description" content="First check, if you have your class name declared in the view itself, not in the file owner.
-If not, do it. Then try it again.Another option is to create IBOutlet in your AddProgramView.swift1@IBOutle">
-<meta property="og:image" content="http://i.stack.imgur.com/j70PR.png">
-<meta property="og:image" content="http://i.stack.imgur.com/aiYxL.png">
-<meta property="og:image" content="http://i.stack.imgur.com/YlfZ9.png">
-<meta property="og:updated_time" content="2016-06-16T14:50:24.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Build a custom xib class in Swift">
-<meta name="twitter:description" content="First check, if you have your class name declared in the view itself, not in the file owner.
-If not, do it. Then try it again.Another option is to create IBOutlet in your AddProgramView.swift1@IBOutle">
-  
-    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+If not, do it. Then try it again.Another option is to cre">
   
   
-    <link rel="icon" href="/favicon.png">
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Build a custom xib class in Swift"/>
+  <meta property="og:site_name" content="litt1e-p"/>
+
   
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 </head>
+
+
 <body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="https://avatars3.githubusercontent.com/u/10734995?v=3&amp;s=460" class="js-avatar">
-			
-		</a>
+<div id="page" class="site">
+  <div id="primary" class="content-area">
 
-		<hgroup>
-		  <h1 class="header-author"><a href="/">litt1e-p</a></h1>
-		</hgroup>
-
-		
-
-		
-
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">home</a></li>
-				        
-							<li><a href="/archives">archives</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="https://github.com/litt1e-p" title="github">github</a>
-					        
-								<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				
-				
-
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="inner"><div class="site-branding">
+  <h1 class="site-title">
+    <a href="/">litt1e-p</a>
+  </h1>
+  <p class="site-description"></p>
 </div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">litt1e-p</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-				<img lazy-src="https://avatars3.githubusercontent.com/u/10734995?v=3&amp;s=460" class="js-avatar">
-			</div>
-			<hgroup>
-			  <h1 class="header-author">litt1e-p</h1>
-			</hgroup>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">home</a></li>
-		        
-					<li><a href="/archives">archives</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="https://github.com/litt1e-p" title="github">github</a>
-			        
-						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
-</nav>
-      <div class="body-wrap"><article id="post-Build-a-custom-xib-class-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" class="article-date">
-  	<time datetime="2016-06-16T14:43:41.000Z" itemprop="datePublished">2016-06-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
+<nav id="site-navigation" class="main-navigation" role="navigation">
+  <ul>
     
-      <input type="hidden" class="isFancy" />
+      <li><a href="/">主页</a></li>
     
+      <li><a href="/archives">归档</a></li>
     
-      <header class="article-header">
-        
+  </ul>
+</nav></header>
+
+    <main id="main" class="site-main posts-loop" role="main">
+      <article class="post article">
+
   
-    <h1 class="article-title" itemprop="name">
-      Build a custom xib class in Swift
-    </h1>
+  
+    <h3 class="article-title"><span>Build a custom xib class in Swift</span></h3>
   
 
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-        
 
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-06-16T14:43:41.000Z">
+          2016-06-16
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
       
         <h3 id="First_check,_if_you_have_your_class_name_declared_in_the_view_itself,_not_in_the_file_owner-">First check, if you have your class name declared in the view itself, not in the file owner.</h3><p><img src="http://i.stack.imgur.com/j70PR.png" alt=""></p>
 <h3 id="If_not,_do_it-_Then_try_it_again-">If not, do it. Then try it again.</h3><h3 id="Another_option_is_to_create_IBOutlet_in_your_AddProgramView-swift">Another option is to create IBOutlet in your AddProgramView.swift</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
@@ -161,132 +82,33 @@ If not, do it. Then try it again.Another option is to create IBOutlet in your Ad
 <h3 id="done">done</h3>
       
     </div>
-    
+    <footer class="article-footer">
+        <div class="article-meta pull-left">
+          
+          
+        </div>
+        
+    </footer>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2016/06/21/typealias-closure-in-Swift/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          typealias closure in Swift
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2016/06/09/log-json-with-pretty-unescape-character-string/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">log json with pretty &amp; unescape character string</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-  
 </article>
 
-
-<div class="share">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到：</span>
-		<a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
-</div>
+  
 
 
 
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="Build-a-custom-xib-class-in-Swift" data-title="Build a custom xib class in Swift" data-url="https://litt1e-p.github.io/2016/06/16/Build-a-custom-xib-class-in-Swift/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"little-d"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
-</div>
+    </main>
 
-
-
-
-</div>
-      <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2016 litt1e-p
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
-    </div>
-  </div>
+    <footer id="colophon" class="site-footer" role="contentinfo"><p class="site-info">
+  Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+  Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+  </br>
+  
+  &copy; 2016 litt1e-p
+  
+</p>
 </footer>
-    </div>
     
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-
-
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
-</script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="/js/main.js" type="text/javascript"></script>
-
-
-
-
-
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
-
-MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
-</script>
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-
-
   </div>
+</div>
 </body>
 </html>
