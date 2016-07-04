@@ -31,6 +31,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-UIRefreshControl-Trigger" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/04/UIRefreshControl-Trigger/">UIRefreshControl Trigger</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/07/04/UIRefreshControl-Trigger/" class="article-date">
+  <time datetime="2016-07-04T13:22:46.000Z" itemprop="datePublished">2016-07-04</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="UIRefreshControl_Trigger">UIRefreshControl Trigger</h1><p>Sometimes we want to trigger the UIRefreshControl auto beginRefreshing with scrollView or its subView pulling down effects.</p>
+<p>here it is a extension for it</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIRefreshControl</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">triggerRefresh</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> scrollView = superview <span class="keyword">as</span>? <span class="type">UIScrollView</span> &#123;</span><br><span class="line">            scrollView.setContentOffset(<span class="type">CGPoint</span>(x: <span class="number">0</span>, y: scrollView.contentOffset.y - frame.height), animated: <span class="literal">true</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        beginRefreshing()</span><br><span class="line">        <span class="keyword">self</span>.sendActionsForControlEvents(<span class="type">UIControlEvents</span>.<span class="type">ValueChanged</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Usage">Usage</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">tableView.triggerRefresh()</span><br><span class="line"></span><br><span class="line">collectionView.triggerRefresh()</span><br><span class="line"></span><br><span class="line">scrollView.triggerRefresh()</span><br></pre></td></tr></table></figure>
+<h3 id="done_🎉🎉">done 🎉🎉</h3>
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Selector-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -369,41 +407,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">unEscapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span>  <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;lt;"</span>, withString: <span class="string">"&lt;"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;gt;"</span>, withString: <span class="string">"&gt;"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;quot;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\t"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\r"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"\n"</span>, withString: <span class="string">""</span>)</span><br><span class="line">                    .stringByReplacingOccurrencesOfString(<span class="string">"&amp;apos;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">escapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;"</span>, withString: <span class="string">"&amp;amp;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"\""</span>, withString: <span class="string">"&amp;quot;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"'"</span>, withString: <span class="string">"&amp;#39;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&lt;"</span>, withString: <span class="string">"&amp;lt;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&gt;"</span>, withString: <span class="string">"&amp;gt;"</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-regex" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/23/regex/">regex</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/04/23/regex/" class="article-date">
-  <time datetime="2016-04-23T05:48:14.000Z" itemprop="datePublished">2016-04-23</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[\s\<span class="type">S</span>]*</span><br><span class="line">[\d\<span class="type">D</span>]*</span><br><span class="line">[\w\<span class="type">W</span>]*</span><br></pre></td></tr></table></figure>
 
       
 
