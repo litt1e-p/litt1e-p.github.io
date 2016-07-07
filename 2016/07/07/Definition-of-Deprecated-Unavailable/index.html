@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Definition of Deprecated &amp; Unavailable | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.0 mark for unavailable function
+
+12__attribute__((unavailable(&quot;It is not available, Use other function instead&quot;)));
+Notice__attribute__((unavailable(...) can not pass buiding
+
+
+2.0 mark for deprecat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Definition of Deprecated & Unavailable">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/07/07/Definition-of-Deprecated-Unavailable/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="1.0 mark for unavailable function
+
+12__attribute__((unavailable(&quot;It is not available, Use other function instead&quot;)));
+Notice__attribute__((unavailable(...) can not pass buiding
+
+
+2.0 mark for deprecat">
+<meta property="og:updated_time" content="2016-07-07T12:17:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Definition of Deprecated & Unavailable">
+<meta name="twitter:description" content="1.0 mark for unavailable function
+
+12__attribute__((unavailable(&quot;It is not available, Use other function instead&quot;)));
+Notice__attribute__((unavailable(...) can not pass buiding
+
+
+2.0 mark for deprecat">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Definition-of-Deprecated-Unavailable" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Definition of Deprecated &amp; Unavailable
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/07/07/Definition-of-Deprecated-Unavailable/" class="article-date">
+  <time datetime="2016-07-07T12:14:06.000Z" itemprop="datePublished">2016-07-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>1.0 <code>mark for unavailable function</code></li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">__attribute__((unavailable(<span class="string">"It is not available, Use other function instead"</span>)));</span><br></pre></td></tr></table></figure>
+<h3 id="Notice">Notice</h3><p><code>__attribute__((unavailable(...) can not pass buiding</code></p>
+<hr>
+<ul>
+<li>2.0 <code>mark for deprecated function</code></li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">NS_DEPRECATED_IOS</span>(<span class="number">2_0</span>, <span class="number">6_0</span>, <span class="string">"Use other function instead"</span>)</span><br><span class="line"><span class="comment">//2_0 &amp; 6_0 means that the function can only run on iOS2~6.0</span></span><br></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>if you want get more infomation for deprecated definitions, check Apple’s official documents</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define <span class="type">NS_DEPRECATED</span>(_macIntro, _macDep, _iosIntro, _iosDep, ...) <span class="type">CF_DEPRECATED</span>(_macIntro, _macDep, _iosIntro, _iosDep, __VA_ARGS__)</span><br><span class="line">#define <span class="type">NS_DEPRECATED_MAC</span>(_macIntro, _macDep, ...) <span class="type">CF_DEPRECATED_MAC</span>(_macIntro, _macDep, __VA_ARGS__)</span><br><span class="line">#define <span class="type">NS_DEPRECATED_IOS</span>(_iosIntro, _iosDep, ...) <span class="type">CF_DEPRECATED_IOS</span>(_iosIntro, _iosDep, __VA_ARGS__)</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/07/04/UIRefreshControl-Trigger/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">UIRefreshControl Trigger</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/07/07/Definition-of-Deprecated-Unavailable/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
