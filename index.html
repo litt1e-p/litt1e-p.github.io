@@ -54,16 +54,14 @@
     <div class="article-entry" itemprop="articleBody">
       
         <ul>
-<li>1.0 <code>mark for unavailable function</code></li>
+<li>1 <code>mark for unavailable function</code></li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">__attribute__((unavailable(<span class="string">"It is not available, Use other function instead"</span>)));</span><br></pre></td></tr></table></figure>
 <h3 id="Notice">Notice</h3><p><code>__attribute__((unavailable(...) can not pass Xcode buid</code></p>
-<hr>
 <ul>
-<li>2.0 <code>mark for deprecated function</code></li>
+<li>2 <code>mark for deprecated function</code></li>
 </ul>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">NS_DEPRECATED_IOS</span>(<span class="number">2_0</span>, <span class="number">6_0</span>, <span class="string">"Use other function instead"</span>)</span><br><span class="line"><span class="comment">//2_0 &amp; 6_0 means that the function can only run on iOS2~6.0</span></span><br></pre></td></tr></table></figure>
-<hr>
 <blockquote>
 <p>if you want get more infomation for deprecated definitions, check Apple’s official documents</p>
 </blockquote>
