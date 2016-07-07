@@ -52,14 +52,15 @@
     <link href="https://litt1e-p.github.io/2016/07/04/UIRefreshControl-Trigger/"/>
     <id>https://litt1e-p.github.io/2016/07/04/UIRefreshControl-Trigger/</id>
     <published>2016-07-04T13:22:46.000Z</published>
-    <updated>2016-07-04T13:23:24.000Z</updated>
-    <content type="html"><![CDATA[<h1 id="UIRefreshControl_Trigger">UIRefreshControl Trigger</h1><p>Sometimes we want to trigger the UIRefreshControl auto beginRefreshing with scrollView or its subView pulling down effects.</p>
+    <updated>2016-07-07T12:19:14.000Z</updated>
+    <content type="html"><![CDATA[<p>Sometimes we want to trigger the UIRefreshControl auto beginRefreshing with scrollView or its subView pulling down effects.</p>
 <p>here it is a extension for it</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIRefreshControl</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">triggerRefresh</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> scrollView = superview <span class="keyword">as</span>? <span class="type">UIScrollView</span> &#123;</span><br><span class="line">            scrollView.setContentOffset(<span class="type">CGPoint</span>(x: <span class="number">0</span>, y: scrollView.contentOffset.y - frame.height), animated: <span class="literal">true</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        beginRefreshing()</span><br><span class="line">        <span class="keyword">self</span>.sendActionsForControlEvents(<span class="type">UIControlEvents</span>.<span class="type">ValueChanged</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="Usage">Usage</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">tableView.triggerRefresh()</span><br><span class="line"></span><br><span class="line">collectionView.triggerRefresh()</span><br><span class="line"></span><br><span class="line">scrollView.triggerRefresh()</span><br></pre></td></tr></table></figure>
 <h3 id="done_🎉🎉">done 🎉🎉</h3>]]></content>
     <summary type="html">
-    <![CDATA[<h1 id="UIRefreshControl_Trigger">UIRefreshControl Trigger</h1><p>Sometimes we want to trigger the UIRefreshControl auto beginRefreshing wit]]>
+    <![CDATA[<p>Sometimes we want to trigger the UIRefreshControl auto beginRefreshing with scrollView or its subView pulling down effects.</p>
+<p>here i]]>
     </summary>
     
   </entry>
