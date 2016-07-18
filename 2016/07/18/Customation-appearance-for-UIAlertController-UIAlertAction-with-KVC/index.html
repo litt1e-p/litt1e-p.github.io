@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Customation appearance for UIAlertController &amp; UIAlertAction with KVC | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="for UIAlertController
+
+123456789101112131415161718192021extension UIAlertController&amp;#123;    func customAppearance() &amp;#123;        //custom title or message with attributedString and its attributes(fo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Customation appearance for UIAlertController & UIAlertAction with KVC">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="for UIAlertController
+
+123456789101112131415161718192021extension UIAlertController&amp;#123;    func customAppearance() &amp;#123;        //custom title or message with attributedString and its attributes(fo">
+<meta property="og:updated_time" content="2016-07-18T13:42:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Customation appearance for UIAlertController & UIAlertAction with KVC">
+<meta name="twitter:description" content="for UIAlertController
+
+123456789101112131415161718192021extension UIAlertController&amp;#123;    func customAppearance() &amp;#123;        //custom title or message with attributedString and its attributes(fo">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Customation appearance for UIAlertController &amp; UIAlertAction with KVC
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/" class="article-date">
+  <time datetime="2016-07-18T13:41:24.000Z" itemprop="datePublished">2016-07-18</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>for UIAlertController</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertController</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//custom title or message with attributedString and its attributes(fontName\foregroundColor with different range) </span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> titleStr = title &#123;</span><br><span class="line">            <span class="keyword">let</span> range = <span class="type">NSMakeRange</span>(<span class="number">0</span>, titleStr.characters.<span class="built_in">count</span>)</span><br><span class="line">            <span class="keyword">let</span> attrTitle = <span class="type">NSMutableAttributedString</span>(string: titleStr)</span><br><span class="line">            attrTitle.addAttribute(<span class="type">NSFontAttributeName</span>, value: <span class="type">UIFont</span>(name: yourFontName, size: <span class="number">20.0</span>)!, range: range)</span><br><span class="line">            attrTitle.addAttribute(<span class="type">NSForegroundColorAttributeName</span>, value: yourCustomColor, range: range)</span><br><span class="line">            setValue(attrTitle, forKey: <span class="string">"attributedTitle"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> msgStr = message &#123;</span><br><span class="line">            <span class="keyword">let</span> range = <span class="type">NSMakeRange</span>(<span class="number">0</span>, msgStr.characters.<span class="built_in">count</span>)</span><br><span class="line">            <span class="keyword">let</span> attrMsg = <span class="type">NSMutableAttributedString</span>(string: msgStr)</span><br><span class="line">            attrMsg.addAttribute(<span class="type">NSFontAttributeName</span>, value: <span class="type">UIFont</span>(name: yourFontName, size: <span class="number">14.0</span>)!, range: range)</span><br><span class="line">            attrMsg.addAttribute(<span class="type">NSForegroundColorAttributeName</span>, value: yourCustomColor, range: range)</span><br><span class="line">            setValue(attrMsg, forKey: <span class="string">"attributedMessage"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>for UIAlertAction<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertAction</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Cancel</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">//custom titleTextColor</span></span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//custom left image</span></span><br><span class="line">            <span class="keyword">let</span> img = <span class="type">UIImage</span>(named: <span class="string">"yourImageFileName"</span>)?.imageWithRenderingMode(.<span class="type">AlwaysOriginal</span>)</span><br><span class="line">            setValue(img, forKey: <span class="string">"image"</span>)</span><br><span class="line">            <span class="comment">//custom titleTextAlignment with NSTextAlignment.enum rawValue(Int: 64-bit integer)</span></span><br><span class="line">            setValue(<span class="type">NSNumber</span>(integer: <span class="type">NSTextAlignment</span>.<span class="type">Left</span>.rawValue), forKey: <span class="string">"titleTextAlignment"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//so By that analogy, custom the other styles as your want   </span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Default</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Destructive</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/07/07/Definition-of-Deprecated-Unavailable/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Definition of Deprecated &amp; Unavailable</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
