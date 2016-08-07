@@ -6,28 +6,22 @@
   <title>Change UIStatusBar backgroundColor | litt1e-p</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="how to change the color of UIStatusBar? there are two solutions to it
-
-solution 1
-
-just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBa">
+Solution 1just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar
+1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Change UIStatusBar backgroundColor">
 <meta property="og:url" content="https://litt1e-p.github.io/2016/08/07/Change-UIStatusBar-backgroundColor/index.html">
 <meta property="og:site_name" content="litt1e-p">
 <meta property="og:description" content="how to change the color of UIStatusBar? there are two solutions to it
-
-solution 1
-
-just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBa">
+Solution 1just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar
+1">
 <meta property="og:image" content="https://raw.githubusercontent.com/litt1e-p/LPStatusBarBackgroundColor-swift/master/screenshot.gif">
-<meta property="og:updated_time" content="2016-08-07T14:45:51.000Z">
+<meta property="og:updated_time" content="2016-08-07T14:49:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Change UIStatusBar backgroundColor">
 <meta name="twitter:description" content="how to change the color of UIStatusBar? there are two solutions to it
-
-solution 1
-
-just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBa">
+Solution 1just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar
+1">
   
     <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
   
@@ -66,16 +60,10 @@ just set a backgroundImage for navigationBar which size’s height is 64.0, beca
     <div class="article-entry" itemprop="articleBody">
       
         <p>how to change the color of UIStatusBar? there are two solutions to it</p>
-<ul>
-<li>solution 1</li>
-</ul>
-<p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
+<h4 id="Solution_1">Solution 1</h4><p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">64</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
 <p>if your don’t want to set navigationBar’s backgroundImage with height 64, such as you just set it to 44, you can try it out with solution 2 below.</p>
-<ul>
-<li>solution 2</li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Solution_2">Solution 2</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
 <h4 id="tricky_time">tricky time</h4><p>use <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift" target="_blank" rel="external">LPStatusBarBackgroundColor-swift</a> or <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor" target="_blank" rel="external">LPStatusBarBackgroundColor</a> and they are quite simple</p>
 <p>let’s take LPStatusBarBackgroundColor-swift for example:</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
