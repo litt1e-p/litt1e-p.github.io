@@ -31,6 +31,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Change-UIStatusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/07/Change-UIStatusBar-backgroundColor/">Change UIStatusBar backgroundColor</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/07/Change-UIStatusBar-backgroundColor/" class="article-date">
+  <time datetime="2016-08-07T14:40:06.000Z" itemprop="datePublished">2016-08-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>how to change the color of UIStatusBar? there are two solutions to it</p>
+<ul>
+<li>solution 1</li>
+</ul>
+<p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">64</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<p>if your don’t want to set navigationBar’s backgroundImage with height 64, such as you just set it to 44, you can try it out with solution 2 below.</p>
+<ul>
+<li>solution 2</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="tricky_time">tricky time</h4><p>use <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift" target="_blank" rel="external">LPStatusBarBackgroundColor-swift</a> or <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor" target="_blank" rel="external">LPStatusBarBackgroundColor</a> and they are quite simple</p>
+<p>let’s take LPStatusBarBackgroundColor-swift for example:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
+<p>the end it works well now!</p>
+<p><img src="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift/blob/master/screenshot.gif" alt=""></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Reduce-animated-effect-of-UICollectionView-while-reloading-section" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -390,43 +440,6 @@
         <p>In swift 2.+, printing json object in Xcode debug console window will show the escape special character string, and it is difficult to read.<br>so this is a func for printing pretty &amp; unescape character string</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">LogJson</span><span class="params">(data: NSData, <span class="number">_</span> file: String = #file , <span class="number">_</span> function: String = #function, <span class="number">_</span> line: Int = #line)</span></span> &#123;</span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> dataAsJSON = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(data, options: [])</span><br><span class="line">            <span class="keyword">let</span> prettyData =  <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.dataWithJSONObject(dataAsJSON, options: .<span class="type">PrettyPrinted</span>)</span><br><span class="line">            <span class="keyword">let</span> ss = <span class="type">NSString</span>(data: prettyData, encoding: <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> name = (file <span class="keyword">as</span> <span class="type">NSString</span>).lastPathComponent</span><br><span class="line">            <span class="keyword">let</span> fileArray = name.componentsSeparatedByString(<span class="string">"."</span>)</span><br><span class="line">            <span class="keyword">let</span> fileName = fileArray[<span class="number">0</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="type">Logger</span>.log(.<span class="type">Debug</span>, fileName + <span class="string">"-<span class="subst">\(line)</span>-"</span> + function, ss)</span><br><span class="line">        &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">            <span class="type">Log</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="Notice">Notice</h3><p>there is a dependency lib named <a href="https://github.com/litt1e-p/Logger" target="_blank" rel="external">Logger</a>, which will be release in my <a href="https://github.com/litt1e-p" target="_blank" rel="external">github</a></p>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-swift-debug-flag" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/03/swift-debug-flag/">swift debug flag</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/03/swift-debug-flag/" class="article-date">
-  <time datetime="2016-06-03T13:48:23.000Z" itemprop="datePublished">2016-06-03</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">PROJECT</span> -&gt; <span class="type">Build</span> <span class="type">Settings</span> -&gt; <span class="type">Swift</span> <span class="type">Compiler</span> - <span class="type">Custom</span> <span class="type">Flags</span> -&gt; <span class="type">Other</span> <span class="type">Swift</span> <span class="type">Flags</span> -&gt; <span class="type">Debug</span> </span><br><span class="line"></span><br><span class="line">click +</span><br><span class="line"></span><br><span class="line">add  -<span class="type">D</span> <span class="type">DEBUG</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f4hujelcspj31k01467de.jpg" alt=""></p>
-<h3 id="usage">usage</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> kApiDomain = <span class="string">"http://192.168.2.8"</span></span><br><span class="line"></span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> kApiDomain = <span class="string">"http://192.168.2.9"</span></span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
 
       
 

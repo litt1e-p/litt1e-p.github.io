@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Change UIStatusBar backgroundColor | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="how to change the color of UIStatusBar? there are two solutions to it
+
+solution 1
+
+just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Change UIStatusBar backgroundColor">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/08/07/Change-UIStatusBar-backgroundColor/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="how to change the color of UIStatusBar? there are two solutions to it
+
+solution 1
+
+just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBa">
+<meta property="og:image" content="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift/blob/master/screenshot.gif">
+<meta property="og:updated_time" content="2016-08-07T14:42:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Change UIStatusBar backgroundColor">
+<meta name="twitter:description" content="how to change the color of UIStatusBar? there are two solutions to it
+
+solution 1
+
+just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBa">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Change-UIStatusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Change UIStatusBar backgroundColor
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/07/Change-UIStatusBar-backgroundColor/" class="article-date">
+  <time datetime="2016-08-07T14:40:06.000Z" itemprop="datePublished">2016-08-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>how to change the color of UIStatusBar? there are two solutions to it</p>
+<ul>
+<li>solution 1</li>
+</ul>
+<p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">64</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<p>if your don’t want to set navigationBar’s backgroundImage with height 64, such as you just set it to 44, you can try it out with solution 2 below.</p>
+<ul>
+<li>solution 2</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="tricky_time">tricky time</h4><p>use <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift" target="_blank" rel="external">LPStatusBarBackgroundColor-swift</a> or <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor" target="_blank" rel="external">LPStatusBarBackgroundColor</a> and they are quite simple</p>
+<p>let’s take LPStatusBarBackgroundColor-swift for example:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
+<p>the end it works well now!</p>
+<p><img src="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift/blob/master/screenshot.gif" alt=""></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/07/27/Reduce-animated-effect-of-UICollectionView-while-reloading-section/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Reduce animated effect of UICollectionView while reloading section</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/08/07/Change-UIStatusBar-backgroundColor/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
