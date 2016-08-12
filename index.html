@@ -53,7 +53,8 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <p>in Objective-C</p>
+        <p>for instance, define a rgba color macro</p>
+<p>in Objective-C</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define <span class="type">RGBA</span>(r,g,b,a) [<span class="type">UIColor</span> colorWithRed:(float)r/<span class="number">255</span>.0f green:(float)g/<span class="number">255</span>.0f blue:(float)b/<span class="number">255</span>.0f alpha:a]</span><br></pre></td></tr></table></figure>
 <p>in Swift: <code>define a closure const</code></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">RGBA</span>: (<span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> = &#123;</span><br><span class="line">    (r: <span class="type">CGFloat</span>, g: <span class="type">CGFloat</span>, b: <span class="type">CGFloat</span>, a: <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIColor</span>(red: r/<span class="number">255.0</span>, green: g/<span class="number">255.0</span>, blue: b/<span class="number">255.0</span>, alpha: a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
