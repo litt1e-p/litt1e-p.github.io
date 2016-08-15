@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="The code which creates the error is:
+1234567891011import UIKitpublic class BugView: UIView&amp;#123;    public func resignFirstResponder() &amp;#123;...&amp;#125;&amp;#125;
+This creates the following compiler error:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="The code which creates the error is:
+1234567891011import UIKitpublic class BugView: UIView&amp;#123;    public func resignFirstResponder() &amp;#123;...&amp;#125;&amp;#125;
+This creates the following compiler error:">
+<meta property="og:updated_time" content="2016-08-15T13:10:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector">
+<meta name="twitter:description" content="The code which creates the error is:
+1234567891011import UIKitpublic class BugView: UIView&amp;#123;    public func resignFirstResponder() &amp;#123;...&amp;#125;&amp;#125;
+This creates the following compiler error:">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/" class="article-date">
+  <time datetime="2016-08-15T13:08:34.000Z" itemprop="datePublished">2016-08-15</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>The code which creates the error is:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span>: <span class="title">UIView</span></span><br><span class="line"></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This creates the following compiler error:</p>
+<blockquote>
+<p>Method ‘resignFirstResponder()’ with Objective-C selector ‘resignFirstResponder’ conflicts with method ‘resignFirstResponder()’ from superclass ‘UIResponder’ with the same Objective-C selector</p>
+</blockquote>
+<p>By simply removing the sub-classing of UIViewController the code compiles successfully:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Why?">Why?</h4><p>The reason is that Objective-C does not support method overloading, you have to use a different method name. When you inherited UIViewController you inherited NSObject and made the class interopable to Obj-C. Swift on the other hand does support overloading, that’s why it works when you remove the inheritance.</p>
+<p>As we all knowed, ObjC doesn’t support method overloading (two methods with the same name) and In swift 2 under Xcode 7 there are two options to solve this kind of problems. </p>
+<p>One option is to rename the method using the attribute: @objc(newNameMethod:)</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1, par2)</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span>(methodTwo:)</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1)</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>another option to solve this kind of problems in Xcode7 is by applying @nonobjc attribute to any method, subscript or initialiser</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@nonobjc</span> </span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/08/12/Macro-define-in-swift/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Macro #define in swift</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

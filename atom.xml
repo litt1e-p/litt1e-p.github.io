@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-08-12T15:24:34.000Z</updated>
+  <updated>2016-08-15T13:10:44.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector]]></title>
+    <link href="https://litt1e-p.github.io/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/"/>
+    <id>https://litt1e-p.github.io/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/</id>
+    <published>2016-08-15T13:08:34.000Z</published>
+    <updated>2016-08-15T13:10:44.000Z</updated>
+    <content type="html"><![CDATA[<p>The code which creates the error is:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span>: <span class="title">UIView</span></span><br><span class="line"></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This creates the following compiler error:</p>
+<blockquote>
+<p>Method ‘resignFirstResponder()’ with Objective-C selector ‘resignFirstResponder’ conflicts with method ‘resignFirstResponder()’ from superclass ‘UIResponder’ with the same Objective-C selector</p>
+</blockquote>
+<p>By simply removing the sub-classing of UIViewController the code compiles successfully:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Why?">Why?</h4><p>The reason is that Objective-C does not support method overloading, you have to use a different method name. When you inherited UIViewController you inherited NSObject and made the class interopable to Obj-C. Swift on the other hand does support overloading, that’s why it works when you remove the inheritance.</p>
+<p>As we all knowed, ObjC doesn’t support method overloading (two methods with the same name) and In swift 2 under Xcode 7 there are two options to solve this kind of problems. </p>
+<p>One option is to rename the method using the attribute: @objc(newNameMethod:)</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1, par2)</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span>(methodTwo:)</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1)</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>another option to solve this kind of problems in Xcode7 is by applying @nonobjc attribute to any method, subscript or initialiser</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@nonobjc</span> </span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>The code which creates the error is:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><b]]>
+    </summary>
+    
+      <category term="nonobjc" scheme="https://litt1e-p.github.io/tags/nonobjc/"/>
+    
+      <category term="objc" scheme="https://litt1e-p.github.io/tags/objc/"/>
+    
+      <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Macro #define in swift]]></title>

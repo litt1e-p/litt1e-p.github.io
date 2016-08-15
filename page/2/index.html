@@ -31,6 +31,46 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Build-a-custom-xib-class-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/16/Build-a-custom-xib-class-in-Swift/">Build a custom xib class in Swift</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" class="article-date">
+  <time datetime="2016-06-16T14:43:41.000Z" itemprop="datePublished">2016-06-16</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="First_check,_if_you_have_your_class_name_declared_in_the_view_itself,_not_in_the_file_owner-">First check, if you have your class name declared in the view itself, not in the file owner.</h3><p><img src="http://i.stack.imgur.com/j70PR.png" alt=""></p>
+<h3 id="If_not,_do_it-_Then_try_it_again-">If not, do it. Then try it again.</h3><h3 id="Another_option_is_to_create_IBOutlet_in_your_AddProgramView-swift">Another option is to create IBOutlet in your AddProgramView.swift</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
+<h3 id="and_remove_the_class_name_from_the_view_and_add_it_to_File’s_Owner-">and remove the class name from the view and add it to File’s Owner.</h3><p><img src="http://i.stack.imgur.com/aiYxL.png" alt=""></p>
+<h3 id="Connect_contentView_by_right-clicking_at_the_File’s_owner:">Connect contentView by right-clicking at the File’s owner:</h3><p><img src="http://i.stack.imgur.com/YlfZ9.png" alt=""></p>
+<h3 id="Then_create_init_methods_like_this:">Then create init methods like this:</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddProgramView</span>: <span class="title">UIView</span> </span>&#123;</span><br><span class="line">    <span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(frame: <span class="type">CGRect</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>?(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">commonInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="type">NSBundle</span>.mainBundle().loadNibNamed(<span class="string">"AddProgramView"</span>, owner: <span class="keyword">self</span>, options: <span class="literal">nil</span>)</span><br><span class="line">        <span class="keyword">self</span>.addSubview(<span class="keyword">self</span>.contentView)</span><br><span class="line">        <span class="keyword">self</span>.contentView.frame = <span class="keyword">self</span>.bounds</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="And_now_you_can_use_the_AddProgramView_wherever_you_want-_Either_by_init(frame:)">And now you can use the AddProgramView wherever you want. Either by init(frame:)</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> addProgramView = <span class="type">AddProgramView</span>.<span class="keyword">init</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">30</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="done">done</h3>
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-log-json-with-pretty-unescape-character-string" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
