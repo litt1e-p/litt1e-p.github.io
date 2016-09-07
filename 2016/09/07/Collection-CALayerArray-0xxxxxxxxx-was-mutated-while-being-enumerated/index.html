@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="an error occured when I trying to remove a gradient layer from CALayer.sublayers:
+123456for (CALayer *layer in cell.imageView.layer.sublayers) &amp;#123;    if ([layer.name isEqualToString:@&quot;Gradient&quot;]) &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collection <CALayerArray: 0xxxxxxxxx> was mutated while being enumerated">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="an error occured when I trying to remove a gradient layer from CALayer.sublayers:
+123456for (CALayer *layer in cell.imageView.layer.sublayers) &amp;#123;    if ([layer.name isEqualToString:@&quot;Gradient&quot;]) &amp;">
+<meta property="og:updated_time" content="2016-09-07T12:52:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Collection <CALayerArray: 0xxxxxxxxx> was mutated while being enumerated">
+<meta name="twitter:description" content="an error occured when I trying to remove a gradient layer from CALayer.sublayers:
+123456for (CALayer *layer in cell.imageView.layer.sublayers) &amp;#123;    if ([layer.name isEqualToString:@&quot;Gradient&quot;]) &amp;">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/" class="article-date">
+  <time datetime="2016-09-07T12:43:46.000Z" itemprop="datePublished">2016-09-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>an error occured when I trying to remove a gradient layer from CALayer.sublayers:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> cell.imageView.layer.sublayers) &#123;</span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The exception is thrown because changing the contents of the sublayers array while enumerating it with foreach loop. This is not something special to layers, a similar exception is thrown when you add/remove objects while enumerating any NSMutableArray.</p>
+<p>we have various options to solve this issue</p>
+<p>Solution 1: Stop enumerating as soon as you modify the array.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> yourView.layer.sublayers) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Solution 2: Do not enumerate the real array, instead use its copy.</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSArray</span>* sublayers = [<span class="type">NSArray</span> arrayWithArray:yourView.layer.sublayers];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> sublayers) &#123;  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>Solution 3: Use key value coding to keep a reference to the gradient layer.</p>
+<p>Set it after inserting:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[yourView.layer insertSublayer:layer atIndex:<span class="number">0</span>]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:layer forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
+<p>Retrieve and remove it</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">CALayer</span>* layer = [yourView.layer valueForKey:@<span class="string">"GradientLayer"</span>];</span><br><span class="line"></span><br><span class="line"> [layer removeFromSuperlayer]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:<span class="literal">nil</span> forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
