@@ -5,19 +5,22 @@
   
   <title>Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated | litt1e-p</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="an error occured when I trying to remove a gradient layer from CALayer.sublayers:
-123456for (CALayer *layer in cell.imageView.layer.sublayers) &amp;#123;    if ([layer.name isEqualToString:@&quot;Gradient&quot;]) &amp;">
+  <meta name="description" content="Collection &amp;lt;CALayerArray: 0xxxxxxxxx&amp;gt; was mutated while being enumerated
+an error occured when I trying to remove a gradient layer from CALayer.sublayers:
+123456for (CALayer *layer in cell.image">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Collection <CALayerArray: 0xxxxxxxxx> was mutated while being enumerated">
 <meta property="og:url" content="https://litt1e-p.github.io/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/index.html">
 <meta property="og:site_name" content="litt1e-p">
-<meta property="og:description" content="an error occured when I trying to remove a gradient layer from CALayer.sublayers:
-123456for (CALayer *layer in cell.imageView.layer.sublayers) &amp;#123;    if ([layer.name isEqualToString:@&quot;Gradient&quot;]) &amp;">
-<meta property="og:updated_time" content="2016-09-07T12:55:39.000Z">
+<meta property="og:description" content="Collection &amp;lt;CALayerArray: 0xxxxxxxxx&amp;gt; was mutated while being enumerated
+an error occured when I trying to remove a gradient layer from CALayer.sublayers:
+123456for (CALayer *layer in cell.image">
+<meta property="og:updated_time" content="2016-09-07T12:57:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Collection <CALayerArray: 0xxxxxxxxx> was mutated while being enumerated">
-<meta name="twitter:description" content="an error occured when I trying to remove a gradient layer from CALayer.sublayers:
-123456for (CALayer *layer in cell.imageView.layer.sublayers) &amp;#123;    if ([layer.name isEqualToString:@&quot;Gradient&quot;]) &amp;">
+<meta name="twitter:description" content="Collection &amp;lt;CALayerArray: 0xxxxxxxxx&amp;gt; was mutated while being enumerated
+an error occured when I trying to remove a gradient layer from CALayer.sublayers:
+123456for (CALayer *layer in cell.image">
   
     <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
   
@@ -55,7 +58,8 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <p>an error occured when I trying to remove a gradient layer from CALayer.sublayers:</p>
+        <p><code>Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated</code></p>
+<p>an error occured when I trying to remove a gradient layer from CALayer.sublayers:</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> cell.imageView.layer.sublayers) &#123;</span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>The exception is thrown because changing the contents of the sublayers array while enumerating it with foreach loop. This is not something special to layers, a similar exception is thrown when you add/remove objects while enumerating any NSMutableArray.</p>
 <p>we have various options to solve this issue</p>
