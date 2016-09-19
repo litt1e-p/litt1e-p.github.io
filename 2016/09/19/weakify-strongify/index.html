@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>weakify &amp; strongify | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="here are two kinds of weakify and strongify solutions for preventing memory leak in ARC.
+firstly is a chinese developer author with his great job which is named YYKit
+YYKit1234567891011121314151617181">
+<meta property="og:type" content="article">
+<meta property="og:title" content="weakify & strongify">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/09/19/weakify-strongify/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="here are two kinds of weakify and strongify solutions for preventing memory leak in ARC.
+firstly is a chinese developer author with his great job which is named YYKit
+YYKit1234567891011121314151617181">
+<meta property="og:updated_time" content="2016-09-19T12:29:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="weakify & strongify">
+<meta name="twitter:description" content="here are two kinds of weakify and strongify solutions for preventing memory leak in ARC.
+firstly is a chinese developer author with his great job which is named YYKit
+YYKit1234567891011121314151617181">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-weakify-strongify" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      weakify &amp; strongify
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/19/weakify-strongify/" class="article-date">
+  <time datetime="2016-09-19T12:27:28.000Z" itemprop="datePublished">2016-09-19</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>here are two kinds of weakify and strongify solutions for preventing memory leak in ARC.</p>
+<p>firstly is a chinese developer author with his great job which is named <code>YYKit</code></p>
+<h4 id="YYKit">YYKit</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#ifndef weakify</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define weakify(object) autoreleasepool&#123;&#125; __weak __typeof__(object) <span class="keyword">weak</span>##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define weakify(object) autoreleasepool&#123;&#125; __block __typeof__(object) block##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define weakify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; &#123;&#125; __weak __typeof__(object) <span class="keyword">weak</span>##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define weakify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; &#123;&#125; __block __typeof__(object) block##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#ifndef strongify</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define strongify(object) autoreleasepool&#123;&#125; __typeof__(object) object = <span class="keyword">weak</span>##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define strongify(object) autoreleasepool&#123;&#125; __typeof__(object) object = block##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define strongify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; __typeof__(object) object = <span class="keyword">weak</span>##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define strongify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; __typeof__(object) object = block##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>secondly, the famous lib : <code>libextobjc</code></p>
+<h4 id="libextobjc">libextobjc</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define weakify(...) \\</span><br><span class="line"></span><br><span class="line">    autoreleasepool &#123;&#125; \\</span><br><span class="line"></span><br><span class="line">    metamacro_foreach_cxt(rac_weakify_,, __weak, __VA_ARGS__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#define strongify(...) \\</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;&#125; @finally &#123;&#125; \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic push"</span>) \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic ignored \\"</span>-<span class="type">Wshadow</span>\\<span class="string">""</span>) \\</span><br><span class="line"></span><br><span class="line">    metamacro_foreach(rac_strongify_,, __VA_ARGS__) \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic pop"</span>)</span><br></pre></td></tr></table></figure>
+<p>all of them can be used in friendly and simply way, enjoy them! 🎉</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"></span><br><span class="line"> Example:</span><br><span class="line"></span><br><span class="line">    @weakify(self)</span><br><span class="line"></span><br><span class="line">    [self doSomething^&#123;</span><br><span class="line"></span><br><span class="line">        @strongify(self)</span><br><span class="line"></span><br><span class="line">        if (!self) return;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line"> */</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/09/19/weakify-strongify/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
