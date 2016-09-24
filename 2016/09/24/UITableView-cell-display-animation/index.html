@@ -7,20 +7,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="when will fire the animate effect?there are 2 moments for it as below options:
 
-in `- (void)tableView:(UITableView )tableView willDisplayCell:(UITableViewCell )cell forRowAtIndexPath:(NSIndexPath *)in">
+in - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)i">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UITableView cell display animation">
 <meta property="og:url" content="https://litt1e-p.github.io/2016/09/24/UITableView-cell-display-animation/index.html">
 <meta property="og:site_name" content="litt1e-p">
 <meta property="og:description" content="when will fire the animate effect?there are 2 moments for it as below options:
 
-in `- (void)tableView:(UITableView )tableView willDisplayCell:(UITableViewCell )cell forRowAtIndexPath:(NSIndexPath *)in">
-<meta property="og:updated_time" content="2016-09-24T13:32:57.000Z">
+in - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)i">
+<meta property="og:updated_time" content="2016-09-24T13:35:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UITableView cell display animation">
 <meta name="twitter:description" content="when will fire the animate effect?there are 2 moments for it as below options:
 
-in `- (void)tableView:(UITableView )tableView willDisplayCell:(UITableViewCell )cell forRowAtIndexPath:(NSIndexPath *)in">
+in - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)i">
   
     <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
   
@@ -60,11 +60,10 @@ in `- (void)tableView:(UITableView )tableView willDisplayCell:(UITableViewCell )
       
         <h3 id="when_will_fire_the_animate_effect?">when will fire the animate effect?</h3><p>there are 2 moments for it as below options:</p>
 <ul>
-<li>in `- (void)tableView:(UITableView <em>)tableView willDisplayCell:(UITableViewCell </em>)cell forRowAtIndexPath:(NSIndexPath *)indexPath</li>
-</ul>
-<p>`</p>
-<ul>
-<li>in <code>-(void)viewDidAppear</code></li>
+<li><p>in <code>- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath</code></p>
+</li>
+<li><p>in <code>-(void)viewDidAppear</code></p>
+</li>
 </ul>
 <blockquote>
 <p>I prefer to choose the second one cause it will fire the animation on everytime that view come appear</p>

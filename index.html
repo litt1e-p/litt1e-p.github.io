@@ -55,11 +55,10 @@
       
         <h3 id="when_will_fire_the_animate_effect?">when will fire the animate effect?</h3><p>there are 2 moments for it as below options:</p>
 <ul>
-<li>in `- (void)tableView:(UITableView <em>)tableView willDisplayCell:(UITableViewCell </em>)cell forRowAtIndexPath:(NSIndexPath *)indexPath</li>
-</ul>
-<p>`</p>
-<ul>
-<li>in <code>-(void)viewDidAppear</code></li>
+<li><p>in <code>- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath</code></p>
+</li>
+<li><p>in <code>-(void)viewDidAppear</code></p>
+</li>
 </ul>
 <blockquote>
 <p>I prefer to choose the second one cause it will fire the animation on everytime that view come appear</p>
