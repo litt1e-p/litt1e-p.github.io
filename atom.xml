@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-09-24T13:37:53.000Z</updated>
+  <updated>2016-09-25T15:03:12.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[system version check and comparison in iOS 10]]></title>
+    <link href="https://litt1e-p.github.io/2016/09/25/system-version-check-and-comparison-in-iOS-10/"/>
+    <id>https://litt1e-p.github.io/2016/09/25/system-version-check-and-comparison-in-iOS-10/</id>
+    <published>2016-09-25T14:58:10.000Z</published>
+    <updated>2016-09-25T15:03:12.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>there are kinds of ways to check or compare iOS system version</p>
+</blockquote>
+<h3 id="1-_NSProcessInfo">1. NSProcessInfo</h3><h4 id="in_Swift">in Swift</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> os = <span class="type">NSProcessInfo</span>().operatingSystemVersion </span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (os.majorVersion, os.minorVersion, os.patchVersion) &#123; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">8</span>, <span class="number">0</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.0.0, &lt; 8.1.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">8</span>, <span class="number">_</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.1.0, &lt; 9.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">9</span>, <span class="number">_</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 9.0.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span>:    <span class="comment">// this code will have already crashed on iOS 7, so &gt;= iOS 10.0    </span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">println</span>(<span class="string">"iOS &gt;= 10.0.0"</span>)</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="in_Objective-C">in Objective-C</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSInteger</span> ver = [[[<span class="type">NSProcessInfo</span> alloc] <span class="keyword">init</span>] operatingSystemVersion];</span><br><span class="line"></span><br><span class="line"><span class="type">NSLog</span>(@<span class="string">"majorVer: %zi, minorVer: %zi, patchVer: %zi"</span>, ver.majorVersion, ver.minorVersion, ver.patchVersion);</span><br></pre></td></tr></table></figure>
+<p>do any checking or comparison you want</p>
+<blockquote>
+<p>unfortunately, checking system version via NSProcessInfo is only availuable above iOS 8</p>
+</blockquote>
+<h3 id="2-_UIDevice_systemVersion">2. UIDevice systemVersion</h3><p>for instance, to check version <code>8.0</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">switch</span> <span class="type">UIDevice</span>.currentDevice().systemVersion.compare(<span class="string">"8.0"</span>, options:.<span class="type">NumericSearch</span>) &#123; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">OrderedSame</span>, .<span class="type">OrderedDescending</span>:    </span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">OrderedAscending</span>:   </span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"iOS &lt; 8.0"</span>)</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>it works well before iOS 10 cause UIDevice’s systemVersion can be compared as numberic, but it can not compare version like ‘7.0.2’ and ‘10.0.1’, how to fix it?</p>
+<h3 id="3-_compare_on_our_own!">3. compare on our own!</h3><p>here is a category of NSString</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="type">NSComparisonResult</span>)compareVersion:(<span class="type">NSString</span> *)checkingVersion</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">NSString</span> *currentVersion = <span class="keyword">self</span>;</span><br><span class="line">    <span class="keyword">if</span> ([currentVersion isEqualToString:checkingVersion]) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">NSOrderedSame</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">NSArray</span> *currentArr  = [currentVersion componentsSeparatedByString:@<span class="string">"."</span>];</span><br><span class="line">    <span class="type">NSArray</span> *checkingArr = [checkingVersion componentsSeparatedByString:@<span class="string">"."</span>];</span><br><span class="line">    <span class="type">NSInteger</span> <span class="built_in">count</span>      = ([currentArr <span class="built_in">count</span>] &gt; [checkingArr <span class="built_in">count</span>]) ? [currentArr <span class="built_in">count</span>] : [checkingArr <span class="built_in">count</span>];</span><br><span class="line">    <span class="type">NSComparisonResult</span> res;</span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="built_in">count</span>; i++) &#123;</span><br><span class="line">        <span class="type">NSString</span> *currentString  = i &lt; [currentArr <span class="built_in">count</span>] ? [currentArr objectAtIndex:i] : @<span class="string">"0"</span>;</span><br><span class="line">        <span class="type">NSString</span> *checkingString = i &lt; [checkingArr <span class="built_in">count</span>] ? [checkingArr objectAtIndex:i] : @<span class="string">"0"</span>;</span><br><span class="line">        <span class="keyword">if</span> ([currentString intValue] &gt; [checkingString intValue]) &#123;</span><br><span class="line">            res = <span class="type">NSOrderedDescending</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([currentString intValue] &lt; [checkingString intValue])&#123;</span><br><span class="line">            res = <span class="type">NSOrderedAscending</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//compare current version simply</span></span><br><span class="line">+ (<span class="type">NSComparisonResult</span>)compareCurrentVersion:(<span class="type">NSString</span> *)checkingVersion</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [[[<span class="type">UIDevice</span> currentDevice] systemVersion] compareVersion:checkingVersion];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>how to use them ?</p>
+<ul>
+<li>use define macro</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define iOS10_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"10.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br><span class="line">#define iOS9_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"9.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br><span class="line">#define iOS8_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"8.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br><span class="line">#define iOS7_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"7.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>app version comparison also works!</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSString</span> *currentAppVer = [[[<span class="type">NSBundle</span> mainBundle] infoDictionary] objectForKey:@<span class="string">"CFBundleShortVersionString"</span>];</span><br><span class="line"></span><br><span class="line"><span class="type">NSString</span> *latestAppStoreVer = @<span class="string">"2.3.1"</span>; <span class="comment">//get it from your api server or appstore</span></span><br><span class="line"></span><br><span class="line"><span class="type">BOOL</span> isUpdateNeeded = [currentAppVer compareVersion:latestAppStoreVer] == </span><br><span class="line"></span><br><span class="line"><span class="type">NSOrderedAscending</span>;</span><br></pre></td></tr></table></figure>
+<p>done! 🎉🎉</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>there are kinds of ways to check or compare iOS system version</p>
+</blockquote>
+<h3 id="1-_NSProcessInfo">1. NSProcessInfo<]]>
+    </summary>
+    
+      <category term="Note" scheme="https://litt1e-p.github.io/tags/Note/"/>
+    
+      <category term="Objective-C" scheme="https://litt1e-p.github.io/tags/Objective-C/"/>
+    
+      <category term="iOS 10" scheme="https://litt1e-p.github.io/tags/iOS-10/"/>
+    
+      <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[UITableView cell display animation]]></title>
@@ -452,20 +500,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<p>here is an extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><s]]>
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[regex]]></title>
-    <link href="https://litt1e-p.github.io/2016/04/23/regex/"/>
-    <id>https://litt1e-p.github.io/2016/04/23/regex/</id>
-    <published>2016-04-23T05:48:14.000Z</published>
-    <updated>2016-04-23T05:48:23.000Z</updated>
-    <content type="html"><![CDATA[<h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[\s\<span class="type">S</span>]*</span><br><span class="line">[\d\<span class="type">D</span>]*</span><br><span class="line">[\w\<span class="type">W</span>]*</span><br></pre></td></tr></table></figure>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre>]]>
     </summary>
     
   </entry>
