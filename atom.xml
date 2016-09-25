@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-09-25T15:04:27.000Z</updated>
+  <updated>2016-09-25T15:05:41.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -19,13 +19,13 @@
     <link href="https://litt1e-p.github.io/2016/09/25/system-version-check-and-comparison-in-iOS-10/"/>
     <id>https://litt1e-p.github.io/2016/09/25/system-version-check-and-comparison-in-iOS-10/</id>
     <published>2016-09-25T14:58:10.000Z</published>
-    <updated>2016-09-25T15:04:27.000Z</updated>
+    <updated>2016-09-25T15:05:41.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>there are kinds of ways to check or compare iOS system version</p>
 </blockquote>
 <h3 id="1-_NSProcessInfo">1. NSProcessInfo</h3><h4 id="in_Swift">in Swift</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> os = <span class="type">NSProcessInfo</span>().operatingSystemVersion </span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (os.majorVersion, os.minorVersion, os.patchVersion) &#123; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">8</span>, <span class="number">0</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.0.0, &lt; 8.1.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">8</span>, <span class="number">_</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.1.0, &lt; 9.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">9</span>, <span class="number">_</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 9.0.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span>:    <span class="comment">// this code will have already crashed on iOS 7, so &gt;= iOS 10.0    </span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 10.0.0"</span>)</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 <h4 id="in_Objective-C">in Objective-C</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSInteger</span> ver = [[[<span class="type">NSProcessInfo</span> alloc] <span class="keyword">init</span>] operatingSystemVersion];</span><br><span class="line"></span><br><span class="line"><span class="type">NSLog</span>(@<span class="string">"majorVer: %zi, minorVer: %zi, patchVer: %zi"</span>, ver.majorVersion, ver.minorVersion, ver.patchVersion);</span><br></pre></td></tr></table></figure>
-<p>do any checking or comparison you want</p>
+<p>do checking or comparison any you want</p>
 <blockquote>
 <p>unfortunately, checking system version via NSProcessInfo is only availuable above iOS 8</p>
 </blockquote>
