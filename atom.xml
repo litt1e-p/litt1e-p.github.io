@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-09-25T15:10:30.000Z</updated>
+  <updated>2016-10-09T13:57:33.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[solution for `forwardInvocation and NSInvocation are not available to Swift`]]></title>
+    <link href="https://litt1e-p.github.io/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/"/>
+    <id>https://litt1e-p.github.io/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/</id>
+    <published>2016-10-09T13:54:46.000Z</published>
+    <updated>2016-10-09T13:57:33.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>forwardInvocation and NSInvocation are not available to Swift</p>
+</blockquote>
+<p>for instance:</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyTimer</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">var</span> timer:NSTimer?</span><br><span class="line">  <span class="keyword">let</span> INTERVAL_SECONDS = <span class="number">1.0</span></span><br><span class="line">  required init() &#123;</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = nil</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = NSTimer<span class="built_in">.</span>scheduledTimerWithTimeInterval(INTERVAL_SECONDS, target: <span class="built_in">self</span>, <span class="keyword">select</span><span class="subst">or</span>: <span class="variable">#selector</span>(<span class="built_in">self</span><span class="built_in">.</span>getUpdateds(_:))<span class="string">", userInfo: nil, repeats: true)</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>here are class with init() function,  I setup a timer with a selector named:<code>getUpdateds</code> in <code>init()</code></p>
+<p>and selector function looks like this:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dynamic</span> <span class="func"><span class="keyword">func</span> <span class="title">getUpdateds</span><span class="params">(timer: NSTimer!)</span></span> &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If you’re sharp you might have noticed the <code>dynamic</code> keyword in the function declaration. If you leave it out you’ll get an error like this:</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSForwarding: warning: object <span class="number">0x7f9662d56f0</span> <span class="keyword">of</span> <span class="type">class</span>  SwiftDemo.MyTimer' <span class="keyword">does</span> <span class="keyword">not</span> implement  methodSignatureForSelector: <span class="comment">-- trouble ahead</span></span><br><span class="line">Unrecognized selector -[SwiftDemo.MyTimer getUpdateds:]</span><br></pre></td></tr></table></figure>
+<p>That’s because <code>methodSignatureForSelector</code>: is an Objective-C method. By default, Swift objects don’t have it. Adding <code>dynamic</code> to the function signature makes calls to it get dispatched using the Objective-C runtime which avoids our error.</p>
+<p>Another way to fix this error is to tag the class with <code>@objc</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTimer</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Which exposes the class to the Objective-C runtime. Then it’ll effectively insert <code>dynamic</code> if it’s needed. Personally, I’d rather have <code>dynamic</code> near the spot that requires it than labelling the whole class.Hopefully we’ll get something more Swift-y soon.</p>
+<p>Though <code>forwardInvocation</code> and <code>NSInvocation</code> are not available to Swift.</p>
+<p>But, soft! What light through yonder window breaks!</p>
+<p>While <code>forwardInvocation</code>: isn’t available, <code>forwardingTargetForSelector</code>: is available.</p>
+<p>Which means the we could see if the selector responds to that, and then does a <code>performSelector:</code></p>
+<p>or other any your want:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">forwardingTargetForSelector</span><span class="params">(aSelector: Selector)</span></span> -&gt; <span class="type">AnyObject</span>? &#123;</span><br><span class="line">    <span class="keyword">if</span> forwardTarget!.respondsToSelector(aSelector) &#123;</span><br><span class="line">        <span class="keyword">return</span> forwardTarget</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>However, Swift support for <code>forwardInvocation:</code> and <code>NSInvocation</code> would be useful. These things have their uses, and while <code>forwardingTargetForSelector:</code> can take care of some of them, they don’t take care of all of them.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>forwardInvocation and NSInvocation are not available to Swift</p>
+</blockquote>
+<p>for instance:</p>
+<figure class="highligh]]>
+    </summary>
+    
+      <category term="Note" scheme="https://litt1e-p.github.io/tags/Note/"/>
+    
+      <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[system version check and comparison in iOS 10]]></title>
@@ -483,23 +525,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2]]>
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Escape & unescape html character code symbol]]></title>
-    <link href="https://litt1e-p.github.io/2016/04/24/escape_html/"/>
-    <id>https://litt1e-p.github.io/2016/04/24/escape_html/</id>
-    <published>2016-04-24T03:24:10.000Z</published>
-    <updated>2016-07-06T13:51:58.000Z</updated>
-    <content type="html"><![CDATA[<p>here is an extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">extension</span> <span class="title">String</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">unEscapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">         <span class="keyword">return</span>  <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;lt;"</span>, withString: <span class="string">"&lt;"</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"&amp;gt;"</span>, withString: <span class="string">"&gt;"</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"&amp;quot;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"\t"</span>, withString: <span class="string">""</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"\r"</span>, withString: <span class="string">""</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"\n"</span>, withString: <span class="string">""</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"&amp;apos;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">escapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;"</span>, withString: <span class="string">"&amp;amp;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"\""</span>, withString: <span class="string">"&amp;quot;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"'"</span>, withString: <span class="string">"&amp;#39;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&lt;"</span>, withString: <span class="string">"&amp;lt;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&gt;"</span>, withString: <span class="string">"&amp;gt;"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>there are also several Apple’s Foundation functions for escaping and unescaping the encoding characters</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">extension</span> <span class="title">String</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="type">URLEscapedString</span>: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByAddingPercentEncodingWithAllowedCharacters(<span class="type">NSCharacterSet</span>.<span class="type">URLHostAllowedCharacterSet</span>())!</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> <span class="type">URLUnEscapedString</span>: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByRemovingPercentEncoding!</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>done exactly.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>here is an extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><s]]>
     </summary>
     
   </entry>

@@ -31,6 +31,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/">solution for `forwardInvocation and NSInvocation are not available to Swift`</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/" class="article-date">
+  <time datetime="2016-10-09T13:54:46.000Z" itemprop="datePublished">2016-10-09</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>forwardInvocation and NSInvocation are not available to Swift</p>
+</blockquote>
+<p>for instance:</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyTimer</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">var</span> timer:NSTimer?</span><br><span class="line">  <span class="keyword">let</span> INTERVAL_SECONDS = <span class="number">1.0</span></span><br><span class="line">  required init() &#123;</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = nil</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = NSTimer<span class="built_in">.</span>scheduledTimerWithTimeInterval(INTERVAL_SECONDS, target: <span class="built_in">self</span>, <span class="keyword">select</span><span class="subst">or</span>: <span class="variable">#selector</span>(<span class="built_in">self</span><span class="built_in">.</span>getUpdateds(_:))<span class="string">", userInfo: nil, repeats: true)</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>here are class with init() function,  I setup a timer with a selector named:<code>getUpdateds</code> in <code>init()</code></p>
+<p>and selector function looks like this:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dynamic</span> <span class="func"><span class="keyword">func</span> <span class="title">getUpdateds</span><span class="params">(timer: NSTimer!)</span></span> &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If you’re sharp you might have noticed the <code>dynamic</code> keyword in the function declaration. If you leave it out you’ll get an error like this:</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSForwarding: warning: object <span class="number">0x7f9662d56f0</span> <span class="keyword">of</span> <span class="type">class</span>  SwiftDemo.MyTimer' <span class="keyword">does</span> <span class="keyword">not</span> implement  methodSignatureForSelector: <span class="comment">-- trouble ahead</span></span><br><span class="line">Unrecognized selector -[SwiftDemo.MyTimer getUpdateds:]</span><br></pre></td></tr></table></figure>
+<p>That’s because <code>methodSignatureForSelector</code>: is an Objective-C method. By default, Swift objects don’t have it. Adding <code>dynamic</code> to the function signature makes calls to it get dispatched using the Objective-C runtime which avoids our error.</p>
+<p>Another way to fix this error is to tag the class with <code>@objc</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTimer</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Which exposes the class to the Objective-C runtime. Then it’ll effectively insert <code>dynamic</code> if it’s needed. Personally, I’d rather have <code>dynamic</code> near the spot that requires it than labelling the whole class.Hopefully we’ll get something more Swift-y soon.</p>
+<p>Though <code>forwardInvocation</code> and <code>NSInvocation</code> are not available to Swift.</p>
+<p>But, soft! What light through yonder window breaks!</p>
+<p>While <code>forwardInvocation</code>: isn’t available, <code>forwardingTargetForSelector</code>: is available.</p>
+<p>Which means the we could see if the selector responds to that, and then does a <code>performSelector:</code></p>
+<p>or other any your want:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">forwardingTargetForSelector</span><span class="params">(aSelector: Selector)</span></span> -&gt; <span class="type">AnyObject</span>? &#123;</span><br><span class="line">    <span class="keyword">if</span> forwardTarget!.respondsToSelector(aSelector) &#123;</span><br><span class="line">        <span class="keyword">return</span> forwardTarget</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>However, Swift support for <code>forwardInvocation:</code> and <code>NSInvocation</code> would be useful. These things have their uses, and while <code>forwardingTargetForSelector:</code> can take care of some of them, they don’t take care of all of them.</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-system-version-check-and-comparison-in-iOS-10" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -422,53 +477,6 @@
 <li>for UIAlertAction<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertAction</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Cancel</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">//custom titleTextColor</span></span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//custom left image</span></span><br><span class="line">            <span class="keyword">let</span> img = <span class="type">UIImage</span>(named: <span class="string">"yourImageFileName"</span>)?.imageWithRenderingMode(.<span class="type">AlwaysOriginal</span>)</span><br><span class="line">            setValue(img, forKey: <span class="string">"image"</span>)</span><br><span class="line">            <span class="comment">//custom titleTextAlignment with NSTextAlignment.enum rawValue(Int: 64-bit integer)</span></span><br><span class="line">            setValue(<span class="type">NSNumber</span>(integer: <span class="type">NSTextAlignment</span>.<span class="type">Left</span>.rawValue), forKey: <span class="string">"titleTextAlignment"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//so By that analogy, custom the other styles as your want   </span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Default</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Destructive</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Definition-of-Deprecated-Unavailable" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/07/Definition-of-Deprecated-Unavailable/">Definition of Deprecated &amp; Unavailable</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/07/07/Definition-of-Deprecated-Unavailable/" class="article-date">
-  <time datetime="2016-07-07T12:14:06.000Z" itemprop="datePublished">2016-07-07</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>1 <code>mark for unavailable function</code></li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">__attribute__((unavailable(<span class="string">"It is not available, Use other function instead"</span>)));</span><br></pre></td></tr></table></figure>
-<h3 id="Notice">Notice</h3><p><code>__attribute__((unavailable(...) can not pass Xcode buid</code></p>
-<ul>
-<li>2 <code>mark for deprecated function</code></li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">NS_DEPRECATED_IOS</span>(<span class="number">2_0</span>, <span class="number">6_0</span>, <span class="string">"Use other function instead"</span>)</span><br><span class="line"><span class="comment">//2_0 &amp; 6_0 means that the function can only run on iOS2~6.0</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>if you want get more infomation for deprecated definitions, check Apple’s official documents</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define <span class="type">NS_DEPRECATED</span>(_macIntro, _macDep, _iosIntro, _iosDep, ...) <span class="type">CF_DEPRECATED</span>(_macIntro, _macDep, _iosIntro, _iosDep, __VA_ARGS__)</span><br><span class="line">#define <span class="type">NS_DEPRECATED_MAC</span>(_macIntro, _macDep, ...) <span class="type">CF_DEPRECATED_MAC</span>(_macIntro, _macDep, __VA_ARGS__)</span><br><span class="line">#define <span class="type">NS_DEPRECATED_IOS</span>(_iosIntro, _iosDep, ...) <span class="type">CF_DEPRECATED_IOS</span>(_iosIntro, _iosDep, __VA_ARGS__)</span><br></pre></td></tr></table></figure>
 
       
 

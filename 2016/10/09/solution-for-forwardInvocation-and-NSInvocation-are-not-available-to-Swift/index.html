@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>solution for `forwardInvocation and NSInvocation are not available to Swift` | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="forwardInvocation and NSInvocation are not available to Swift
+
+for instance:
+123456789class MyTimer&amp;#123;  var timer:NSTimer?  let INTERVAL_SECONDS = 1.0  required init() &amp;#123;    self.timer = nil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="solution for `forwardInvocation and NSInvocation are not available to Swift`">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="forwardInvocation and NSInvocation are not available to Swift
+
+for instance:
+123456789class MyTimer&amp;#123;  var timer:NSTimer?  let INTERVAL_SECONDS = 1.0  required init() &amp;#123;    self.timer = nil">
+<meta property="og:updated_time" content="2016-10-09T13:57:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="solution for `forwardInvocation and NSInvocation are not available to Swift`">
+<meta name="twitter:description" content="forwardInvocation and NSInvocation are not available to Swift
+
+for instance:
+123456789class MyTimer&amp;#123;  var timer:NSTimer?  let INTERVAL_SECONDS = 1.0  required init() &amp;#123;    self.timer = nil">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      solution for `forwardInvocation and NSInvocation are not available to Swift`
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/" class="article-date">
+  <time datetime="2016-10-09T13:54:46.000Z" itemprop="datePublished">2016-10-09</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>forwardInvocation and NSInvocation are not available to Swift</p>
+</blockquote>
+<p>for instance:</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyTimer</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">var</span> timer:NSTimer?</span><br><span class="line">  <span class="keyword">let</span> INTERVAL_SECONDS = <span class="number">1.0</span></span><br><span class="line">  required init() &#123;</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = nil</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = NSTimer<span class="built_in">.</span>scheduledTimerWithTimeInterval(INTERVAL_SECONDS, target: <span class="built_in">self</span>, <span class="keyword">select</span><span class="subst">or</span>: <span class="variable">#selector</span>(<span class="built_in">self</span><span class="built_in">.</span>getUpdateds(_:))<span class="string">", userInfo: nil, repeats: true)</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>here are class with init() function,  I setup a timer with a selector named:<code>getUpdateds</code> in <code>init()</code></p>
+<p>and selector function looks like this:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dynamic</span> <span class="func"><span class="keyword">func</span> <span class="title">getUpdateds</span><span class="params">(timer: NSTimer!)</span></span> &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If you’re sharp you might have noticed the <code>dynamic</code> keyword in the function declaration. If you leave it out you’ll get an error like this:</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSForwarding: warning: object <span class="number">0x7f9662d56f0</span> <span class="keyword">of</span> <span class="type">class</span>  SwiftDemo.MyTimer' <span class="keyword">does</span> <span class="keyword">not</span> implement  methodSignatureForSelector: <span class="comment">-- trouble ahead</span></span><br><span class="line">Unrecognized selector -[SwiftDemo.MyTimer getUpdateds:]</span><br></pre></td></tr></table></figure>
+<p>That’s because <code>methodSignatureForSelector</code>: is an Objective-C method. By default, Swift objects don’t have it. Adding <code>dynamic</code> to the function signature makes calls to it get dispatched using the Objective-C runtime which avoids our error.</p>
+<p>Another way to fix this error is to tag the class with <code>@objc</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTimer</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Which exposes the class to the Objective-C runtime. Then it’ll effectively insert <code>dynamic</code> if it’s needed. Personally, I’d rather have <code>dynamic</code> near the spot that requires it than labelling the whole class.Hopefully we’ll get something more Swift-y soon.</p>
+<p>Though <code>forwardInvocation</code> and <code>NSInvocation</code> are not available to Swift.</p>
+<p>But, soft! What light through yonder window breaks!</p>
+<p>While <code>forwardInvocation</code>: isn’t available, <code>forwardingTargetForSelector</code>: is available.</p>
+<p>Which means the we could see if the selector responds to that, and then does a <code>performSelector:</code></p>
+<p>or other any your want:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">forwardingTargetForSelector</span><span class="params">(aSelector: Selector)</span></span> -&gt; <span class="type">AnyObject</span>? &#123;</span><br><span class="line">    <span class="keyword">if</span> forwardTarget!.respondsToSelector(aSelector) &#123;</span><br><span class="line">        <span class="keyword">return</span> forwardTarget</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>However, Swift support for <code>forwardInvocation:</code> and <code>NSInvocation</code> would be useful. These things have their uses, and while <code>forwardingTargetForSelector:</code> can take care of some of them, they don’t take care of all of them.</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/09/25/system-version-check-and-comparison-in-iOS-10/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">system version check and comparison in iOS 10</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
