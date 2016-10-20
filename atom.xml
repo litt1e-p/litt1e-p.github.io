@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-10-20T14:02:09.000Z</updated>
+  <updated>2016-10-20T14:05:38.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://litt1e-p.github.io/2016/10/20/build-a-https-server-for-localhost/"/>
     <id>https://litt1e-p.github.io/2016/10/20/build-a-https-server-for-localhost/</id>
     <published>2016-10-20T13:48:08.000Z</published>
-    <updated>2016-10-20T14:02:09.000Z</updated>
+    <updated>2016-10-20T14:05:38.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>we need a local https server when https is required in product environment</p>
 </blockquote>
