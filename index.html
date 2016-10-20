@@ -31,6 +31,61 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-build-a-https-server-for-localhost" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/20/build-a-https-server-for-localhost/">build a https server for localhost</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/10/20/build-a-https-server-for-localhost/" class="article-date">
+  <time datetime="2016-10-20T13:48:08.000Z" itemprop="datePublished">2016-10-20</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>we need a local https server when https is required in product environment</p>
+</blockquote>
+<p>let us do it now 🔨</p>
+<h3 id="0-_install_openssl_firstly!">0. install openssl firstly!</h3><h3 id="1-prepare_a_CA_request_files">1.prepare a CA request files</h3><h4 id="1-1_generate_a_RSA_server_key">1.1 generate a RSA server key</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl genrsa -out server<span class="class">.key</span> <span class="number">2048</span></span><br></pre></td></tr></table></figure>
+<h4 id="1-2_generate_a_CA_request_file">1.2 generate a CA request file</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl req -new -out server<span class="class">.req</span> -key server<span class="class">.key</span> -subj <span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=127.0.0.1"</span></span><br></pre></td></tr></table></figure>
+<p><code>ps. &#39;-subj&#39; can be ignored and you can type them all in the command tool</code></p>
+<p>now notice there are two files(server.key, server.req) in current directory, the <code>.key</code> is server private key and the <code>.req</code> is CA request file.</p>
+<p>let us get CA signature with <code>server.req</code> if there is no error occured</p>
+<h3 id="2-make_a_own_CA">2.make a own CA</h3><h4 id="2-1_generate_a_RSA_key">2.1 generate a RSA key</h4><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl genrsa -<span class="keyword">out</span> <span class="keyword">ca</span>.key 2048</span><br></pre></td></tr></table></figure>
+<h4 id="2-2_root_signature_for_self">2.2 root signature for self</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl req -new -x509 -days <span class="number">1000</span> -key ca<span class="class">.key</span> -out ca<span class="class">.crt</span> -sha256 -subj <span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=Namido CA"</span></span><br></pre></td></tr></table></figure>
+<p>notice: <code>value of CN in -subj is the name of CA</code></p>
+<h4 id="2-3_generate_a_server_certificate_with_this_root_signature">2.3 generate a server certificate with this root signature</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> server<span class="class">.req</span> -out server<span class="class">.crt</span> -CAkey ca<span class="class">.key</span> -CA ca<span class="class">.crt</span> -days <span class="number">1000</span> -sha256 -CAcreateserial -CAserial server.serial</span><br></pre></td></tr></table></figure>
+<p>the <code>server.crt</code> file that via our own CA generated will exists in current directory if no error occur. </p>
+<h3 id="3-0_finally_process">3.0 finally process</h3><h4 id="3-1_add_them_to_server_configuration">3.1 add them to server configuration</h4><p>copy <code>ca.crt</code>, <code>server.crt</code>, <code>server.key</code> three files to HTTPS server such as Nginx/Apache or other server by using <code>server.crt</code> as server certificate, <code>server.key</code> as server private key, <code>ca.crt</code> as keychain certificate.</p>
+<p>for example:</p>
+<p>this is a node.js server souce code</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> https = <span class="built_in">require</span>(<span class="string">'https'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line"></span><br><span class="line">	key: fs.readFileSync(<span class="string">'./keys/server.key'</span>),</span><br><span class="line"></span><br><span class="line">	ca: [fs.readFileSync(<span class="string">'./keys/ca.crt'</span>)],</span><br><span class="line"></span><br><span class="line">	cert: fs.readFileSync(<span class="string">'./keys/server.crt'</span>)</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">https.createServer(options, app).listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'server is running on port 3000'</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="3-2_make_it_valid">3.2 make it valid</h4><p>copy  <code>ca.crt</code> to your local computer somewhere and double click it and modify <code>always trust</code> in your keychain to make it valid.</p>
+<p><img src="http://ww2.sinaimg.cn/large/006y8lVagw1f8mcm69ot9j30n60csq3i.jpg" alt=""></p>
+<p>done! 🎉</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -435,48 +490,6 @@
         <p>the animated effect is quite werid while reloading UICollectionView’s section which is base on our custom flowLayout, to reduce or avoid that, here is a solution to it. </p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.0</span>, animations: &#123;</span><br><span class="line"></span><br><span class="line">     [<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">     <span class="keyword">self</span>!.collectionView.performBatchUpdates(&#123; </span><br><span class="line"></span><br><span class="line">           <span class="keyword">self</span>?.collectionView.reloadSections(<span class="type">NSIndexSet</span>(index: yourIndex))</span><br><span class="line"></span><br><span class="line">      &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p>its animation duration sets to <code>0.0</code> so that it can reduces or avoids the bug happening. </p>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/">Customation appearance for UIAlertController &amp; UIAlertAction with KVC</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/" class="article-date">
-  <time datetime="2016-07-18T13:41:24.000Z" itemprop="datePublished">2016-07-18</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>for UIAlertController</li>
-</ol>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertController</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//custom title or message with attributedString and its attributes(fontName\foregroundColor with different range) </span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> titleStr = title &#123;</span><br><span class="line">            <span class="keyword">let</span> range = <span class="type">NSMakeRange</span>(<span class="number">0</span>, titleStr.characters.<span class="built_in">count</span>)</span><br><span class="line">            <span class="keyword">let</span> attrTitle = <span class="type">NSMutableAttributedString</span>(string: titleStr)</span><br><span class="line">            attrTitle.addAttribute(<span class="type">NSFontAttributeName</span>, value: <span class="type">UIFont</span>(name: yourFontName, size: <span class="number">20.0</span>)!, range: range)</span><br><span class="line">            attrTitle.addAttribute(<span class="type">NSForegroundColorAttributeName</span>, value: yourCustomColor, range: range)</span><br><span class="line">            setValue(attrTitle, forKey: <span class="string">"attributedTitle"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> msgStr = message &#123;</span><br><span class="line">            <span class="keyword">let</span> range = <span class="type">NSMakeRange</span>(<span class="number">0</span>, msgStr.characters.<span class="built_in">count</span>)</span><br><span class="line">            <span class="keyword">let</span> attrMsg = <span class="type">NSMutableAttributedString</span>(string: msgStr)</span><br><span class="line">            attrMsg.addAttribute(<span class="type">NSFontAttributeName</span>, value: <span class="type">UIFont</span>(name: yourFontName, size: <span class="number">14.0</span>)!, range: range)</span><br><span class="line">            attrMsg.addAttribute(<span class="type">NSForegroundColorAttributeName</span>, value: yourCustomColor, range: range)</span><br><span class="line">            setValue(attrMsg, forKey: <span class="string">"attributedMessage"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>for UIAlertAction<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertAction</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Cancel</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">//custom titleTextColor</span></span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//custom left image</span></span><br><span class="line">            <span class="keyword">let</span> img = <span class="type">UIImage</span>(named: <span class="string">"yourImageFileName"</span>)?.imageWithRenderingMode(.<span class="type">AlwaysOriginal</span>)</span><br><span class="line">            setValue(img, forKey: <span class="string">"image"</span>)</span><br><span class="line">            <span class="comment">//custom titleTextAlignment with NSTextAlignment.enum rawValue(Int: 64-bit integer)</span></span><br><span class="line">            setValue(<span class="type">NSNumber</span>(integer: <span class="type">NSTextAlignment</span>.<span class="type">Left</span>.rawValue), forKey: <span class="string">"titleTextAlignment"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//so By that analogy, custom the other styles as your want   </span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Default</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Destructive</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
 
       
 

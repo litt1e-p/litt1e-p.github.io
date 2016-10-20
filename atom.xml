@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-10-09T13:57:33.000Z</updated>
+  <updated>2016-10-20T13:50:21.000Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,52 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[build a https server for localhost]]></title>
+    <link href="https://litt1e-p.github.io/2016/10/20/build-a-https-server-for-localhost/"/>
+    <id>https://litt1e-p.github.io/2016/10/20/build-a-https-server-for-localhost/</id>
+    <published>2016-10-20T13:48:08.000Z</published>
+    <updated>2016-10-20T13:50:21.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>we need a local https server when https is required in product environment</p>
+</blockquote>
+<p>let us do it now 🔨</p>
+<h3 id="0-_install_openssl_firstly!">0. install openssl firstly!</h3><h3 id="1-prepare_a_CA_request_files">1.prepare a CA request files</h3><h4 id="1-1_generate_a_RSA_server_key">1.1 generate a RSA server key</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl genrsa -out server<span class="class">.key</span> <span class="number">2048</span></span><br></pre></td></tr></table></figure>
+<h4 id="1-2_generate_a_CA_request_file">1.2 generate a CA request file</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl req -new -out server<span class="class">.req</span> -key server<span class="class">.key</span> -subj <span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=127.0.0.1"</span></span><br></pre></td></tr></table></figure>
+<p><code>ps. &#39;-subj&#39; can be ignored and you can type them all in the command tool</code></p>
+<p>now notice there are two files(server.key, server.req) in current directory, the <code>.key</code> is server private key and the <code>.req</code> is CA request file.</p>
+<p>let us get CA signature with <code>server.req</code> if there is no error occured</p>
+<h3 id="2-make_a_own_CA">2.make a own CA</h3><h4 id="2-1_generate_a_RSA_key">2.1 generate a RSA key</h4><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl genrsa -<span class="keyword">out</span> <span class="keyword">ca</span>.key 2048</span><br></pre></td></tr></table></figure>
+<h4 id="2-2_root_signature_for_self">2.2 root signature for self</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl req -new -x509 -days <span class="number">1000</span> -key ca<span class="class">.key</span> -out ca<span class="class">.crt</span> -sha256 -subj <span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=Namido CA"</span></span><br></pre></td></tr></table></figure>
+<p>notice: <code>value of CN in -subj is the name of CA</code></p>
+<h4 id="2-3_generate_a_server_certificate_with_this_root_signature">2.3 generate a server certificate with this root signature</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> server<span class="class">.req</span> -out server<span class="class">.crt</span> -CAkey ca<span class="class">.key</span> -CA ca<span class="class">.crt</span> -days <span class="number">1000</span> -sha256 -CAcreateserial -CAserial server.serial</span><br></pre></td></tr></table></figure>
+<p>the <code>server.crt</code> file that via our own CA generated will exists in current directory if no error occur. </p>
+<h3 id="3-0_finally_process">3.0 finally process</h3><h4 id="3-1_add_them_to_server_configuration">3.1 add them to server configuration</h4><p>copy <code>ca.crt</code>, <code>server.crt</code>, <code>server.key</code> three files to HTTPS server such as Nginx/Apache or other server by using <code>server.crt</code> as server certificate, <code>server.key</code> as server private key, <code>ca.crt</code> as keychain certificate.</p>
+<p>for example:</p>
+<p>this is a node.js server souce code</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> https = <span class="built_in">require</span>(<span class="string">'https'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line"></span><br><span class="line">	key: fs.readFileSync(<span class="string">'./keys/server.key'</span>),</span><br><span class="line"></span><br><span class="line">	ca: [fs.readFileSync(<span class="string">'./keys/ca.crt'</span>)],</span><br><span class="line"></span><br><span class="line">	cert: fs.readFileSync(<span class="string">'./keys/server.crt'</span>)</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">https.createServer(options, app).listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'server is running on port 3000'</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="3-2_make_it_valid">3.2 make it valid</h4><p>copy  <code>ca.crt</code> to your local computer somewhere and double click it and modify <code>always trust</code> in your keychain to make it valid.</p>
+<p><img src="http://ww2.sinaimg.cn/large/006y8lVagw1f8mcm69ot9j30n60csq3i.jpg" alt=""></p>
+<p>done! 🎉</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>we need a local https server when https is required in product environment</p>
+</blockquote>
+<p>let us do it now 🔨</p>
+<h3 ]]>
+    </summary>
+    
+      <category term="Node.js" scheme="https://litt1e-p.github.io/tags/Node-js/"/>
+    
+      <category term="RSA" scheme="https://litt1e-p.github.io/tags/RSA/"/>
+    
+      <category term="https" scheme="https://litt1e-p.github.io/tags/https/"/>
+    
+      <category term="openssl" scheme="https://litt1e-p.github.io/tags/openssl/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[solution for `forwardInvocation and NSInvocation are not available to Swift`]]></title>
@@ -511,20 +557,6 @@
     <summary type="html">
     <![CDATA[<p>a simple macro func example for check whether a string is empty </p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><]]>
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[adjust text font for rect]]></title>
-    <link href="https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/"/>
-    <id>https://litt1e-p.github.io/2016/05/10/adjust-text-font-for-rect/</id>
-    <published>2016-05-10T12:54:32.000Z</published>
-    <updated>2016-05-10T12:57:19.000Z</updated>
-    <content type="html"><![CDATA[<p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustsFontSizeToFitRect:(<span class="type">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">CGSize</span> maxSize          = <span class="type">CGSizeMake</span>(rect.size.width, rect.size.height);</span><br><span class="line">    <span class="type">CGFloat</span> currentFontSize = <span class="number">17</span>.f;</span><br><span class="line">    <span class="type">NSString</span> *str           = <span class="keyword">self</span>.text;</span><br><span class="line">    <span class="type">CGSize</span> requiredSize     = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    <span class="keyword">if</span>(requiredSize.height &lt;= maxSize.height) &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &lt;= maxSize.height &amp;&amp; requiredSize.width &lt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize++;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &gt; maxSize.height || requiredSize.width &gt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize--;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">        requiredSize=[str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.font = [<span class="keyword">self</span>.font fontWithSize:currentFontSize];</span><br><span class="line">    <span class="keyword">self</span>.adjustsFontSizeToFitWidth = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2]]>
     </summary>
     
   </entry>
