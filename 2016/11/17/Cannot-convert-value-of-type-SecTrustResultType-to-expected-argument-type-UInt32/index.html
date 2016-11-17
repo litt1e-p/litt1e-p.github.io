@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32` | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’
+
+12345678910111213141516171819//error example: var result = SecTrustResultType(rawValue: SecTrustResultType.Invalid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’
+
+12345678910111213141516171819//error example: var result = SecTrustResultType(rawValue: SecTrustResultType.Invalid">
+<meta property="og:updated_time" content="2016-11-17T15:00:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`">
+<meta name="twitter:description" content="Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’
+
+12345678910111213141516171819//error example: var result = SecTrustResultType(rawValue: SecTrustResultType.Invalid">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/" class="article-date">
+  <time datetime="2016-11-17T14:58:33.000Z" itemprop="datePublished">2016-11-17</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//error example: </span></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>(rawValue: <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//solution:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for other enum values</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let unspecified = SecTrustResultType(rawValue: SecTrustResultType.Unspecified)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let proceed = SecTrustResultType(rawValue: SecTrustResultType.Proceed)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> unspecified = <span class="type">SecTrustResultType</span>.<span class="type">Unspecified</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> proceed = <span class="type">SecTrustResultType</span>.<span class="type">Proceed</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/10/20/build-a-https-server-for-localhost/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">build a https server for localhost</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
