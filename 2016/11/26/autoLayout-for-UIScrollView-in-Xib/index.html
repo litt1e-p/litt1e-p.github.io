@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>autoLayout for UIScrollView in Xib | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets
+
+let’s be">
+<meta property="og:type" content="article">
+<meta property="og:title" content="autoLayout for UIScrollView in Xib">
+<meta property="og:url" content="https://litt1e-p.github.io/2016/11/26/autoLayout-for-UIScrollView-in-Xib/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets
+
+let’s be">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1418424-8450a58e55abcf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1418424-5881ada668a2f949.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1418424-21e23d2a8f18d687.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-26T07:32:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="autoLayout for UIScrollView in Xib">
+<meta name="twitter:description" content="Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets
+
+let’s be">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-autoLayout-for-UIScrollView-in-Xib" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      autoLayout for UIScrollView in Xib
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/" class="article-date">
+  <time datetime="2016-11-26T07:31:27.000Z" itemprop="datePublished">2016-11-26</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets</p>
+</blockquote>
+<p>let’s begin</p>
+<h4 id="1-0_initial_a_scrollView">1.0 initial a scrollView</h4><ul>
+<li>new a project, drag a UIScrollView into Storyboard or Xib and make some constraints:</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-8450a58e55abcf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-5881ada668a2f949.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h4 id="2-0_add_a_contenView">2.0 add a contenView</h4><ul>
+<li>2.1 drag an UIView named: <code>containView</code> into scrollView and add the edge constraints. the contentSize of scrollView depend on this <code>containView</code> </li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-21e23d2a8f18d687.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>by the way, Xcode interface builder will show some errors, just ignore them.</p>
+<ul>
+<li>2.2 add some extral constraints to <code>containView</code>  according to the scroll direction</li>
+</ul>
+<p>so firstly you should make sure that which scroll direction you want</p>
+<p>you should not add the constraints like below shows if horizontal and vertical scroll direction are both wanted:</p>
+<ul>
+<li><p>2.2.1 add a <code>Horizontally in Container</code> and a <code>Vertically in Container</code> constraints</p>
+</li>
+<li><p>2.2.2 height or width constraints:</p>
+</li>
+</ul>
+<p>for horizontal scroll direction: add a <code>width</code> constraint for <code>containView</code></p>
+<p>for vertical scroll direction: add a <code>height</code> constraint for <code>containView</code></p>
+<p>and done! 🎉🎉</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2016 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2016/11/26/autoLayout-for-UIScrollView-in-Xib/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
