@@ -31,6 +31,46 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Macro-define-in-swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/12/Macro-define-in-swift/">Macro #define in swift</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/12/Macro-define-in-swift/" class="article-date">
+  <time datetime="2016-08-12T15:18:39.000Z" itemprop="datePublished">2016-08-12</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>define a rgba color macro, for instance.</p>
+<p>in Objective-C</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define <span class="type">RGBA</span>(r,g,b,a) [<span class="type">UIColor</span> colorWithRed:(float)r/<span class="number">255</span>.0f green:(float)g/<span class="number">255</span>.0f blue:(float)b/<span class="number">255</span>.0f alpha:a]</span><br></pre></td></tr></table></figure>
+<p>in Swift: <code>define a closure macro</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">RGBA</span>: (<span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> = &#123;</span><br><span class="line">    (r: <span class="type">CGFloat</span>, g: <span class="type">CGFloat</span>, b: <span class="type">CGFloat</span>, a: <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIColor</span>(red: r/<span class="number">255.0</span>, green: g/<span class="number">255.0</span>, blue: b/<span class="number">255.0</span>, alpha: a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Usage">Usage</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">RGBA</span>(<span class="number">101</span>, <span class="number">101</span>, <span class="number">101</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Change-UIStatusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -399,43 +439,6 @@
 <h3 id="Then_create_init_methods_like_this:">Then create init methods like this:</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddProgramView</span>: <span class="title">UIView</span> </span>&#123;</span><br><span class="line">    <span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(frame: <span class="type">CGRect</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>?(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">commonInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="type">NSBundle</span>.mainBundle().loadNibNamed(<span class="string">"AddProgramView"</span>, owner: <span class="keyword">self</span>, options: <span class="literal">nil</span>)</span><br><span class="line">        <span class="keyword">self</span>.addSubview(<span class="keyword">self</span>.contentView)</span><br><span class="line">        <span class="keyword">self</span>.contentView.frame = <span class="keyword">self</span>.bounds</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="And_now_you_can_use_the_AddProgramView_wherever_you_want-_Either_by_init(frame:)">And now you can use the AddProgramView wherever you want. Either by init(frame:)</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> addProgramView = <span class="type">AddProgramView</span>.<span class="keyword">init</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">30</span>))</span><br></pre></td></tr></table></figure>
 <h3 id="done">done</h3>
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-log-json-with-pretty-unescape-character-string" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/09/log-json-with-pretty-unescape-character-string/">log json with pretty &amp; unescape character string</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/09/log-json-with-pretty-unescape-character-string/" class="article-date">
-  <time datetime="2016-06-09T00:19:35.000Z" itemprop="datePublished">2016-06-09</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>In swift 2.+, printing json object in Xcode debug console window will show the escape special character string, and it is difficult to read.<br>so this is a func for printing pretty &amp; unescape character string</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">LogJson</span><span class="params">(data: NSData, <span class="number">_</span> file: String = #file , <span class="number">_</span> function: String = #function, <span class="number">_</span> line: Int = #line)</span></span> &#123;</span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> dataAsJSON = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(data, options: [])</span><br><span class="line">            <span class="keyword">let</span> prettyData =  <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.dataWithJSONObject(dataAsJSON, options: .<span class="type">PrettyPrinted</span>)</span><br><span class="line">            <span class="keyword">let</span> ss = <span class="type">NSString</span>(data: prettyData, encoding: <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> name = (file <span class="keyword">as</span> <span class="type">NSString</span>).lastPathComponent</span><br><span class="line">            <span class="keyword">let</span> fileArray = name.componentsSeparatedByString(<span class="string">"."</span>)</span><br><span class="line">            <span class="keyword">let</span> fileName = fileArray[<span class="number">0</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="type">Logger</span>.log(.<span class="type">Debug</span>, fileName + <span class="string">"-<span class="subst">\(line)</span>-"</span> + function, ss)</span><br><span class="line">        &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">            <span class="type">Log</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Notice">Notice</h3><p>there is a dependency lib named <a href="https://github.com/litt1e-p/Logger" target="_blank" rel="external">Logger</a>, which will be release in my <a href="https://github.com/litt1e-p" target="_blank" rel="external">github</a></p>
-
       
 
       

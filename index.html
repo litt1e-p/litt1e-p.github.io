@@ -31,6 +31,41 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-change-statusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/03/change-statusBar-backgroundColor/">change statusBar backgroundColor</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/12/03/change-statusBar-backgroundColor/" class="article-date">
+  <time datetime="2016-12-03T13:31:23.000Z" itemprop="datePublished">2016-12-03</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//for swift</span></span><br><span class="line"></span><br><span class="line">let statWindow = <span class="built_in">UIApplication</span><span class="variable">.shared</span><span class="variable">.value</span>(forKey:<span class="string">"statusBarWindow"</span>) as! <span class="built_in">UIView</span></span><br><span class="line"></span><br><span class="line">let statusBar = statWindow<span class="variable">.subviews</span>[<span class="number">0</span>] as <span class="built_in">UIView</span></span><br><span class="line"></span><br><span class="line">statusBar<span class="variable">.backgroundColor</span> = <span class="built_in">UIColor</span><span class="variable">.red</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//for Objective-C</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *statusWindow = [[<span class="built_in">UIApplication</span> sharedApplication] valueForKey:<span class="string">@"statusBarWindow"</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *statusBar = statusWindow<span class="variable">.subviews</span><span class="variable">.firstObject</span>;</span><br><span class="line"></span><br><span class="line">statusBar<span class="variable">.backgroundColor</span> = <span class="keyword">self</span><span class="variable">.statusBarBackgroundColor</span>;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-autoLayout-for-UIScrollView-in-Xib" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -468,46 +503,6 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1, par2)</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span>(methodTwo:)</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1)</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
 <p>another option to solve this kind of problems in Xcode7 is by applying @nonobjc attribute to any method, subscript or initialiser</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@nonobjc</span> </span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Macro-define-in-swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/12/Macro-define-in-swift/">Macro #define in swift</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/08/12/Macro-define-in-swift/" class="article-date">
-  <time datetime="2016-08-12T15:18:39.000Z" itemprop="datePublished">2016-08-12</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>define a rgba color macro, for instance.</p>
-<p>in Objective-C</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define <span class="type">RGBA</span>(r,g,b,a) [<span class="type">UIColor</span> colorWithRed:(float)r/<span class="number">255</span>.0f green:(float)g/<span class="number">255</span>.0f blue:(float)b/<span class="number">255</span>.0f alpha:a]</span><br></pre></td></tr></table></figure>
-<p>in Swift: <code>define a closure macro</code></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">RGBA</span>: (<span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> = &#123;</span><br><span class="line">    (r: <span class="type">CGFloat</span>, g: <span class="type">CGFloat</span>, b: <span class="type">CGFloat</span>, a: <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIColor</span>(red: r/<span class="number">255.0</span>, green: g/<span class="number">255.0</span>, blue: b/<span class="number">255.0</span>, alpha: a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="Usage">Usage</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">RGBA</span>(<span class="number">101</span>, <span class="number">101</span>, <span class="number">101</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
       
 
