@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2016-12-03T13:32:25.000Z</updated>
+  <updated>2018-03-04T11:19:36.812Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,55 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Timer]]></title>
+    <link href="https://litt1e-p.github.io/2017/03/04/Timer/"/>
+    <id>https://litt1e-p.github.io/2017/03/04/Timer/</id>
+    <published>2017-03-04T11:17:57.000Z</published>
+    <updated>2018-03-04T11:19:36.812Z</updated>
+    <content type="html"><![CDATA[<h2 id="定时器">定时器</h2><h4 id="1-_RunLoop定时器">1. RunLoop定时器</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种方法 手动加入runloop</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">timerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(action) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>YES];</span><br><span class="line"></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSDefaultRunLoopMode];<span class="comment">//默认模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>UITrackingRunLoopMode];<span class="comment">//页面追踪模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSRunLoopCommonModes]; <span class="comment">//common模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种方法 自动加入runloop(NSDefaultRunLoopMode)</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">scheduledTimerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>NO];</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">[timer invalidate];</span><br></pre></td></tr></table></figure>
+<h6 id="特点">特点</h6><ul>
+<li>存在延迟</li>
+</ul>
+<p>不管是一次性的还是周期性的timer的实际触发事件的时间，都会与所加入的RunLoop和RunLoop Mode有关，如果此RunLoop正在执行一个连续性的运算，timer就会被延时出发。重复性的timer遇到这种情况，如果延迟超过了一个周期，则会在延时结束后立刻执行，并按照之前指定的周期继续执行。</p>
+<ul>
+<li>必须加入Runloop(手动或自动)</li>
+</ul>
+<h4 id="2-_GCD定时器">2. GCD定时器</h4><ul>
+<li>循环timer</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> 1.创建GCD中的定时器</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_SOURCE_TYPE_TIMER source的类型，表示是定时器</span><br><span class="line"> <span class="doctag">@param</span> 0 描述信息，线程ID</span><br><span class="line"> <span class="doctag">@param</span> 0 更详细的描述信息</span><br><span class="line"> <span class="doctag">@param</span> dispatchQueue 队列，确定GCD定时器中的任务在哪个线程中执行</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, <span class="number">0</span>, <span class="number">0</span>, dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> 2.设置定时器（起始时间|间隔时间|精准度）</span><br><span class="line"> <span class="doctag">@param</span> timer 定时器对象</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_TIME_NOW 起始时间，DISPATCH_TIME_NOW 从现在开始计时</span><br><span class="line"> <span class="doctag">@param</span> intervalInSeconds * NSEC_PER_SEC 间隔时间</span><br><span class="line"> <span class="doctag">@param</span> leewayInSeconds * NSEC_PER_SEC 精准度，绝对精准0</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, <span class="number">2.0</span> * NSEC_PER_SEC, <span class="number">0</span> * NSEC_PER_SEC);</span><br><span class="line"></span><br><span class="line"><span class="comment">//3.设置定时器执行的任务</span></span><br><span class="line">dispatch_source_set_event_handler(timer, ^&#123;</span><br><span class="line">    NSLog(@<span class="string">"------------%@"</span>, [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4.启动执行</span></span><br><span class="line">dispatch_resume(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5.暂停</span></span><br><span class="line">dispatch_suspend(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6.释放</span></span><br><span class="line">dispatch_source_cancel(timer);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>单次timer</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">dispatch_after</span>(<span class="function">dispatch_time</span>(DISPATCH_TIME_NOW, (int64_t)(<span class="number">2</span> * NSEC_PER_SEC)), <span class="tag">dispatch_get_main_queue</span>(), ^(void)&#123;</span><br><span class="line">    <span class="attr_selector">[self action]</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h6 id="特点-1">特点</h6><p>GCD定时器和NSTimer是不一样的，NSTimer受RunLoop影响，但是GCD的定时器不受影响，因为通过源码可知RunLoop也是基于GCD的实现的，所以GCD定时器有非常高的精度</p>
+<h4 id="3-_CADisplayLink">3. CADisplayLink</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CADisplayLink *displayLink = [CADisplayLink <span class="string">displayLinkWithTarget:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>)];  </span><br><span class="line"></span><br><span class="line"><span class="comment">// 每隔2帧调用一次</span></span><br><span class="line">displayLink.frameInterval = <span class="number">2</span>;  </span><br><span class="line"></span><br><span class="line">[displayLink <span class="string">addToRunLoop:</span>[NSRunLoop currentRunLoop] <span class="string">forMode:</span>NSDefaultRunLoopMode];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">[displayLink invalidate];</span><br></pre></td></tr></table></figure>
+<h6 id="特点-2">特点</h6><ul>
+<li>刷新频率固定</li>
+</ul>
+<p>正常情况iOS设备的屏幕刷新频率是固定60Hz,如果CPU过于繁忙，无法保证屏幕60次/秒的刷新率，就会导致跳过若干次调用回调方法的机会，跳过次数取决CPU的忙碌程度。</p>
+<ul>
+<li>屏幕刷新时调用</li>
+</ul>
+<p>CADisplayLink在正常情况下会在每次刷新结束都被调用，精确度相当高。但如果调用的方法比较耗时，超过了屏幕刷新周期，就会导致跳过若干次回调调用机会</p>
+<ul>
+<li>适合做界面渲染</li>
+</ul>
+<p>CADisplayLink可以确保系统渲染每一帧的时候我们的方法都被调用，从而保证了动画的流畅性</p>
+<hr>
+<h6 id="参考资料">参考资料</h6><blockquote>
+<p><a href="https://www.jianshu.com/p/21d351116587" target="_blank" rel="external">https://www.jianshu.com/p/21d351116587</a><br><a href="http://www.bijishequ.com/detail/234634" target="_blank" rel="external">http://www.bijishequ.com/detail/234634</a></p>
+</blockquote>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="定时器">定时器</h2><h4 id="1-_RunLoop定时器">1. RunLoop定时器</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span clas]]>
+    </summary>
+    
+      <category term="RunLoop" scheme="https://litt1e-p.github.io/tags/RunLoop/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[change statusBar backgroundColor]]></title>
@@ -578,25 +627,6 @@
     <summary type="html">
     <![CDATA[<p>typealias closure in Swift</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span cl]]>
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Build a custom xib class in Swift]]></title>
-    <link href="https://litt1e-p.github.io/2016/06/16/Build-a-custom-xib-class-in-Swift/"/>
-    <id>https://litt1e-p.github.io/2016/06/16/Build-a-custom-xib-class-in-Swift/</id>
-    <published>2016-06-16T14:43:41.000Z</published>
-    <updated>2016-06-16T14:50:24.000Z</updated>
-    <content type="html"><![CDATA[<h3 id="First_check,_if_you_have_your_class_name_declared_in_the_view_itself,_not_in_the_file_owner-">First check, if you have your class name declared in the view itself, not in the file owner.</h3><p><img src="http://i.stack.imgur.com/j70PR.png" alt=""></p>
-<h3 id="If_not,_do_it-_Then_try_it_again-">If not, do it. Then try it again.</h3><h3 id="Another_option_is_to_create_IBOutlet_in_your_AddProgramView-swift">Another option is to create IBOutlet in your AddProgramView.swift</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
-<h3 id="and_remove_the_class_name_from_the_view_and_add_it_to_File’s_Owner-">and remove the class name from the view and add it to File’s Owner.</h3><p><img src="http://i.stack.imgur.com/aiYxL.png" alt=""></p>
-<h3 id="Connect_contentView_by_right-clicking_at_the_File’s_owner:">Connect contentView by right-clicking at the File’s owner:</h3><p><img src="http://i.stack.imgur.com/YlfZ9.png" alt=""></p>
-<h3 id="Then_create_init_methods_like_this:">Then create init methods like this:</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddProgramView</span>: <span class="title">UIView</span> </span>&#123;</span><br><span class="line">    <span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(frame: <span class="type">CGRect</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>?(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">commonInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="type">NSBundle</span>.mainBundle().loadNibNamed(<span class="string">"AddProgramView"</span>, owner: <span class="keyword">self</span>, options: <span class="literal">nil</span>)</span><br><span class="line">        <span class="keyword">self</span>.addSubview(<span class="keyword">self</span>.contentView)</span><br><span class="line">        <span class="keyword">self</span>.contentView.frame = <span class="keyword">self</span>.bounds</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="And_now_you_can_use_the_AddProgramView_wherever_you_want-_Either_by_init(frame:)">And now you can use the AddProgramView wherever you want. Either by init(frame:)</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> addProgramView = <span class="type">AddProgramView</span>.<span class="keyword">init</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">30</span>))</span><br></pre></td></tr></table></figure>
-<h3 id="done">done</h3>]]></content>
-    <summary type="html">
-    <![CDATA[<h3 id="First_check,_if_you_have_your_class_name_declared_in_the_view_itself,_not_in_the_file_owner-">First check, if you have your class na]]>
     </summary>
     
   </entry>

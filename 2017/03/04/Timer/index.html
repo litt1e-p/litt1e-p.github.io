@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Timer | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="定时器1. RunLoop定时器123456789101112//第一种方法 手动加入runloopNSTimer *timer = [NSTimer timerWithTimeInterval:2.0 target:self selector:@selector(action) userInfo:nil repeats:YES];[[NSRunLoop currentRunLoop] addTi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timer">
+<meta property="og:url" content="https://litt1e-p.github.io/2017/03/04/Timer/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="定时器1. RunLoop定时器123456789101112//第一种方法 手动加入runloopNSTimer *timer = [NSTimer timerWithTimeInterval:2.0 target:self selector:@selector(action) userInfo:nil repeats:YES];[[NSRunLoop currentRunLoop] addTi">
+<meta property="og:updated_time" content="2018-03-04T11:19:36.812Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Timer">
+<meta name="twitter:description" content="定时器1. RunLoop定时器123456789101112//第一种方法 手动加入runloopNSTimer *timer = [NSTimer timerWithTimeInterval:2.0 target:self selector:@selector(action) userInfo:nil repeats:YES];[[NSRunLoop currentRunLoop] addTi">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Timer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Timer
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/03/04/Timer/" class="article-date">
+  <time datetime="2017-03-04T11:17:57.000Z" itemprop="datePublished">2017-03-04</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="定时器">定时器</h2><h4 id="1-_RunLoop定时器">1. RunLoop定时器</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种方法 手动加入runloop</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">timerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(action) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>YES];</span><br><span class="line"></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSDefaultRunLoopMode];<span class="comment">//默认模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>UITrackingRunLoopMode];<span class="comment">//页面追踪模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSRunLoopCommonModes]; <span class="comment">//common模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种方法 自动加入runloop(NSDefaultRunLoopMode)</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">scheduledTimerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>NO];</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">[timer invalidate];</span><br></pre></td></tr></table></figure>
+<h6 id="特点">特点</h6><ul>
+<li>存在延迟</li>
+</ul>
+<p>不管是一次性的还是周期性的timer的实际触发事件的时间，都会与所加入的RunLoop和RunLoop Mode有关，如果此RunLoop正在执行一个连续性的运算，timer就会被延时出发。重复性的timer遇到这种情况，如果延迟超过了一个周期，则会在延时结束后立刻执行，并按照之前指定的周期继续执行。</p>
+<ul>
+<li>必须加入Runloop(手动或自动)</li>
+</ul>
+<h4 id="2-_GCD定时器">2. GCD定时器</h4><ul>
+<li>循环timer</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> 1.创建GCD中的定时器</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_SOURCE_TYPE_TIMER source的类型，表示是定时器</span><br><span class="line"> <span class="doctag">@param</span> 0 描述信息，线程ID</span><br><span class="line"> <span class="doctag">@param</span> 0 更详细的描述信息</span><br><span class="line"> <span class="doctag">@param</span> dispatchQueue 队列，确定GCD定时器中的任务在哪个线程中执行</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, <span class="number">0</span>, <span class="number">0</span>, dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> 2.设置定时器（起始时间|间隔时间|精准度）</span><br><span class="line"> <span class="doctag">@param</span> timer 定时器对象</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_TIME_NOW 起始时间，DISPATCH_TIME_NOW 从现在开始计时</span><br><span class="line"> <span class="doctag">@param</span> intervalInSeconds * NSEC_PER_SEC 间隔时间</span><br><span class="line"> <span class="doctag">@param</span> leewayInSeconds * NSEC_PER_SEC 精准度，绝对精准0</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, <span class="number">2.0</span> * NSEC_PER_SEC, <span class="number">0</span> * NSEC_PER_SEC);</span><br><span class="line"></span><br><span class="line"><span class="comment">//3.设置定时器执行的任务</span></span><br><span class="line">dispatch_source_set_event_handler(timer, ^&#123;</span><br><span class="line">    NSLog(@<span class="string">"------------%@"</span>, [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4.启动执行</span></span><br><span class="line">dispatch_resume(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5.暂停</span></span><br><span class="line">dispatch_suspend(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6.释放</span></span><br><span class="line">dispatch_source_cancel(timer);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>单次timer</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">dispatch_after</span>(<span class="function">dispatch_time</span>(DISPATCH_TIME_NOW, (int64_t)(<span class="number">2</span> * NSEC_PER_SEC)), <span class="tag">dispatch_get_main_queue</span>(), ^(void)&#123;</span><br><span class="line">    <span class="attr_selector">[self action]</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h6 id="特点-1">特点</h6><p>GCD定时器和NSTimer是不一样的，NSTimer受RunLoop影响，但是GCD的定时器不受影响，因为通过源码可知RunLoop也是基于GCD的实现的，所以GCD定时器有非常高的精度</p>
+<h4 id="3-_CADisplayLink">3. CADisplayLink</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CADisplayLink *displayLink = [CADisplayLink <span class="string">displayLinkWithTarget:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>)];  </span><br><span class="line"></span><br><span class="line"><span class="comment">// 每隔2帧调用一次</span></span><br><span class="line">displayLink.frameInterval = <span class="number">2</span>;  </span><br><span class="line"></span><br><span class="line">[displayLink <span class="string">addToRunLoop:</span>[NSRunLoop currentRunLoop] <span class="string">forMode:</span>NSDefaultRunLoopMode];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">[displayLink invalidate];</span><br></pre></td></tr></table></figure>
+<h6 id="特点-2">特点</h6><ul>
+<li>刷新频率固定</li>
+</ul>
+<p>正常情况iOS设备的屏幕刷新频率是固定60Hz,如果CPU过于繁忙，无法保证屏幕60次/秒的刷新率，就会导致跳过若干次调用回调方法的机会，跳过次数取决CPU的忙碌程度。</p>
+<ul>
+<li>屏幕刷新时调用</li>
+</ul>
+<p>CADisplayLink在正常情况下会在每次刷新结束都被调用，精确度相当高。但如果调用的方法比较耗时，超过了屏幕刷新周期，就会导致跳过若干次回调调用机会</p>
+<ul>
+<li>适合做界面渲染</li>
+</ul>
+<p>CADisplayLink可以确保系统渲染每一帧的时候我们的方法都被调用，从而保证了动画的流畅性</p>
+<hr>
+<h6 id="参考资料">参考资料</h6><blockquote>
+<p><a href="https://www.jianshu.com/p/21d351116587" target="_blank" rel="external">https://www.jianshu.com/p/21d351116587</a><br><a href="http://www.bijishequ.com/detail/234634" target="_blank" rel="external">http://www.bijishequ.com/detail/234634</a></p>
+</blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/12/03/change-statusBar-backgroundColor/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">change statusBar backgroundColor</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2017/03/04/Timer/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
