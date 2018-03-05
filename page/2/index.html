@@ -31,6 +31,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/">Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/" class="article-date">
+  <time datetime="2016-09-07T12:43:46.000Z" itemprop="datePublished">2016-09-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><strong><em> Collection <calayerarray: 0xxxxxxxxx=""> was mutated while being enumerated</calayerarray:></em></strong></p>
+</blockquote>
+<p>an error occured when I trying to remove a gradient layer from CALayer.sublayers:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> cell.imageView.layer.sublayers) &#123;</span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The exception is thrown because changing the contents of the sublayers array while enumerating it with foreach loop. This is not something special to layers, a similar exception is thrown when you add/remove objects while enumerating any NSMutableArray.</p>
+<p>we have various options to solve this issue</p>
+<h4 id="Solution_1:_Stop_enumerating_as_soon_as_you_modify_the_array-">Solution 1: Stop enumerating as soon as you modify the array.</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> yourView.layer.sublayers) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Solution_2:_Do_not_enumerate_the_real_array,_instead_use_its_copy-">Solution 2: Do not enumerate the real array, instead use its copy.</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSArray</span>* sublayers = [<span class="type">NSArray</span> arrayWithArray:yourView.layer.sublayers];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> sublayers) &#123;  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Solution_3:_Use_key_value_coding_to_keep_a_reference_to_the_gradient_layer-">Solution 3: Use key value coding to keep a reference to the gradient layer.</h4><p>Set it after inserting:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[yourView.layer insertSublayer:layer atIndex:<span class="number">0</span>]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:layer forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
+<p>Retrieve and remove it</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">CALayer</span>* layer = [yourView.layer valueForKey:@<span class="string">"GradientLayer"</span>];</span><br><span class="line"></span><br><span class="line"> [layer removeFromSuperlayer]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:<span class="literal">nil</span> forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -420,47 +467,9 @@
 
 
   
-    <article id="post-typealias-closure-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/21/typealias-closure-in-Swift/">typealias closure in Swift</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/21/typealias-closure-in-Swift/" class="article-date">
-  <time datetime="2016-06-21T12:44:59.000Z" itemprop="datePublished">2016-06-21</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>typealias closure in Swift</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = ((isLimit: <span class="type">Bool</span>, data: <span class="type">AnyObject</span>)-&gt;<span class="type">Void</span>)?</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = (() -&gt; <span class="type">Void</span>)?</span><br></pre></td></tr></table></figure>
-<p>typealias closure in OC</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;typedef void(^IsLimited)(BOOL isLimit, id data);&#10;&#10;typedef void(^IsLimited)();</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 </section>
