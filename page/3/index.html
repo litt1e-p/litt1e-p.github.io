@@ -31,6 +31,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Set-a-float-value-for-Xib-constraint" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/22/Set-a-float-value-for-Xib-constraint/">Set a float value for Xib constraint</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" class="article-date">
+  <time datetime="2016-06-22T12:05:43.000Z" itemprop="datePublished">2016-06-22</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p> as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height</p>
+</blockquote>
+<h3 id="There_are_2_solutions_to_break_it_out">There are 2 solutions to break it out</h3><ul>
+<li>Method 01: <code>get its constraint IBOutlet and modify with animation</code></li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// </span></span><br><span class="line">separateLineCst.constant = <span class="number">0.5</span></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.02</span>) &#123; </span><br><span class="line">     <span class="keyword">self</span>.layoutIfNeeded()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li>Method 02: <code>trick way!</code></li>
+</ul>
+<p>1.open your xib as souceCode</p>
+<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545z4256aj31kw0hh0wo.jpg" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/005wcR5Jgw1f545zfgpn5j31a20gsjx7.jpg" alt=""></p>
+<p>2.find your target view’s constraint and modify it</p>
+<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f545zu8qmkj31by0pmh6u.jpg" alt=""></p>
+<p>3.save and reopen it as interface builder document</p>
+<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f54602mvmxj311g09q441.jpg" alt=""></p>
+<p>4.see what happen! 🎉🎉</p>
+<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg" alt=""></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-typealias-closure-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -361,45 +415,6 @@
         
           <p class="article-more-link">
             <a href="/2016/01/05/commit-to-cocoapods/#more">More...</a>
-          </p>
-        
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-time-to-go" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/18/time-to-go/">time to go</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2015/11/18/time-to-go/" class="article-date">
-  <time datetime="2015-11-17T16:05:56.000Z" itemprop="datePublished">2015-11-18</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="it’s_a_new_world,_time_to_go">it’s a new world, time to go</h1>
-        
-          <p class="article-more-link">
-            <a href="/2015/11/18/time-to-go/#more">More...</a>
           </p>
         
       

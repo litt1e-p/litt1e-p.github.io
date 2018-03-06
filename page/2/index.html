@@ -31,6 +31,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-weakify-strongify" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/19/weakify-strongify/">weakify &amp; strongify</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/19/weakify-strongify/" class="article-date">
+  <time datetime="2016-09-19T12:27:28.000Z" itemprop="datePublished">2016-09-19</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>here are two kinds of weakify and strongify solutions for preventing memory leak in ARC.</p>
+<p>firstly is a chinese iOS developer with his great job which is named <code>YYKit</code></p>
+<h4 id="YYKit">YYKit</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#ifndef weakify</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define weakify(object) autoreleasepool&#123;&#125; __weak __typeof__(object) <span class="keyword">weak</span>##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define weakify(object) autoreleasepool&#123;&#125; __block __typeof__(object) block##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define weakify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; &#123;&#125; __weak __typeof__(object) <span class="keyword">weak</span>##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define weakify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; &#123;&#125; __block __typeof__(object) block##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#ifndef strongify</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define strongify(object) autoreleasepool&#123;&#125; __typeof__(object) object = <span class="keyword">weak</span>##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define strongify(object) autoreleasepool&#123;&#125; __typeof__(object) object = block##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define strongify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; __typeof__(object) object = <span class="keyword">weak</span>##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define strongify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; __typeof__(object) object = block##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>secondly, the famous lib : <code>libextobjc</code></p>
+<h4 id="libextobjc">libextobjc</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define weakify(...) \\</span><br><span class="line"></span><br><span class="line">    autoreleasepool &#123;&#125; \\</span><br><span class="line"></span><br><span class="line">    metamacro_foreach_cxt(rac_weakify_,, __weak, __VA_ARGS__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#define strongify(...) \\</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;&#125; @finally &#123;&#125; \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic push"</span>) \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic ignored \\"</span>-<span class="type">Wshadow</span>\\<span class="string">""</span>) \\</span><br><span class="line"></span><br><span class="line">    metamacro_foreach(rac_strongify_,, __VA_ARGS__) \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic pop"</span>)</span><br></pre></td></tr></table></figure>
+<p>all of them can be used in friendly and simply way, enjoy them! 🎉</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"></span><br><span class="line"> Example:</span><br><span class="line"></span><br><span class="line">    @weakify(self)</span><br><span class="line"></span><br><span class="line">    [self doSomething^&#123;</span><br><span class="line"></span><br><span class="line">        @strongify(self)</span><br><span class="line"></span><br><span class="line">        if (!self) return;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line"> */</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -401,60 +442,6 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// func</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">optional</span> <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">collectionView</span><span class="params">(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">CGSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// selector</span></span><br><span class="line"></span><br><span class="line">#selector(<span class="type">UICollectionViewDelegateFlowLayout</span>.collectionView(<span class="number">_</span>:layout:sizeForItemAtIndexPath:))</span><br><span class="line"></span><br><span class="line"><span class="comment">// in a word</span></span><br><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>(<span class="type">ParamA</span>:<span class="type">ParamB</span>:...))</span><br></pre></td></tr></table></figure>
 <h4 id="Notice">Notice</h4><p>if func does not have params</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>)</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Set-a-float-value-for-Xib-constraint" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/22/Set-a-float-value-for-Xib-constraint/">Set a float value for Xib constraint</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/22/Set-a-float-value-for-Xib-constraint/" class="article-date">
-  <time datetime="2016-06-22T12:05:43.000Z" itemprop="datePublished">2016-06-22</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p> as we all knows, it is impossible that setting a float value for autoLayout constraint in Xib interfaceBuilder, such as set 0.5 for a UIView’s height</p>
-</blockquote>
-<h3 id="There_are_2_solutions_to_break_it_out">There are 2 solutions to break it out</h3><ul>
-<li>Method 01: <code>get its constraint IBOutlet and modify with animation</code></li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// </span></span><br><span class="line">separateLineCst.constant = <span class="number">0.5</span></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.02</span>) &#123; </span><br><span class="line">     <span class="keyword">self</span>.layoutIfNeeded()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<ul>
-<li>Method 02: <code>trick way!</code></li>
-</ul>
-<p>1.open your xib as souceCode</p>
-<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545z4256aj31kw0hh0wo.jpg" alt=""></p>
-<p><img src="http://ww2.sinaimg.cn/large/005wcR5Jgw1f545zfgpn5j31a20gsjx7.jpg" alt=""></p>
-<p>2.find your target view’s constraint and modify it</p>
-<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f545zu8qmkj31by0pmh6u.jpg" alt=""></p>
-<p>3.save and reopen it as interface builder document</p>
-<p><img src="http://ww3.sinaimg.cn/large/005wcR5Jgw1f54602mvmxj311g09q441.jpg" alt=""></p>
-<p>4.see what happen! 🎉🎉</p>
-<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f545vwfo4aj31ho0f8whq.jpg" alt=""></p>
 
       
 
