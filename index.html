@@ -31,6 +31,187 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LiftCycle" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/04/LiftCycle/">LiftCycle</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2018/07/04/LiftCycle/" class="article-date">
+  <time datetime="2018-07-04T14:17:13.000Z" itemprop="datePublished">2018-07-04</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="生命周期">生命周期</h2><h4 id="load方法和initialize">load方法和initialize</h4><ul>
+<li><code>load</code></li>
+</ul>
+<p>被程序装载时调用，main之前</p>
+<p><code>父类 -&gt; 子类 -&gt; 分类</code></p>
+<p>如果一个类没有实现load方法，那么就不会调用它父类的load方法<br>根据编译顺序</p>
+<ul>
+<li><code>initializez</code></li>
+</ul>
+<p>第一次给某个类发送消息时调用，惰性调用<br>如果子类实现了initialize方法，就不会执行父类的了，直接执行子类本身的。如果分类实现了initialize方法，也不会再执行主类的。所以initialize方法的执行覆盖顺序是</p>
+<p><code>分类 -&gt; 子类 -&gt;类</code></p>
+<p>且只会有一个initialize方法被执行</p>
+<h6 id="总结">总结</h6><table>
+<thead>
+<tr>
+<th></th>
+<th>+ load</th>
+<th>+ initialize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>调用时机</td>
+<td>被添加到 runtime 时, 通常就是App启动时进行加载</td>
+<td>收到第一条消息前(主动使用该类时)，可能永远不调用</td>
+</tr>
+<tr>
+<td>调用顺序</td>
+<td>父类-&gt;子类-&gt;分类</td>
+<td>父类-&gt;子类</td>
+</tr>
+<tr>
+<td>调用次数</td>
+<td>1次</td>
+<td>多次</td>
+</tr>
+<tr>
+<td>是否需要显式调用父类实现</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>是否沿用父类的实现</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>分类中的实现</td>
+<td>类和分类都执行</td>
+<td>覆盖类中的方法，只执行分类的实现</td>
+</tr>
+<tr>
+<td>常见应用</td>
+<td>runtime method swizzling</td>
+<td>可用来做一些初始化工作，如单例模式。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="UIViewController_的生命周期">UIViewController 的生命周期</h4><ol>
+<li><p><code>-[ViewController initWithCoder:]</code>或<code>-[ViewController initWithNibName:Bundle]</code>:首先从归档文件中加载UIViewController对象。即使是纯代码，也会把nil作为参数传给后者。</p>
+</li>
+<li><p><code>-[UIView awakeFromNib]</code>:作为第一个方法的助手，方便处理一些额外的设置。</p>
+</li>
+<li><p><code>-[ViewController loadView]</code>:创建或加载一个view并把它赋值给UIViewController的view属性</p>
+</li>
+<li><p><code>-[ViewController viewDidLoad]</code>:此时整个视图层次(view hierarchy)已经被放到内存中，可以移除一些视图，修改约束，加载数据等</p>
+</li>
+<li><p><code>-[ViewController viewWillAppear:]</code>:视图加载完成，并即将显示在屏幕上,还没有设置动画，可以改变当前屏幕方向或状态栏的风格等。</p>
+</li>
+<li><p><code>-[ViewController viewWillLayoutSubviews]</code>：即将开始子视图位置布局</p>
+</li>
+<li><p><code>-[ViewController viewDidLayoutSubviews]</code>：用于通知视图的位置布局已经完成</p>
+</li>
+<li><p><code>-[ViewController viewDidAppear:]</code>：视图已经展示在屏幕上，可以对视图做一些关于展示效果方面的修改。</p>
+</li>
+<li><p><code>-[ViewController viewWillDisappear:]</code>：视图即将消失。</p>
+</li>
+<li><p><code>-[ViewController viewDidDisappear:]</code>：视图已经消失。</p>
+</li>
+</ol>
+<h4 id="UIView的加载和生命周期">UIView的加载和生命周期</h4><ul>
+<li>通过Storyboard加载</li>
+</ul>
+<p>通过这种方式创建UIViewController对象的话，首先生成UIStoryboard类型的对象，然后调用这个对象的<code>instantiateViewControllerWithIdentifier:</code>方法</p>
+<ul>
+<li>通过Nib文件加载：</li>
+</ul>
+<p>Nib文件其实就是xib文件，Storyboard相当于是聚合了多个nib文件，并且添加了对不同的UIViewController之间的segue和relationship的管理。但总的实现原理非常类似，通过这种方式加载视图,需要调用UIViewController类的<code>initWithNibName:bundle:</code>方法。<code>awakeFromNib</code>方法在视图控制器的生命周期内只会被调用一次。因为它和视图控制器从nib文件中的解档密切相关，和view的关系却不大。+</p>
+<ul>
+<li>通过loadview方法加载：</li>
+</ul>
+<p>这就是通过代码加载。这需要我们在<code>loadView</code>方法中，通过编程创建自己的视图层次，并且把把根视图赋值给UIViewController的view属性。loadView方法在UIViewController对象的view属性被访问到且为空的时候调用。 注意在重写loadView方法的时候，不要调用父类的方法。</p>
+<h4 id="UIApplication生命周期">UIApplication生命周期</h4><p><img src="http://i.stack.imgur.com/c2d1D.jpg" alt=""></p>
+<p>常见的代理方法有</p>
+<ul>
+<li><code>(void)applicationWillResignActive:(UIApplication *)application</code></li>
+</ul>
+<p>说明：当应用程序将要入非活动状态执行，在此期间，应用程序不接收消息或事件，比如来电话了</p>
+<ul>
+<li><code>(void)applicationDidBecomeActive:(UIApplication *)application</code></li>
+</ul>
+<p>说明：当应用程序入活动状态执行，这个刚好跟上面那个方法相反</p>
+<ul>
+<li><code>(void)applicationDidEnterBackground:(UIApplication *)application</code></li>
+</ul>
+<p>说明：当程序被推送到后台的时候调用。所以要设置后台继续运行，则在这个函数里面设置即可</p>
+<ul>
+<li><code>(void)applicationWillEnterForeground:(UIApplication *)application</code></li>
+</ul>
+<p>说明：当程序从后台将要重新回到前台时候调用，这个刚好跟上面的那个方法相反。</p>
+<ul>
+<li><code>(void)applicationWillTerminate:(UIApplication *)application</code></li>
+</ul>
+<p>说明：当程序将要退出是被调用，通常是用来保存数据和一些退出前的清理工作。这个需要设置 UIApplicationExitsOnSuspend 的键值。</p>
+<ul>
+<li><code>(void)applicationDidReceiveMemoryWarning:(UIApplication *)application</code></li>
+</ul>
+<p>说明：iPhone 设备只有有限的内存，如果为应用程序分配了太多内存操作系统会终止应用程序的运行，在终止前会执行这个方法，通常可以在这里进行内存清理工作防止程序被终止</p>
+<ul>
+<li><code>(void)applicationSignificantTimeChange:(UIApplication*)application</code></li>
+</ul>
+<p>说明：当系统时间发生改变时执行</p>
+<ul>
+<li><code>(void)applicationDidFinishLaunching:(UIApplication*)application</code></li>
+</ul>
+<p>说明：当程序载入后执行</p>
+<h4 id="源码到可执行程序的过程">源码到可执行程序的过程</h4><p>预编译</p>
+<p>i. 预编译器负责</p>
+<p>在这一步主要简单替换宏定义和和其他预编译指令，这一步之后的 .c 文件变成了 .i 文件。</p>
+<p>ii. 编译</p>
+<p>编译器负责。</p>
+<ul>
+<li><p>词法分析，识别源代码中的各种括号、数字、标点等。比如有(但没有)，这一步就能发现错误。</p>
+</li>
+<li><p>语法分析，这一步会生成语法树，在这一步就会报错。</p>
+</li>
+<li><p>语义分析，这一步主要考虑类型声明、匹配和转换。比如你写2 * “3”在这一步就会报错。</p>
+</li>
+<li><p>三地址码，优化，这一步会生成平台无关的三地址码，同时也会把这样在编译期就可以确定的表达式进行优化。</p>
+</li>
+<li><p>生成汇编代码，编译器根据三地址码生成依赖于目标机器的目标机器代码，也就是汇编语言。<br><code>.i</code>文件经过编译，得到汇编文件，后缀是<code>.s</code>。</p>
+</li>
+</ul>
+<p>iii. 汇编</p>
+<p>汇编器负责。将汇编语言转换成机器可以执行的语言，汇编文件经过汇编，变成目标文件，后缀为<code>.o</code>。</p>
+<p>iiii. 链接</p>
+<p>链接器负责。主要负责地址重分配、符号名称绑定和重定位。链接过程一般分为两步，首先地址分配，然后符号解析并重定位。</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Lock-in-iOS" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -689,61 +870,6 @@
 <h4 id="3-2_make_it_valid">3.2 make it valid</h4><p>copy  <code>ca.crt</code> to your local computer somewhere and double click it and modify <code>always trust</code> in your keychain to make it valid.</p>
 <p><img src="http://ww2.sinaimg.cn/large/006y8lVagw1f8mcm69ot9j30n60csq3i.jpg" alt=""></p>
 <p>done! 🎉</p>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/">solution for `forwardInvocation and NSInvocation are not available to Swift`</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/" class="article-date">
-  <time datetime="2016-10-09T13:54:46.000Z" itemprop="datePublished">2016-10-09</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>forwardInvocation and NSInvocation are not available to Swift</p>
-</blockquote>
-<p>for instance:</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyTimer</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">var</span> timer:NSTimer?</span><br><span class="line">  <span class="keyword">let</span> INTERVAL_SECONDS = <span class="number">1.0</span></span><br><span class="line">  required init() &#123;</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = nil</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = NSTimer<span class="built_in">.</span>scheduledTimerWithTimeInterval(INTERVAL_SECONDS, target: <span class="built_in">self</span>, <span class="keyword">select</span><span class="subst">or</span>: <span class="variable">#selector</span>(<span class="built_in">self</span><span class="built_in">.</span>getUpdateds(_:))<span class="string">", userInfo: nil, repeats: true)</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>here are class with init() function,  I setup a timer with a selector named:<code>getUpdateds</code> in <code>init()</code></p>
-<p>and selector function looks like this:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dynamic</span> <span class="func"><span class="keyword">func</span> <span class="title">getUpdateds</span><span class="params">(timer: NSTimer!)</span></span> &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>If you’re sharp you might have noticed the <code>dynamic</code> keyword in the function declaration. If you leave it out you’ll get an error like this:</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSForwarding: warning: object <span class="number">0x7f9662d56f0</span> <span class="keyword">of</span> <span class="type">class</span>  SwiftDemo.MyTimer' <span class="keyword">does</span> <span class="keyword">not</span> implement  methodSignatureForSelector: <span class="comment">-- trouble ahead</span></span><br><span class="line">Unrecognized selector -[SwiftDemo.MyTimer getUpdateds:]</span><br></pre></td></tr></table></figure>
-<p>That’s because <code>methodSignatureForSelector</code>: is an Objective-C method. By default, Swift objects don’t have it. Adding <code>dynamic</code> to the function signature makes calls to it get dispatched using the Objective-C runtime which avoids our error.</p>
-<p>Another way to fix this error is to tag the class with <code>@objc</code>:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTimer</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Which exposes the class to the Objective-C runtime. Then it’ll effectively insert <code>dynamic</code> if it’s needed. Personally, I’d rather have <code>dynamic</code> near the spot that requires it than labelling the whole class.Hopefully we’ll get something more Swift-y soon.</p>
-<p>Though <code>forwardInvocation</code> and <code>NSInvocation</code> are not available to Swift.</p>
-<p>But, soft! What light through yonder window breaks!</p>
-<p>While <code>forwardInvocation</code>: isn’t available, <code>forwardingTargetForSelector</code>: is available.</p>
-<p>Which means the we could see if the selector responds to that, and then does a <code>performSelector:</code></p>
-<p>or other any your want:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">forwardingTargetForSelector</span><span class="params">(aSelector: Selector)</span></span> -&gt; <span class="type">AnyObject</span>? &#123;</span><br><span class="line">    <span class="keyword">if</span> forwardTarget!.respondsToSelector(aSelector) &#123;</span><br><span class="line">        <span class="keyword">return</span> forwardTarget</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>However, Swift support for <code>forwardInvocation:</code> and <code>NSInvocation</code> would be useful. These things have their uses, and while <code>forwardingTargetForSelector:</code> can take care of some of them, they don’t take care of all of them.</p>
 
       
 
