@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Use ES7 async&amp;await in Wechat app | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在微信小程序中使用 ES7 async&amp;amp;await微信小程序虽然已经支持Promiss，在一定程度上缓解了臭名昭著的callback hell：
+1234567function foo() &amp;#123;    return new Promise(function (resolve, reject) &amp;#123;        setTimeout(function () &amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use ES7 async&await in Wechat app">
+<meta property="og:url" content="https://litt1e-p.github.io/2018/01/07/Use-ES7-async-await-in-Wechat-app/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="在微信小程序中使用 ES7 async&amp;amp;await微信小程序虽然已经支持Promiss，在一定程度上缓解了臭名昭著的callback hell：
+1234567function foo() &amp;#123;    return new Promise(function (resolve, reject) &amp;#123;        setTimeout(function () &amp;#123;">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006tKfTcgy1fp32ylaplyj311c0ak75l.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006tKfTcgy1fp3384dryfj30mu0e675n.jpg">
+<meta property="og:updated_time" content="2018-03-07T12:25:54.256Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Use ES7 async&await in Wechat app">
+<meta name="twitter:description" content="在微信小程序中使用 ES7 async&amp;amp;await微信小程序虽然已经支持Promiss，在一定程度上缓解了臭名昭著的callback hell：
+1234567function foo() &amp;#123;    return new Promise(function (resolve, reject) &amp;#123;        setTimeout(function () &amp;#123;">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Use-ES7-async-await-in-Wechat-app" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Use ES7 async&amp;await in Wechat app
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2018/01/07/Use-ES7-async-await-in-Wechat-app/" class="article-date">
+  <time datetime="2018-01-07T11:06:45.000Z" itemprop="datePublished">2018-01-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="在微信小程序中使用_ES7_async&amp;await">在微信小程序中使用 ES7 async&amp;await</h2><p>微信小程序虽然已经支持Promiss，在一定程度上缓解了臭名昭著的callback hell：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            resolve(&#123;data: <span class="string">"Hello,World"</span>&#125;)</span><br><span class="line">        &#125;, <span class="number">5000</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是仍不够解耦不够优雅，若是支持ES7的async和await就好了，可惜微信MINA IDE还不支持这个特性，只能自己动手实现了。</p>
+<h4 id="原理">原理</h4><p>首先，async/await也是和Promise配合使用的。具体语法不一一赘述，详见<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank" rel="external">ES7 Async Await</a></p>
+<p>这里举个简单的使用例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">wxLogin</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        wx.login(&#123;</span><br><span class="line">            success: <span class="function"><span class="keyword">function</span> <span class="title">success</span>(<span class="params">r</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (r.code) &#123;</span><br><span class="line">                    resolve(r)</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    reject(<span class="string">'获取用户登录状态失败！'</span> + r.errMsg)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            fail: <span class="function"><span class="keyword">function</span> <span class="title">fail</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                reject(<span class="string">'获取用户登录状态失败'</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">tryLogin</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> rs = <span class="keyword">await</span> wxLogin().catch(e =&gt; &#123;</span><br><span class="line">            <span class="built_in">console</span>.info(e)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="built_in">console</span>.info(<span class="string">"logined!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tryLogin()</span><br></pre></td></tr></table></figure>
+<p>是不是优雅多了。跟callback hell say byebye.</p>
+<h4 id="配置">配置</h4><p>那么又该如何实现呢？微信MINA自带了Babel转换工具，但不够强大，这里我们自己来配置一个Babel来转换编译我们的代码。</p>
+<p>所以，我们先把MINA里的<code>开启ES6转ES5</code>关闭，我们用自己的Babel。</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tKfTcgy1fp32ylaplyj311c0ak75l.jpg" alt=""></p>
+<p>然后用Gulp来写我的脚本，从Gulp中调用Babel来编译我的代码。z在调用Babel时，需要给我们的Babel配置插件以支持async/await，比如async-to-generator，async-generator-functions等插件。</p>
+<ol>
+<li><p>Babel的配置</p>
+<p> 编辑Babel的配置文件：.babelrc，这里直接用<code>latest</code>，便支持ES7。</p>
+ <figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//.<span class="atom">babelrc</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="string">"presets"</span>: [ <span class="string">"latest"</span> ],  </span><br><span class="line">  <span class="string">"plugins"</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Glup的配置</p>
+<p> 把我们小程序项目下所有的js文件都通过Babel编译：</p>
+ <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">gulp.<span class="keyword">task</span>(<span class="string">'scripts'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> gulp.src([<span class="string">'./src/**/*.js'</span>])</span><br><span class="line">        .pipe(babel())</span><br><span class="line">        .pipe(gulpAddRequireRuntime())</span><br><span class="line">        .pipe(gulp.dest(<span class="string">'./dist'</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">function gulpAddRequireRuntime() &#123;</span><br><span class="line">    <span class="keyword">return</span> through.obj(function(<span class="keyword">file</span>, enc, cb) &#123;</span><br><span class="line">        var prefixText = ``;</span><br><span class="line">        var rel = path.relative(path.dirname(<span class="keyword">file</span>.path), path.<span class="keyword">join</span>(<span class="keyword">file</span>.base, <span class="string">'lib/runtime.js'</span>));</span><br><span class="line">        rel = rel.replace(<span class="regexp">/\\/g</span>, <span class="string">'/'</span>);</span><br><span class="line">        <span class="keyword">if</span> (rel === <span class="string">'runtime.js'</span>) &#123;</span><br><span class="line">            prefixText = <span class="keyword">new</span> Buffer(prefixText);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            prefixText = `var regeneratorRuntime = require(<span class="string">"$&#123;rel&#125;"</span>);`;</span><br><span class="line">            prefixText = <span class="keyword">new</span> Buffer(prefixText);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">file</span>.isNull()) &#123;</span><br><span class="line">            cb(<span class="keyword">null</span>, <span class="keyword">file</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">file</span>.isBuffer()) &#123;</span><br><span class="line">            <span class="keyword">file</span>.contents = Buffer.concat([prefixText, <span class="keyword">file</span>.contents]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">file</span>.isStream()) &#123;</span><br><span class="line">            <span class="keyword">file</span>.contents = <span class="keyword">file</span>.contents.pipe(prefixStream(prefixText));</span><br><span class="line">        &#125;</span><br><span class="line">        cb(<span class="keyword">null</span>, <span class="keyword">file</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="使用">使用</h4><ol>
+<li>项目目录结构</li>
+</ol>
+<p><img src="http://ww2.sinaimg.cn/large/006tKfTcgy1fp3384dryfj30mu0e675n.jpg" alt=""></p>
+<p>如图，这里dist目录正是Gulp编译输出目录，在微信MINA中直接用这个目录即可，而src目录则为我们愉快编写ES7的async&amp;await的目录啦。</p>
+<ol>
+<li>依赖库</li>
+</ol>
+<p>经过Babel转译后的代码是通过类似co库的方式来实现的，即需要使用到generator，所以，和我们使用co的时候一样，需要依赖一个regeneratorRuntime，才能支持generator特性。我们这使用Facebook开源的<a href="https://github.com/facebook/regenerator/" target="_blank" rel="external">regenerator</a>。</p>
+<p>安装regenerator</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> regenerator</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>引入</li>
+</ol>
+<p>把刚才npm安装的regenerator下的<code>rumtime.js</code>复制到我们的src/lib下，然后在需要使用的地方引入即可愉快又优雅地写我们的async/await代码啦。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const RUNTIME = <span class="function"><span class="title">require</span><span class="params">(<span class="string">"/lib/runtime"</span>)</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="参考资料">参考资料</h5><blockquote>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function</a><br><a href="https://www.jianshu.com/p/270f129e5af3" target="_blank" rel="external">https://www.jianshu.com/p/270f129e5af3</a></p>
+</blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/12/28/Event/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Event</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2018/01/07/Use-ES7-async-await-in-Wechat-app/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

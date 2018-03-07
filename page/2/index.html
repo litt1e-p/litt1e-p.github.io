@@ -31,6 +31,171 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Timer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/04/Timer/">Timer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/03/04/Timer/" class="article-date">
+  <time datetime="2017-03-04T11:17:57.000Z" itemprop="datePublished">2017-03-04</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="定时器">定时器</h2><h4 id="1-_RunLoop定时器">1. RunLoop定时器</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种方法 手动加入runloop</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">timerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(action) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>YES];</span><br><span class="line"></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSDefaultRunLoopMode];<span class="comment">//默认模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>UITrackingRunLoopMode];<span class="comment">//页面追踪模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSRunLoopCommonModes]; <span class="comment">//common模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种方法 自动加入runloop(NSDefaultRunLoopMode)</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">scheduledTimerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>NO];</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">[timer invalidate];</span><br></pre></td></tr></table></figure>
+<h6 id="特点">特点</h6><ul>
+<li>存在延迟</li>
+</ul>
+<p>不管是一次性的还是周期性的timer的实际触发事件的时间，都会与所加入的RunLoop和RunLoop Mode有关，如果此RunLoop正在执行一个连续性的运算，timer就会被延时出发。重复性的timer遇到这种情况，如果延迟超过了一个周期，则会在延时结束后立刻执行，并按照之前指定的周期继续执行。</p>
+<ul>
+<li>必须加入Runloop(手动或自动)</li>
+</ul>
+<h4 id="2-_GCD定时器">2. GCD定时器</h4><ul>
+<li>循环timer</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> 1.创建GCD中的定时器</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_SOURCE_TYPE_TIMER source的类型，表示是定时器</span><br><span class="line"> <span class="doctag">@param</span> 0 描述信息，线程ID</span><br><span class="line"> <span class="doctag">@param</span> 0 更详细的描述信息</span><br><span class="line"> <span class="doctag">@param</span> dispatchQueue 队列，确定GCD定时器中的任务在哪个线程中执行</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, <span class="number">0</span>, <span class="number">0</span>, dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> 2.设置定时器（起始时间|间隔时间|精准度）</span><br><span class="line"> <span class="doctag">@param</span> timer 定时器对象</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_TIME_NOW 起始时间，DISPATCH_TIME_NOW 从现在开始计时</span><br><span class="line"> <span class="doctag">@param</span> intervalInSeconds * NSEC_PER_SEC 间隔时间</span><br><span class="line"> <span class="doctag">@param</span> leewayInSeconds * NSEC_PER_SEC 精准度，绝对精准0</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, <span class="number">2.0</span> * NSEC_PER_SEC, <span class="number">0</span> * NSEC_PER_SEC);</span><br><span class="line"></span><br><span class="line"><span class="comment">//3.设置定时器执行的任务</span></span><br><span class="line">dispatch_source_set_event_handler(timer, ^&#123;</span><br><span class="line">    NSLog(@<span class="string">"------------%@"</span>, [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4.启动执行</span></span><br><span class="line">dispatch_resume(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5.暂停</span></span><br><span class="line">dispatch_suspend(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6.释放</span></span><br><span class="line">dispatch_source_cancel(timer);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>单次timer</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">dispatch_after</span>(<span class="function">dispatch_time</span>(DISPATCH_TIME_NOW, (int64_t)(<span class="number">2</span> * NSEC_PER_SEC)), <span class="tag">dispatch_get_main_queue</span>(), ^(void)&#123;</span><br><span class="line">    <span class="attr_selector">[self action]</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h6 id="特点-1">特点</h6><p>GCD定时器和NSTimer是不一样的，NSTimer受RunLoop影响，但是GCD的定时器不受影响，因为通过源码可知RunLoop也是基于GCD的实现的，所以GCD定时器有非常高的精度</p>
+<h4 id="3-_CADisplayLink">3. CADisplayLink</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CADisplayLink *displayLink = [CADisplayLink <span class="string">displayLinkWithTarget:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>)];  </span><br><span class="line"></span><br><span class="line"><span class="comment">// 每隔2帧调用一次</span></span><br><span class="line">displayLink.frameInterval = <span class="number">2</span>;  </span><br><span class="line"></span><br><span class="line">[displayLink <span class="string">addToRunLoop:</span>[NSRunLoop currentRunLoop] <span class="string">forMode:</span>NSDefaultRunLoopMode];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">[displayLink invalidate];</span><br></pre></td></tr></table></figure>
+<h6 id="特点-2">特点</h6><ul>
+<li>刷新频率固定</li>
+</ul>
+<p>正常情况iOS设备的屏幕刷新频率是固定60Hz,如果CPU过于繁忙，无法保证屏幕60次/秒的刷新率，就会导致跳过若干次调用回调方法的机会，跳过次数取决CPU的忙碌程度。</p>
+<ul>
+<li>屏幕刷新时调用</li>
+</ul>
+<p>CADisplayLink在正常情况下会在每次刷新结束都被调用，精确度相当高。但如果调用的方法比较耗时，超过了屏幕刷新周期，就会导致跳过若干次回调调用机会</p>
+<ul>
+<li>适合做界面渲染</li>
+</ul>
+<p>CADisplayLink可以确保系统渲染每一帧的时候我们的方法都被调用，从而保证了动画的流畅性</p>
+<hr>
+<h6 id="参考资料">参考资料</h6><blockquote>
+<p><a href="https://www.jianshu.com/p/21d351116587" target="_blank" rel="external">https://www.jianshu.com/p/21d351116587</a><br><a href="http://www.bijishequ.com/detail/234634" target="_blank" rel="external">http://www.bijishequ.com/detail/234634</a></p>
+</blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-change-statusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/03/change-statusBar-backgroundColor/">change statusBar backgroundColor</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/12/03/change-statusBar-backgroundColor/" class="article-date">
+  <time datetime="2016-12-03T13:31:23.000Z" itemprop="datePublished">2016-12-03</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//for swift</span></span><br><span class="line"></span><br><span class="line">let statWindow = <span class="built_in">UIApplication</span><span class="variable">.shared</span><span class="variable">.value</span>(forKey:<span class="string">"statusBarWindow"</span>) as! <span class="built_in">UIView</span></span><br><span class="line"></span><br><span class="line">let statusBar = statWindow<span class="variable">.subviews</span>[<span class="number">0</span>] as <span class="built_in">UIView</span></span><br><span class="line"></span><br><span class="line">statusBar<span class="variable">.backgroundColor</span> = <span class="built_in">UIColor</span><span class="variable">.red</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//for Objective-C</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *statusWindow = [[<span class="built_in">UIApplication</span> sharedApplication] valueForKey:<span class="string">@"statusBarWindow"</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *statusBar = statusWindow<span class="variable">.subviews</span><span class="variable">.firstObject</span>;</span><br><span class="line"></span><br><span class="line">statusBar<span class="variable">.backgroundColor</span> = <span class="keyword">self</span><span class="variable">.statusBarBackgroundColor</span>;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-autoLayout-for-UIScrollView-in-Xib" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/">autoLayout for UIScrollView in Xib</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/" class="article-date">
+  <time datetime="2016-11-26T07:31:27.000Z" itemprop="datePublished">2016-11-26</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets</p>
+</blockquote>
+<p>let’s begin</p>
+<h4 id="1-0_initial_a_scrollView">1.0 initial a scrollView</h4><ul>
+<li>new a project, drag a UIScrollView into Storyboard or Xib and make some constraints:</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-8450a58e55abcf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-5881ada668a2f949.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h4 id="2-0_add_a_contenView">2.0 add a contenView</h4><ul>
+<li>2.1 drag an UIView named: <code>containView</code> into scrollView and add the edge constraints. the contentSize of scrollView depend on this <code>containView</code> </li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-21e23d2a8f18d687.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>by the way, Xcode interface builder will show some errors, just ignore them.</p>
+<ul>
+<li>2.2 add some extral constraints to <code>containView</code>  according to the scroll direction</li>
+</ul>
+<p>so firstly you should make sure that which scroll direction you want</p>
+<p>you should not add the constraints like below shows if horizontal and vertical scroll direction are both wanted:</p>
+<ul>
+<li><p>2.2.1 add a <code>Horizontally in Container</code> and a <code>Vertically in Container</code> constraints</p>
+</li>
+<li><p>2.2.2 height or width constraints:</p>
+</li>
+</ul>
+<p>for horizontal scroll direction: add a <code>width</code> constraint for <code>containView</code></p>
+<p>for vertical scroll direction: add a <code>height</code> constraint for <code>containView</code></p>
+<p>and done! 🎉🎉</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -358,139 +523,6 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[yourView.layer insertSublayer:layer atIndex:<span class="number">0</span>]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:layer forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
 <p>Retrieve and remove it</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">CALayer</span>* layer = [yourView.layer valueForKey:@<span class="string">"GradientLayer"</span>];</span><br><span class="line"></span><br><span class="line"> [layer removeFromSuperlayer]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:<span class="literal">nil</span> forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/">Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/" class="article-date">
-  <time datetime="2016-08-15T13:08:34.000Z" itemprop="datePublished">2016-08-15</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>The code which creates the error is:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span>: <span class="title">UIView</span></span><br><span class="line"></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>This creates the following compiler error:</p>
-<blockquote>
-<p>Method ‘resignFirstResponder()’ with Objective-C selector ‘resignFirstResponder’ conflicts with method ‘resignFirstResponder()’ from superclass ‘UIResponder’ with the same Objective-C selector</p>
-</blockquote>
-<p>By simply removing the sub-classing of UIViewController the code compiles successfully:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="Why?">Why?</h4><p>The reason is that Objective-C does not support method overloading, you have to use a different method name. When you inherited UIViewController you inherited NSObject and made the class interopable to Obj-C. Swift on the other hand does support overloading, that’s why it works when you remove the inheritance.</p>
-<p>As we all knowed, ObjC doesn’t support method overloading (two methods with the same name) and In swift 2 under Xcode 7 there are two options to solve this kind of problems. </p>
-<p>One option is to rename the method using the attribute: @objc(newNameMethod:)</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1, par2)</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span>(methodTwo:)</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1)</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
-<p>another option to solve this kind of problems in Xcode7 is by applying @nonobjc attribute to any method, subscript or initialiser</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@nonobjc</span> </span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Macro-define-in-swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/12/Macro-define-in-swift/">Macro #define in swift</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/08/12/Macro-define-in-swift/" class="article-date">
-  <time datetime="2016-08-12T15:18:39.000Z" itemprop="datePublished">2016-08-12</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>define a rgba color macro, for instance.</p>
-<p>in Objective-C</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define <span class="type">RGBA</span>(r,g,b,a) [<span class="type">UIColor</span> colorWithRed:(float)r/<span class="number">255</span>.0f green:(float)g/<span class="number">255</span>.0f blue:(float)b/<span class="number">255</span>.0f alpha:a]</span><br></pre></td></tr></table></figure>
-<p>in Swift: <code>define a closure macro</code></p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">RGBA</span>: (<span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> = &#123;</span><br><span class="line">    (r: <span class="type">CGFloat</span>, g: <span class="type">CGFloat</span>, b: <span class="type">CGFloat</span>, a: <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIColor</span>(red: r/<span class="number">255.0</span>, green: g/<span class="number">255.0</span>, blue: b/<span class="number">255.0</span>, alpha: a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="Usage">Usage</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">RGBA</span>(<span class="number">101</span>, <span class="number">101</span>, <span class="number">101</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Change-UIStatusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/07/Change-UIStatusBar-backgroundColor/">Change UIStatusBar backgroundColor</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/08/07/Change-UIStatusBar-backgroundColor/" class="article-date">
-  <time datetime="2016-08-07T14:40:06.000Z" itemprop="datePublished">2016-08-07</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>how to change the color of UIStatusBar? there are two solutions to it</p>
-<h4 id="Solution_1">Solution 1</h4><p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">64</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
-<p>if your don’t want to set navigationBar’s backgroundImage with height 64, such as you just set it to 44, you can try it out with solution 2 below.</p>
-<h4 id="Solution_2">Solution 2</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
-<p><code>tricky time</code></p>
-<p>use <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift" target="_blank" rel="external">LPStatusBarBackgroundColor-swift</a> or <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor" target="_blank" rel="external">LPStatusBarBackgroundColor</a> and they are quite simple</p>
-<p>let’s take LPStatusBarBackgroundColor-swift for example:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
-<p>the end it works well now!</p>
-<p><img src="https://raw.githubusercontent.com/litt1e-p/LPStatusBarBackgroundColor-swift/master/screenshot.gif" alt=""></p>
 
       
 

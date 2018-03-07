@@ -31,6 +31,139 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/">Compiler error: Method with Objective-C selector conflicts with previous declaration with the same Objective-C selector</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/15/Compiler-error-Method-with-Objective-C-selector-conflicts-with-previous-declaration-with-the-same-Objective-C-selector/" class="article-date">
+  <time datetime="2016-08-15T13:08:34.000Z" itemprop="datePublished">2016-08-15</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>The code which creates the error is:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span>: <span class="title">UIView</span></span><br><span class="line"></span><br><span class="line"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This creates the following compiler error:</p>
+<blockquote>
+<p>Method ‘resignFirstResponder()’ with Objective-C selector ‘resignFirstResponder’ conflicts with method ‘resignFirstResponder()’ from superclass ‘UIResponder’ with the same Objective-C selector</p>
+</blockquote>
+<p>By simply removing the sub-classing of UIViewController the code compiles successfully:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BugView</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">resignFirstResponder</span><span class="params">()</span></span> &#123;...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Why?">Why?</h4><p>The reason is that Objective-C does not support method overloading, you have to use a different method name. When you inherited UIViewController you inherited NSObject and made the class interopable to Obj-C. Swift on the other hand does support overloading, that’s why it works when you remove the inheritance.</p>
+<p>As we all knowed, ObjC doesn’t support method overloading (two methods with the same name) and In swift 2 under Xcode 7 there are two options to solve this kind of problems. </p>
+<p>One option is to rename the method using the attribute: @objc(newNameMethod:)</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1, par2)</span></span> &#123;...&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span>(methodTwo:)</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">(par1)</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>another option to solve this kind of problems in Xcode7 is by applying @nonobjc attribute to any method, subscript or initialiser</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">@nonobjc</span> </span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">methodOne</span><span class="params">()</span></span> &#123;...&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Macro-define-in-swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/12/Macro-define-in-swift/">Macro #define in swift</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/12/Macro-define-in-swift/" class="article-date">
+  <time datetime="2016-08-12T15:18:39.000Z" itemprop="datePublished">2016-08-12</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>define a rgba color macro, for instance.</p>
+<p>in Objective-C</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define <span class="type">RGBA</span>(r,g,b,a) [<span class="type">UIColor</span> colorWithRed:(float)r/<span class="number">255</span>.0f green:(float)g/<span class="number">255</span>.0f blue:(float)b/<span class="number">255</span>.0f alpha:a]</span><br></pre></td></tr></table></figure>
+<p>in Swift: <code>define a closure macro</code></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">RGBA</span>: (<span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> = &#123;</span><br><span class="line">    (r: <span class="type">CGFloat</span>, g: <span class="type">CGFloat</span>, b: <span class="type">CGFloat</span>, a: <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIColor</span>(red: r/<span class="number">255.0</span>, green: g/<span class="number">255.0</span>, blue: b/<span class="number">255.0</span>, alpha: a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Usage">Usage</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">RGBA</span>(<span class="number">101</span>, <span class="number">101</span>, <span class="number">101</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Change-UIStatusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/07/Change-UIStatusBar-backgroundColor/">Change UIStatusBar backgroundColor</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/08/07/Change-UIStatusBar-backgroundColor/" class="article-date">
+  <time datetime="2016-08-07T14:40:06.000Z" itemprop="datePublished">2016-08-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>how to change the color of UIStatusBar? there are two solutions to it</p>
+<h4 id="Solution_1">Solution 1</h4><p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">64</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<p>if your don’t want to set navigationBar’s backgroundImage with height 64, such as you just set it to 44, you can try it out with solution 2 below.</p>
+<h4 id="Solution_2">Solution 2</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
+<p><code>tricky time</code></p>
+<p>use <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift" target="_blank" rel="external">LPStatusBarBackgroundColor-swift</a> or <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor" target="_blank" rel="external">LPStatusBarBackgroundColor</a> and they are quite simple</p>
+<p>let’s take LPStatusBarBackgroundColor-swift for example:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
+<p>the end it works well now!</p>
+<p><img src="https://raw.githubusercontent.com/litt1e-p/LPStatusBarBackgroundColor-swift/master/screenshot.gif" alt=""></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Reduce-animated-effect-of-UICollectionView-while-reloading-section" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -313,120 +446,6 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = ((isLimit: <span class="type">Bool</span>, data: <span class="type">AnyObject</span>)-&gt;<span class="type">Void</span>)?</span><br><span class="line"></span><br><span class="line"><span class="keyword">typealias</span> <span class="type">IsLimited</span> = (() -&gt; <span class="type">Void</span>)?</span><br></pre></td></tr></table></figure>
 <p>typealias closure in OC</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;typedef void(^IsLimited)(BOOL isLimit, id data);&#10;&#10;typedef void(^IsLimited)();</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Build-a-custom-xib-class-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/16/Build-a-custom-xib-class-in-Swift/">Build a custom xib class in Swift</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/16/Build-a-custom-xib-class-in-Swift/" class="article-date">
-  <time datetime="2016-06-16T14:43:41.000Z" itemprop="datePublished">2016-06-16</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="First_check,_if_you_have_your_class_name_declared_in_the_view_itself,_not_in_the_file_owner-">First check, if you have your class name declared in the view itself, not in the file owner.</h3><p><img src="http://i.stack.imgur.com/j70PR.png" alt=""></p>
-<h3 id="If_not,_do_it-_Then_try_it_again-">If not, do it. Then try it again.</h3><h3 id="Another_option_is_to_create_IBOutlet_in_your_AddProgramView-swift">Another option is to create IBOutlet in your AddProgramView.swift</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br></pre></td></tr></table></figure>
-<h3 id="and_remove_the_class_name_from_the_view_and_add_it_to_File’s_Owner-">and remove the class name from the view and add it to File’s Owner.</h3><p><img src="http://i.stack.imgur.com/aiYxL.png" alt=""></p>
-<h3 id="Connect_contentView_by_right-clicking_at_the_File’s_owner:">Connect contentView by right-clicking at the File’s owner:</h3><p><img src="http://i.stack.imgur.com/YlfZ9.png" alt=""></p>
-<h3 id="Then_create_init_methods_like_this:">Then create init methods like this:</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddProgramView</span>: <span class="title">UIView</span> </span>&#123;</span><br><span class="line">    <span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> contentView: <span class="type">UIView</span>!</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">init</span>(frame: <span class="type">CGRect</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(frame: frame)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">required</span> <span class="keyword">init</span>?(coder aDecoder: <span class="type">NSCoder</span>) &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>(coder: aDecoder)</span><br><span class="line">        commonInit()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">commonInit</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="type">NSBundle</span>.mainBundle().loadNibNamed(<span class="string">"AddProgramView"</span>, owner: <span class="keyword">self</span>, options: <span class="literal">nil</span>)</span><br><span class="line">        <span class="keyword">self</span>.addSubview(<span class="keyword">self</span>.contentView)</span><br><span class="line">        <span class="keyword">self</span>.contentView.frame = <span class="keyword">self</span>.bounds</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="And_now_you_can_use_the_AddProgramView_wherever_you_want-_Either_by_init(frame:)">And now you can use the AddProgramView wherever you want. Either by init(frame:)</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> addProgramView = <span class="type">AddProgramView</span>.<span class="keyword">init</span>(frame: <span class="type">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">30</span>))</span><br></pre></td></tr></table></figure>
-<h3 id="done">done</h3>
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-log-json-with-pretty-unescape-character-string" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/09/log-json-with-pretty-unescape-character-string/">log json with pretty &amp; unescape character string</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/09/log-json-with-pretty-unescape-character-string/" class="article-date">
-  <time datetime="2016-06-09T00:19:35.000Z" itemprop="datePublished">2016-06-09</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>In swift 2.+, printing json object in Xcode debug console window will show the escape special character string, and it is difficult to read.<br>so this is a func for printing pretty &amp; unescape character string</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">LogJson</span><span class="params">(data: NSData, <span class="number">_</span> file: String = #file , <span class="number">_</span> function: String = #function, <span class="number">_</span> line: Int = #line)</span></span> &#123;</span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> dataAsJSON = <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.<span class="type">JSONObjectWithData</span>(data, options: [])</span><br><span class="line">            <span class="keyword">let</span> prettyData =  <span class="keyword">try</span> <span class="type">NSJSONSerialization</span>.dataWithJSONObject(dataAsJSON, options: .<span class="type">PrettyPrinted</span>)</span><br><span class="line">            <span class="keyword">let</span> ss = <span class="type">NSString</span>(data: prettyData, encoding: <span class="type">NSUTF8StringEncoding</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> name = (file <span class="keyword">as</span> <span class="type">NSString</span>).lastPathComponent</span><br><span class="line">            <span class="keyword">let</span> fileArray = name.componentsSeparatedByString(<span class="string">"."</span>)</span><br><span class="line">            <span class="keyword">let</span> fileName = fileArray[<span class="number">0</span>]</span><br><span class="line">            </span><br><span class="line">            <span class="type">Logger</span>.log(.<span class="type">Debug</span>, fileName + <span class="string">"-<span class="subst">\(line)</span>-"</span> + function, ss)</span><br><span class="line">        &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">            <span class="type">Log</span>(error)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Notice">Notice</h3><p>there is a dependency lib named <a href="https://github.com/litt1e-p/Logger" target="_blank" rel="external">Logger</a>, which will be release in my <a href="https://github.com/litt1e-p" target="_blank" rel="external">github</a></p>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-swift-debug-flag" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/03/swift-debug-flag/">swift debug flag</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/03/swift-debug-flag/" class="article-date">
-  <time datetime="2016-06-03T13:48:23.000Z" itemprop="datePublished">2016-06-03</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">PROJECT</span> -&gt; <span class="type">Build</span> <span class="type">Settings</span> -&gt; <span class="type">Swift</span> <span class="type">Compiler</span> - <span class="type">Custom</span> <span class="type">Flags</span> -&gt; <span class="type">Other</span> <span class="type">Swift</span> <span class="type">Flags</span> -&gt; <span class="type">Debug</span> </span><br><span class="line"></span><br><span class="line">click +</span><br><span class="line"></span><br><span class="line">add  -<span class="type">D</span> <span class="type">DEBUG</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://ww4.sinaimg.cn/large/005wcR5Jgw1f4hujelcspj31k01467de.jpg" alt=""></p>
-<h3 id="usage">usage</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> kApiDomain = <span class="string">"http://192.168.2.8"</span></span><br><span class="line"></span><br><span class="line">#<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> kApiDomain = <span class="string">"http://192.168.2.9"</span></span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
 
       
 
