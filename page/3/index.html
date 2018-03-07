@@ -31,6 +31,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/">Customation appearance for UIAlertController &amp; UIAlertAction with KVC</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/07/18/Customation-appearance-for-UIAlertController-UIAlertAction-with-KVC/" class="article-date">
+  <time datetime="2016-07-18T13:41:24.000Z" itemprop="datePublished">2016-07-18</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>for UIAlertController</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertController</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="comment">//custom title or message with attributedString and its attributes(fontName\foregroundColor with different range) </span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> titleStr = title &#123;</span><br><span class="line">            <span class="keyword">let</span> range = <span class="type">NSMakeRange</span>(<span class="number">0</span>, titleStr.characters.<span class="built_in">count</span>)</span><br><span class="line">            <span class="keyword">let</span> attrTitle = <span class="type">NSMutableAttributedString</span>(string: titleStr)</span><br><span class="line">            attrTitle.addAttribute(<span class="type">NSFontAttributeName</span>, value: <span class="type">UIFont</span>(name: yourFontName, size: <span class="number">20.0</span>)!, range: range)</span><br><span class="line">            attrTitle.addAttribute(<span class="type">NSForegroundColorAttributeName</span>, value: yourCustomColor, range: range)</span><br><span class="line">            setValue(attrTitle, forKey: <span class="string">"attributedTitle"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> msgStr = message &#123;</span><br><span class="line">            <span class="keyword">let</span> range = <span class="type">NSMakeRange</span>(<span class="number">0</span>, msgStr.characters.<span class="built_in">count</span>)</span><br><span class="line">            <span class="keyword">let</span> attrMsg = <span class="type">NSMutableAttributedString</span>(string: msgStr)</span><br><span class="line">            attrMsg.addAttribute(<span class="type">NSFontAttributeName</span>, value: <span class="type">UIFont</span>(name: yourFontName, size: <span class="number">14.0</span>)!, range: range)</span><br><span class="line">            attrMsg.addAttribute(<span class="type">NSForegroundColorAttributeName</span>, value: yourCustomColor, range: range)</span><br><span class="line">            setValue(attrMsg, forKey: <span class="string">"attributedMessage"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>for UIAlertAction<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertAction</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Cancel</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">//custom titleTextColor</span></span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//custom left image</span></span><br><span class="line">            <span class="keyword">let</span> img = <span class="type">UIImage</span>(named: <span class="string">"yourImageFileName"</span>)?.imageWithRenderingMode(.<span class="type">AlwaysOriginal</span>)</span><br><span class="line">            setValue(img, forKey: <span class="string">"image"</span>)</span><br><span class="line">            <span class="comment">//custom titleTextAlignment with NSTextAlignment.enum rawValue(Int: 64-bit integer)</span></span><br><span class="line">            setValue(<span class="type">NSNumber</span>(integer: <span class="type">NSTextAlignment</span>.<span class="type">Left</span>.rawValue), forKey: <span class="string">"titleTextAlignment"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//so By that analogy, custom the other styles as your want   </span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Default</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Destructive</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Definition-of-Deprecated-Unavailable" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -384,41 +426,6 @@
       
         <p>a simple macro func example for check whether a string is empty </p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">IsEmptyStr</span>: (<span class="type">String</span>?) -&gt; <span class="type">Bool</span> = &#123;</span><br><span class="line">    (ref: <span class="type">String</span>?) -&gt; <span class="type">Bool</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> ref == <span class="literal">nil</span> || ref!.isEqual(<span class="type">NSNull</span>()) || ref == <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// usage</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="type">IsEmptyStr</span>(<span class="string">""</span>) &#123;</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">"empty"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-adjust-text-font-for-rect" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/10/adjust-text-font-for-rect/">adjust text font for rect</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/05/10/adjust-text-font-for-rect/" class="article-date">
-  <time datetime="2016-05-10T12:54:32.000Z" itemprop="datePublished">2016-05-10</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustsFontSizeToFitRect:(<span class="type">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">CGSize</span> maxSize          = <span class="type">CGSizeMake</span>(rect.size.width, rect.size.height);</span><br><span class="line">    <span class="type">CGFloat</span> currentFontSize = <span class="number">17</span>.f;</span><br><span class="line">    <span class="type">NSString</span> *str           = <span class="keyword">self</span>.text;</span><br><span class="line">    <span class="type">CGSize</span> requiredSize     = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    <span class="keyword">if</span>(requiredSize.height &lt;= maxSize.height) &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &lt;= maxSize.height &amp;&amp; requiredSize.width &lt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize++;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &gt; maxSize.height || requiredSize.width &gt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize--;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">        requiredSize=[str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.font = [<span class="keyword">self</span>.font fontWithSize:currentFontSize];</span><br><span class="line">    <span class="keyword">self</span>.adjustsFontSizeToFitWidth = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
 

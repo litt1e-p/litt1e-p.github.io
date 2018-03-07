@@ -31,6 +31,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Build-a-git-repo-server" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/25/Build-a-git-repo-server/">Build a git repo server</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/08/25/Build-a-git-repo-server/" class="article-date">
+  <time datetime="2017-08-25T13:12:54.000Z" itemprop="datePublished">2017-08-25</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="步骤">步骤</h4><p>yum install git</p>
+<p>groupadd git<br>adduser git -g git<br>passwd git //设置密码</p>
+<p>// git用户的～目录: /home/git</p>
+<p>mkdir /home/git/.ssh &amp;&amp; touch /home/git/.ssh/authorized_keys<br>chmod 700 /home/git/.ssh<br>chmod 600 /home/git/.ssh/authorized_keys</p>
+<p>//把本地电脑的.ssh/id_rsa.pub里的内容复制并粘贴到远程的/home/git/.ssh/authorized_keys, 若有多个则一行一个</p>
+<p>//初始化一个叫做test的仓库<br>cd /home/git &amp; git init –bare test.git</p>
+<p>chown -R git:git test.git</p>
+<p>//禁用shell登录<br>//1.先找到git-shell的路径<br>grep git-shell /etc/shells || su -c “echo <code>which git-shell</code> &gt;&gt; /etc/shells”<br>eg.控制台输出：/usr/bin/git-shell<br>//2.修改git用户的shell登录<br>vi /etc/passwd<br>//找到类似下面的一行：<br>git:x:1001:1001:,,,:/home/git:/bin/bash<br>//改成<br>git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell<br>//这样，git用户可以正常通过ssh使用git，但无法登录shell，因为我们为git用户指定的git-shell每次一登录就自动退出<br>//测试：<br>ssh git@your-server-name-or-ip<br>//输入密码后显示如下信息即成功<br>fatal: What do you think I am? A shell?<br>Connection to <code>your-server-name-or-ip</code> closed.<br>//给git用户增加push权限<br>usermod -s /bin/bash git</p>
+<p>//在本地电脑中clone仓库<br>git clone git@your-server-name-or-ip:test.git</p>
+<p>//ps. 这里若服务器改了默认的ssh 22端口, 可以在本地电脑中(~/.ssh/)新建config文件<br>vi ~/.ssh/config<br>//config内容：<br>host your-server-name-or-ip<br>hostname  your-server-name-or-ip<br>port your-server-port</p>
+<p>假设windows上已经有个本地仓库，并且与别名叫origin的远程仓库进行了关联，那么，我们只需要将origin所指向的远程仓库的链接改为我们刚搭建的git服务器：<br>git remote set-url origin git@your-server-name-or-ip:my-project.git<br>如果是本地还没有仓库，可以执行下面的命令，并将其与远程仓库进行关联：<br>git init &amp;&amp; git remote add origin git@your-server-name-or-ip:my-project.git</p>
+<p>参考网址：<br><a href="https://git-scm.com/book/zh/v1/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-%E6%9E%B6%E8%AE%BE%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="external">服务器上的 Git - 架设服务器</a><br><a href="http://www.dabu.info/vps-set-private-git-server.html" target="_blank" rel="external">用vps搭建私有的git服务器</a><br><a href="http://www.pubyun.com/blog/deveops/%E6%9C%AC%E5%9C%B0ssh%E9%9D%9E%E6%A0%87%E5%87%86%E7%AB%AF%E5%8F%A3%E6%97%B6%EF%BC%8C%E8%BF%9E%E6%8E%A5github-com/" target="_blank" rel="external">本地ssh非标准端口时，连接github.com</a></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-LiftCycle" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -815,61 +861,6 @@
 <p>Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’</p>
 </blockquote>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//error example: </span></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>(rawValue: <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//solution:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for other enum values</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let unspecified = SecTrustResultType(rawValue: SecTrustResultType.Unspecified)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let proceed = SecTrustResultType(rawValue: SecTrustResultType.Proceed)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> unspecified = <span class="type">SecTrustResultType</span>.<span class="type">Unspecified</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> proceed = <span class="type">SecTrustResultType</span>.<span class="type">Proceed</span></span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-build-a-https-server-for-localhost" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/20/build-a-https-server-for-localhost/">build a https server for localhost</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/10/20/build-a-https-server-for-localhost/" class="article-date">
-  <time datetime="2016-10-20T13:48:08.000Z" itemprop="datePublished">2016-10-20</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>we need a local https server when https is required in product environment</p>
-</blockquote>
-<p>let us do it now 🔨</p>
-<h3 id="0-_install_openssl_firstly!">0. install openssl firstly!</h3><h3 id="1-prepare_a_CA_request_files">1.prepare a CA request files</h3><h4 id="1-1_generate_a_RSA_server_key">1.1 generate a RSA server key</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out server<span class="class">.key</span> <span class="number">2048</span></span><br></pre></td></tr></table></figure>
-<h4 id="1-2_generate_a_CA_request_file">1.2 generate a CA request file</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -out server<span class="class">.req</span> -key server<span class="class">.key</span> -subj</span><br><span class="line"> <span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=127.0.0.1"</span></span><br></pre></td></tr></table></figure>
-<p><code>ps. &#39;-subj&#39; can be ignored and you can type them all in the command tool</code></p>
-<p>now notice there are two files(server.key, server.req) in current directory, the <code>.key</code> is server private key and the <code>.req</code> is CA request file.</p>
-<p>let us get CA signature with <code>server.req</code> if there is no error occured</p>
-<h3 id="2-make_an_our_own_CA">2.make an our own CA</h3><h4 id="2-1_generate_a_RSA_key">2.1 generate a RSA key</h4><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -<span class="keyword">out</span> <span class="keyword">ca</span>.key 2048</span><br></pre></td></tr></table></figure>
-<h4 id="2-2_root_signature_for_self">2.2 root signature for self</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -x509 -days <span class="number">1000</span> -key ca<span class="class">.key</span> -out ca<span class="class">.crt</span> -sha256 -subj </span><br><span class="line"><span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=Namido CA"</span></span><br></pre></td></tr></table></figure>
-<p>notice: <code>value of CN in -subj is the name of CA</code></p>
-<h4 id="2-3_generate_a_server_certificate_with_this_root_signature">2.3 generate a server certificate with this root signature</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -req -<span class="keyword">in</span> server<span class="class">.req</span> -out server<span class="class">.crt</span> -CAkey ca<span class="class">.key</span> -CA ca<span class="class">.crt</span> -days <span class="number">1000</span> </span><br><span class="line">-sha256 -CAcreateserial -CAserial server.serial</span><br></pre></td></tr></table></figure>
-<p>the <code>server.crt</code> file that via our own CA generated will exists in current directory if no error occur. </p>
-<h3 id="3-0_finally_process">3.0 finally process</h3><h4 id="3-1_add_them_to_server_configuration">3.1 add them to server configuration</h4><p>copy <code>ca.crt</code>, <code>server.crt</code>, <code>server.key</code> three files to HTTPS server such as Nginx/Apache or other server by using <code>server.crt</code> as server certificate, <code>server.key</code> as server private key, <code>ca.crt</code> as keychain certificate.</p>
-<p>for example:</p>
-<p>this is a node.js server souce code</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> https = <span class="built_in">require</span>(<span class="string">'https'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line"></span><br><span class="line">	key: fs.readFileSync(<span class="string">'./keys/server.key'</span>),</span><br><span class="line"></span><br><span class="line">	ca: [fs.readFileSync(<span class="string">'./keys/ca.crt'</span>)],</span><br><span class="line"></span><br><span class="line">	cert: fs.readFileSync(<span class="string">'./keys/server.crt'</span>)</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">https.createServer(options, app).listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'server is running on port 3000'</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h4 id="3-2_make_it_valid">3.2 make it valid</h4><p>copy  <code>ca.crt</code> to your local computer somewhere and double click it and modify <code>always trust</code> in your keychain to make it valid.</p>
-<p><img src="http://ww2.sinaimg.cn/large/006y8lVagw1f8mcm69ot9j30n60csq3i.jpg" alt=""></p>
-<p>done! 🎉</p>
 
       
 
