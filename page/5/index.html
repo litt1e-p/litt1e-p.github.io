@@ -31,6 +31,223 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-adjust-text-font-for-rect" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/10/adjust-text-font-for-rect/">adjust text font for rect</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/05/10/adjust-text-font-for-rect/" class="article-date">
+  <time datetime="2016-05-10T12:54:32.000Z" itemprop="datePublished">2016-05-10</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>for Objective-C<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)adjustsFontSizeToFitRect:(<span class="type">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">CGSize</span> maxSize          = <span class="type">CGSizeMake</span>(rect.size.width, rect.size.height);</span><br><span class="line">    <span class="type">CGFloat</span> currentFontSize = <span class="number">17</span>.f;</span><br><span class="line">    <span class="type">NSString</span> *str           = <span class="keyword">self</span>.text;</span><br><span class="line">    <span class="type">CGSize</span> requiredSize     = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    <span class="keyword">if</span>(requiredSize.height &lt;= maxSize.height) &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &lt;= maxSize.height &amp;&amp; requiredSize.width &lt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize++;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (requiredSize.height &gt; maxSize.height || requiredSize.width &gt; maxSize.width) &#123;</span><br><span class="line">            currentFontSize--;</span><br><span class="line">            requiredSize = [str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">        &#125;</span><br><span class="line">        requiredSize=[str boundingRectWithSize:maxSize options:<span class="type">NSStringDrawingUsesFontLeading</span> attributes:@&#123;<span class="type">NSFontAttributeName</span>:[<span class="keyword">self</span>.font fontWithSize:currentFontSize]&#125; context:<span class="literal">nil</span>].size;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">self</span>.font = [<span class="keyword">self</span>.font fontWithSize:currentFontSize];</span><br><span class="line">    <span class="keyword">self</span>.adjustsFontSizeToFitWidth = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-escape_html" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/24/escape_html/">Escape &amp; unescape html character code symbol</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/04/24/escape_html/" class="article-date">
+  <time datetime="2016-04-24T03:24:10.000Z" itemprop="datePublished">2016-04-24</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>here is an extension for swift 2+<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">extension</span> <span class="title">String</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">unEscapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">         <span class="keyword">return</span>  <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;lt;"</span>, withString: <span class="string">"&lt;"</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"&amp;gt;"</span>, withString: <span class="string">"&gt;"</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"&amp;quot;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"\t"</span>, withString: <span class="string">""</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"\r"</span>, withString: <span class="string">""</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"\n"</span>, withString: <span class="string">""</span>)</span><br><span class="line">         .stringByReplacingOccurrencesOfString(<span class="string">"&amp;apos;"</span>, withString: <span class="string">"'"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">escapeHtml</span><span class="params">()</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByReplacingOccurrencesOfString(<span class="string">"&amp;"</span>, withString: <span class="string">"&amp;amp;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"\""</span>, withString: <span class="string">"&amp;quot;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"'"</span>, withString: <span class="string">"&amp;#39;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&lt;"</span>, withString: <span class="string">"&amp;lt;"</span>)</span><br><span class="line">        .stringByReplacingOccurrencesOfString(<span class="string">"&gt;"</span>, withString: <span class="string">"&amp;gt;"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>there are also several Apple’s Foundation functions for escaping and unescaping the encoding characters</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">extension</span> <span class="title">String</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="type">URLEscapedString</span>: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByAddingPercentEncodingWithAllowedCharacters(<span class="type">NSCharacterSet</span>.<span class="type">URLHostAllowedCharacterSet</span>())!</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> <span class="type">URLUnEscapedString</span>: <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.stringByRemovingPercentEncoding!</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>done exactly.</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-regex" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/23/regex/">regex</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/04/23/regex/" class="article-date">
+  <time datetime="2016-04-23T05:48:14.000Z" itemprop="datePublished">2016-04-23</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="for_match_‘\r’_‘\n’_or_‘\r\n’">for match ‘\r’ ‘\n’ or ‘\r\n’</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[\s\<span class="type">S</span>]*</span><br><span class="line">[\d\<span class="type">D</span>]*</span><br><span class="line">[\w\<span class="type">W</span>]*</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Event" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/28/Event/">Event</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/01/28/Event/" class="article-date">
+  <time datetime="2016-01-28T10:19:35.000Z" itemprop="datePublished">2016-01-28</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="事件">事件</h2><p>iOS中事件一共有四种类型，包含触摸事件，运动事件(如晃动手机)，远程控制事件(如耳机控制)，按压事件(如3D Touch)</p>
+<h4 id="UIEvent">UIEvent</h4><p>UIEvent对象中记录了事件发生的时间，类型，对于触摸事件，还记录了一组UITouch对象</p>
+<h4 id="UITouch">UITouch</h4><p>UITouch记录了手指在屏幕上触摸时产生的一组信息，包含触摸的时间，位置，所在的窗口或视图，触摸的状态，力度等信息</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">NSTimeInterval</span>      timestamp;  <span class="comment">//时间</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">UITouchPhase</span>        phase;  <span class="comment">//状态，例如begin，move，end,cancel</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span>          tapCount;   <span class="comment">// 短时间内单击的次数</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">UITouchType</span>         type <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);  <span class="comment">//类型</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> majorRadius <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">8</span>_0);  <span class="comment">//触摸半径</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> majorRadiusTolerance <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">8</span>_0);</span><br><span class="line"><span class="keyword">@property</span>(nullable,<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>,<span class="keyword">strong</span>) <span class="built_in">UIWindow</span>                        *window;  <span class="comment">//触摸所在窗口</span></span><br><span class="line"><span class="keyword">@property</span>(nullable,<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>,<span class="keyword">strong</span>) <span class="built_in">UIView</span>                          *view;  <span class="comment">//触摸所在视图</span></span><br><span class="line"><span class="keyword">@property</span>(nullable,<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>,<span class="keyword">copy</span>)   <span class="built_in">NSArray</span> &lt;<span class="built_in">UIGestureRecognizer</span> *&gt; *gestureRecognizers <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_2);  <span class="comment">//正在接收该触摸对象的手势识别器</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> force <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);  <span class="comment">//触摸的力度</span></span><br></pre></td></tr></table></figure>
+<p>每一根手指的触摸都会产生一个UITouch对象，多个手指触摸便会有多个UITouch对象，当手指在屏幕上移动时，系统会更新UITouch的部分属性值，在触摸结束后系统会释放UITouch对象。</p>
+<p>当事件产生后，系统会寻找可以响应该事件的对象来处理事件，如果找不到可以响应的对象，事件就会被丢弃。那么哪些对象可以响应事件呢？只有继承于UIResponder的对象才能够响应事件，UIApplication，UIView，UIViewcontroller均继承于UIResponder，因此它们均能够响应事件。UIResponder提供了响应事件的一组方法：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event;  <span class="comment">//手指触摸到屏幕</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesMoved:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event; <span class="comment">//手指在屏幕上移动或按压</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesEnded:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event; <span class="comment">//手指离开屏幕</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesCancelled:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event; <span class="comment">//触摸被中断，例如触摸时电话呼入</span></span><br></pre></td></tr></table></figure>
+<h4 id="事件传递">事件传递</h4><p>事件产生之后，会被加入到由UIApplication管理的事件队列里，接下来开始自UIApplication往下传递，首先会传递给主window，然后按照view的层级结构一层层往下传递，一直找到最合适的view（发生touch的那个view）来处理事件</p>
+<p>查找最合适的view的过程是一个递归的过程，其中涉及到两个重要的方法 <code>hitTest:withEvent:</code>和<code>pointInside:withEvent:</code></p>
+<ul>
+<li><p><code>hitTest:withEvent:</code>返回：self，代表这个view会接受用户的操作事件，返回：nil，则代表这个view不会接受用户的操作事件</p>
+</li>
+<li><p><code>pointInside:withEvent:</code>方法作用是判断点是否在视图内，是则返回YES，否则返回NO</p>
+</li>
+<li><p>判断一个view是否能够接收事件有三个条件，分别是，是否禁止用户交互（userInteractionEnabled = NO），是否被隐藏（hidden = YES）以及透明度是否小于等于0.01（alpha &lt;=0.01）</p>
+</li>
+<li><p>从递归的逻辑我们知道，如果触摸的点不在父view上，那么其上的所有子view的hitTest都不会被调用，需要指出的是，如果子view尺寸超出了父view，并且属性clipsToBounds设置为NO（也就是子view超出部分不被裁剪），触摸发生在子view超出父view的区域内，依旧不返回子view。反过来，如果触摸的点在父view上并且父view就是最合适的view，那么它的所有子view的hitTest还是会被调用，因为如果不调用就无法知道是否还有比父view更合适的子view存在。</p>
+</li>
+</ul>
+<h4 id="事件穿透">事件穿透</h4><p>示例：<a href="https://www.ianisme.com/ios/2565.html" target="_blank" rel="external">淘宝app雪花动画层穿透</a> 、 <a href="http://www.cnblogs.com/ficow/p/5936288.html" target="_blank" rel="external">浮动按钮透明背景穿透</a></p>
+<h6 id="参考资料">参考资料</h6><blockquote>
+<p><a href="https://www.ianisme.com/ios/2565.html" target="_blank" rel="external">https://www.ianisme.com/ios/2565.html</a><br><a href="http://www.cnblogs.com/ficow/p/5936288.html" target="_blank" rel="external">http://www.cnblogs.com/ficow/p/5936288.html</a><br><a href="https://juejin.im/post/5a6abaff5188257350516efe" target="_blank" rel="external">https://juejin.im/post/5a6abaff5188257350516efe</a></p>
+</blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-commit-to-cocoapods" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/05/commit-to-cocoapods/">commit to cocoapods</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/01/05/commit-to-cocoapods/" class="article-date">
+  <time datetime="2016-01-05T02:52:09.000Z" itemprop="datePublished">2016-01-05</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>you must register a cocoapods account before push your pod lib 。<br>prepare your：</p>
+<blockquote>
+<ul>
+<li>email : abc@abc.com</li>
+<li>username: abc</li>
+<li>description: I am description</li>
+</ul>
+</blockquote>
+<p><code>use your real custom info</code></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/05/commit-to-cocoapods/#more">More...</a>
+          </p>
+        
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-time-to-go" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">

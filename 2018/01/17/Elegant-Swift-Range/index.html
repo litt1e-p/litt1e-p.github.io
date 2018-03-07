@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Elegant Swift -- Range | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="优雅的Swift–范围判断(～=操作符)我们对数组取值是否越界进行判断，通常的写法是：
+1234func item(at index: Int, array: Array&amp;lt;Element&amp;gt;) -&amp;gt; Element? &amp;#123;    guard index &amp;gt;= 0 &amp;amp;&amp;amp; index &amp;lt; array.count - 1 &amp;#123; else ret">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elegant Swift -- Range">
+<meta property="og:url" content="https://litt1e-p.github.io/2018/01/17/Elegant-Swift-Range/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="优雅的Swift–范围判断(～=操作符)我们对数组取值是否越界进行判断，通常的写法是：
+1234func item(at index: Int, array: Array&amp;lt;Element&amp;gt;) -&amp;gt; Element? &amp;#123;    guard index &amp;gt;= 0 &amp;amp;&amp;amp; index &amp;lt; array.count - 1 &amp;#123; else ret">
+<meta property="og:updated_time" content="2018-03-07T12:57:45.854Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elegant Swift -- Range">
+<meta name="twitter:description" content="优雅的Swift–范围判断(～=操作符)我们对数组取值是否越界进行判断，通常的写法是：
+1234func item(at index: Int, array: Array&amp;lt;Element&amp;gt;) -&amp;gt; Element? &amp;#123;    guard index &amp;gt;= 0 &amp;amp;&amp;amp; index &amp;lt; array.count - 1 &amp;#123; else ret">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Elegant-Swift-Range" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Elegant Swift -- Range
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2018/01/17/Elegant-Swift-Range/" class="article-date">
+  <time datetime="2018-01-17T12:56:45.000Z" itemprop="datePublished">2018-01-17</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="优雅的Swift–范围判断(～=操作符)">优雅的Swift–范围判断(～=操作符)</h2><p>我们对数组取值是否越界进行判断，通常的写法是：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">item</span><span class="params">(at index: Int, array: Array&lt;Element&gt;)</span></span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">    <span class="keyword">guard</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; array.<span class="built_in">count</span> - <span class="number">1</span> &#123; <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">nil</span>&#125;</span><br><span class="line">    <span class="keyword">return</span> array[index]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>或者优雅一点写成这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Array</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">item</span><span class="params">(at index: Int)</span></span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; <span class="keyword">self</span>.<span class="built_in">count</span> - <span class="number">1</span> &#123; <span class="keyword">else</span> <span class="keyword">return</span> <span class="literal">nil</span>&#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>[index]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有没有更优雅的写法呢？看看下面这样写：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Array</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">item</span><span class="params">(at index: Int)</span></span> -&gt; <span class="type">Element</span>? &#123;</span><br><span class="line">        <span class="keyword">guard</span> startIndex..&lt;endIndex ~= index <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>[index]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>是不是更加优雅点了呢？</p>
+<p>操作符Operator<code>~=</code>其实是用于匹配case操作的，下面举个简单的例子：</p>
+<ol>
+<li>先定义一个struct</li>
+</ol>
+<figure class="highlight capnproto"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Pet</span> </span>&#123;</span><br><span class="line">    let name: String</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>再implement<code>~=</code>方法</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> ~=<span class="params">(pattern: String, value: Pet)</span></span> -&gt; <span class="type">Bool</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value.name == pattern</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>使用</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> p = <span class="type">Pet</span>(name: <span class="string">"Poly"</span>)</span><br><span class="line"><span class="keyword">switch</span> p &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="string">"Poly"</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"I am Poly"</span>)</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"no me"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>当调用<code>case</code>时，会调用我们自定义的<code>~=</code>方法进行判断</strong></p>
+<p>或者这样判断也会调用自定义的<code>~=</code>方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">case</span> <span class="string">"Poly"</span> = p &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"It's still me!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由此得知Array的extension方法中的<code>startIndex..&lt;endIndex ~= index</code>同样是调用了在其内部实现的<code>~=</code>方法。</p>
+<h4 id="~=_的更多示例"><code>~=</code> 的更多示例</h4><ul>
+<li>1 检测变量n是否在指定范围内(10~100)</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let n: Int = <span class="number">100</span></span><br><span class="line"><span class="comment">// using "patterns"</span></span><br><span class="line"><span class="keyword">if</span> <span class="number">10.</span>.<span class="number">.100</span> ~= n&#123;</span><br><span class="line">    print(<span class="string">"inside!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>2 检测http响应值</li>
+</ul>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> <span class="built_in">response</span> = <span class="built_in">response</span> as? HTTPURLResponse , <span class="number">200.</span>.<span class="number">.299</span> ~= <span class="built_in">response</span>.statusCode &#123;</span><br><span class="line">    <span class="keyword">let</span> contentLength : Int64 = <span class="built_in">response</span>.expectedContentLength</span><br><span class="line">    completionHandler(contentLength)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    completionHandler(nil)</span><br></pre></td></tr></table></figure>
+<h5 id="参考文章">参考文章</h5><blockquote>
+<p><a href="https://stackoverflow.com/questions/38371870/operator-in-swift" target="_blank" rel="external">https://stackoverflow.com/questions/38371870/operator-in-swift</a></p>
+</blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/02/01/Elegant-Swift-UnWrapped-or-Default-Value/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Elegant Swift -- UnWrapped or Default Value
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/14/Elegant-Swift-Operator/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Elegant Swift -- Operator</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src='https://imsun.github.io/gitment/dist/gitment.browser.js'></script>
+  <script>
+    var gitment = new Gitment({
+      owner: 'your github account',
+      repo: 'your repo',
+      oauth: {
+        client_id: 'your client_id',
+        client_secret: 'your client_secret',
+      },
+    })
+    gitment.render('comments')
+  </script>
+</section>
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/hejianxian" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/hejianxian" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2018/01/17/Elegant-Swift-Range/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

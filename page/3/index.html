@@ -31,6 +31,209 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/">solution for `forwardInvocation and NSInvocation are not available to Swift`</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/10/09/solution-for-forwardInvocation-and-NSInvocation-are-not-available-to-Swift/" class="article-date">
+  <time datetime="2016-10-09T13:54:46.000Z" itemprop="datePublished">2016-10-09</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>forwardInvocation and NSInvocation are not available to Swift</p>
+</blockquote>
+<p>for instance:</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyTimer</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">var</span> timer:NSTimer?</span><br><span class="line">  <span class="keyword">let</span> INTERVAL_SECONDS = <span class="number">1.0</span></span><br><span class="line">  required init() &#123;</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = nil</span><br><span class="line">    <span class="built_in">self</span><span class="built_in">.</span>timer = NSTimer<span class="built_in">.</span>scheduledTimerWithTimeInterval(INTERVAL_SECONDS, target: <span class="built_in">self</span>, <span class="keyword">select</span><span class="subst">or</span>: <span class="variable">#selector</span>(<span class="built_in">self</span><span class="built_in">.</span>getUpdateds(_:))<span class="string">", userInfo: nil, repeats: true)</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>here are class with init() function,  I setup a timer with a selector named:<code>getUpdateds</code> in <code>init()</code></p>
+<p>and selector function looks like this:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">dynamic</span> <span class="func"><span class="keyword">func</span> <span class="title">getUpdateds</span><span class="params">(timer: NSTimer!)</span></span> &#123;</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>If you’re sharp you might have noticed the <code>dynamic</code> keyword in the function declaration. If you leave it out you’ll get an error like this:</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">NSForwarding: warning: object <span class="number">0x7f9662d56f0</span> <span class="keyword">of</span> <span class="type">class</span>  SwiftDemo.MyTimer' <span class="keyword">does</span> <span class="keyword">not</span> implement  methodSignatureForSelector: <span class="comment">-- trouble ahead</span></span><br><span class="line">Unrecognized selector -[SwiftDemo.MyTimer getUpdateds:]</span><br></pre></td></tr></table></figure>
+<p>That’s because <code>methodSignatureForSelector</code>: is an Objective-C method. By default, Swift objects don’t have it. Adding <code>dynamic</code> to the function signature makes calls to it get dispatched using the Objective-C runtime which avoids our error.</p>
+<p>Another way to fix this error is to tag the class with <code>@objc</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">@objc</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTimer</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Which exposes the class to the Objective-C runtime. Then it’ll effectively insert <code>dynamic</code> if it’s needed. Personally, I’d rather have <code>dynamic</code> near the spot that requires it than labelling the whole class.Hopefully we’ll get something more Swift-y soon.</p>
+<p>Though <code>forwardInvocation</code> and <code>NSInvocation</code> are not available to Swift.</p>
+<p>But, soft! What light through yonder window breaks!</p>
+<p>While <code>forwardInvocation</code>: isn’t available, <code>forwardingTargetForSelector</code>: is available.</p>
+<p>Which means the we could see if the selector responds to that, and then does a <code>performSelector:</code></p>
+<p>or other any your want:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">forwardingTargetForSelector</span><span class="params">(aSelector: Selector)</span></span> -&gt; <span class="type">AnyObject</span>? &#123;</span><br><span class="line">    <span class="keyword">if</span> forwardTarget!.respondsToSelector(aSelector) &#123;</span><br><span class="line">        <span class="keyword">return</span> forwardTarget</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>However, Swift support for <code>forwardInvocation:</code> and <code>NSInvocation</code> would be useful. These things have their uses, and while <code>forwardingTargetForSelector:</code> can take care of some of them, they don’t take care of all of them.</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-system-version-check-and-comparison-in-iOS-10" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/25/system-version-check-and-comparison-in-iOS-10/">system version check and comparison in iOS 10</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/25/system-version-check-and-comparison-in-iOS-10/" class="article-date">
+  <time datetime="2016-09-25T14:58:10.000Z" itemprop="datePublished">2016-09-25</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>there are kinds of ways to check or compare iOS system version</p>
+</blockquote>
+<h3 id="1-_NSProcessInfo">1. NSProcessInfo</h3><h4 id="in_Swift">in Swift</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> os = <span class="type">NSProcessInfo</span>().operatingSystemVersion </span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (os.majorVersion, os.minorVersion, os.patchVersion) &#123; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">8</span>, <span class="number">0</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.0.0, &lt; 8.1.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">8</span>, <span class="number">_</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.1.0, &lt; 9.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> (<span class="number">9</span>, <span class="number">_</span>, <span class="number">_</span>):    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 9.0.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span>:    <span class="comment">// this code will have already crashed on iOS 7, so &gt;= iOS 10.0    </span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 10.0.0"</span>)</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="in_Objective-C">in Objective-C</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSInteger</span> ver = [[[<span class="type">NSProcessInfo</span> alloc] <span class="keyword">init</span>] operatingSystemVersion];</span><br><span class="line"></span><br><span class="line"><span class="type">NSLog</span>(@<span class="string">"majorVer: %zi, minorVer: %zi, patchVer: %zi"</span>, ver.majorVersion, ver.minorVersion, ver.patchVersion);</span><br></pre></td></tr></table></figure>
+<p>do checking or comparison any you want</p>
+<blockquote>
+<p>unfortunately, checking system version via NSProcessInfo is only availuable above iOS 8</p>
+</blockquote>
+<h3 id="2-_UIDevice_systemVersion">2. UIDevice systemVersion</h3><p>for instance, to check version <code>8.0</code>:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">switch</span> <span class="type">UIDevice</span>.currentDevice().systemVersion.compare(<span class="string">"8.0"</span>, options:.<span class="type">NumericSearch</span>) &#123; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">OrderedSame</span>, .<span class="type">OrderedDescending</span>:    </span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"iOS &gt;= 8.0"</span>) </span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> .<span class="type">OrderedAscending</span>:   </span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"iOS &lt; 8.0"</span>)</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>it works well in earlier than iOS 10 cause UIDevice’s systemVersion can be compared as numberic, but it can not compare version like ‘7.0.2’ and ‘10.0.1’, how to fix it?</p>
+<h3 id="3-_compare_on_our_own!">3. compare on our own!</h3><p>here is a category of NSString</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="type">NSComparisonResult</span>)compareVersion:(<span class="type">NSString</span> *)checkingVersion</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">NSString</span> *currentVersion = <span class="keyword">self</span>;</span><br><span class="line">    <span class="keyword">if</span> ([currentVersion isEqualToString:checkingVersion]) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">NSOrderedSame</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">NSArray</span> *currentArr  = [currentVersion componentsSeparatedByString:@<span class="string">"."</span>];</span><br><span class="line">    <span class="type">NSArray</span> *checkingArr = [checkingVersion componentsSeparatedByString:@<span class="string">"."</span>];</span><br><span class="line">    <span class="type">NSInteger</span> <span class="built_in">count</span>      = ([currentArr <span class="built_in">count</span>] &gt; [checkingArr <span class="built_in">count</span>]) ? [currentArr <span class="built_in">count</span>] : [checkingArr <span class="built_in">count</span>];</span><br><span class="line">    <span class="type">NSComparisonResult</span> res;</span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="built_in">count</span>; i++) &#123;</span><br><span class="line">        <span class="type">NSString</span> *currentString  = i &lt; [currentArr <span class="built_in">count</span>] ? [currentArr objectAtIndex:i] : @<span class="string">"0"</span>;</span><br><span class="line">        <span class="type">NSString</span> *checkingString = i &lt; [checkingArr <span class="built_in">count</span>] ? [checkingArr objectAtIndex:i] : @<span class="string">"0"</span>;</span><br><span class="line">        <span class="keyword">if</span> ([currentString intValue] &gt; [checkingString intValue]) &#123;</span><br><span class="line">            res = <span class="type">NSOrderedDescending</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ([currentString intValue] &lt; [checkingString intValue])&#123;</span><br><span class="line">            res = <span class="type">NSOrderedAscending</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//compare current version simply</span></span><br><span class="line">+ (<span class="type">NSComparisonResult</span>)compareCurrentVersion:(<span class="type">NSString</span> *)checkingVersion</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [[[<span class="type">UIDevice</span> currentDevice] systemVersion] compareVersion:checkingVersion];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>how to use them ?</p>
+<ul>
+<li>use define macro</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define iOS10_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"10.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br><span class="line">#define iOS9_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"9.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br><span class="line">#define iOS8_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"8.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br><span class="line">#define iOS7_OR_LATER ([<span class="type">NSString</span> compareCurrentVersion:@<span class="string">"7.0"</span>] != <span class="type">NSOrderedAscending</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>app version comparison also works!</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSString</span> *currentAppVer = [[[<span class="type">NSBundle</span> mainBundle] infoDictionary] objectForKey:@<span class="string">"CFBundleShortVersionString"</span>];</span><br><span class="line"></span><br><span class="line"><span class="type">NSString</span> *latestAppStoreVer = @<span class="string">"2.3.1"</span>; <span class="comment">//get it from your api server or appstore</span></span><br><span class="line"></span><br><span class="line"><span class="type">BOOL</span> isUpdateNeeded = [currentAppVer compareVersion:latestAppStoreVer] == <span class="type">NSOrderedAscending</span>;</span><br></pre></td></tr></table></figure>
+<p>done! 🎉🎉</p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-UITableView-cell-display-animation" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/24/UITableView-cell-display-animation/">UITableView cell display animation</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/24/UITableView-cell-display-animation/" class="article-date">
+  <time datetime="2016-09-24T13:29:22.000Z" itemprop="datePublished">2016-09-24</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="when_will_fire_the_animate_effect?">when will fire the animate effect?</h3><p>there are 2 moments for it as below options:</p>
+<ol>
+<li><p>in <code>- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath</code></p>
+</li>
+<li><p>in <code>-(void)viewDidAppear</code></p>
+</li>
+</ol>
+<blockquote>
+<p>I prefer to choose the second one cause it will fire the animation on everytime that view come appear</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (void)viewWillDisappear:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewWillDisappear:animated];</span><br><span class="line">    _tableView.hidden = <span class="type">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)viewDidAppear:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidAppear:animated];</span><br><span class="line">    _tableView.hidden = <span class="type">NO</span>;</span><br><span class="line">    [<span class="keyword">self</span> animateCell1];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)animateCell1</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">NSArray</span> *array = <span class="keyword">self</span>.tableView.indexPathsForVisibleRows;</span><br><span class="line">    <span class="type">NSIndexPath</span> *firstIndexPath = array[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; array.<span class="built_in">count</span>; i++) &#123;</span><br><span class="line">        <span class="type">NSIndexPath</span> *indexPath = array[i];</span><br><span class="line">        <span class="type">UITableViewCell</span> *cell = [<span class="keyword">self</span>.tableView cellForRowAtIndexPath:indexPath];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//set an anchorPoint</span></span><br><span class="line">        cell.layer.anchorPoint = <span class="type">CGPointMake</span>(<span class="number">0</span>, <span class="number">0.5</span>);</span><br><span class="line">        <span class="comment">//reset cell's origin position</span></span><br><span class="line">        cell.layer.position = <span class="type">CGPointMake</span>(<span class="number">0</span>, cell.layer.position.y);      </span><br><span class="line">        </span><br><span class="line">        <span class="comment">//rotate cell </span></span><br><span class="line">        <span class="keyword">if</span> (firstIndexPath.row &lt; indexPath.row) &#123;</span><br><span class="line">            cell.layer.transform = <span class="type">CATransform3DMakeRotation</span>(<span class="type">M_PI_2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1.0</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            cell.layer.transform = <span class="type">CATransform3DMakeRotation</span>(- <span class="type">M_PI_2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1.0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        cell.alpha = <span class="number">0.0</span>;</span><br><span class="line">        </span><br><span class="line">        [<span class="type">UIView</span> animateWithDuration:<span class="number">0.5</span> animations:^&#123;</span><br><span class="line">            cell.layer.transform = <span class="type">CATransform3DIdentity</span>;</span><br><span class="line">            cell.alpha = <span class="number">1.0</span>;</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)animateCell2</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">NSArray</span> *array = <span class="keyword">self</span>.tableView.indexPathsForVisibleRows;</span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; array.<span class="built_in">count</span>; i++) &#123;</span><br><span class="line">        <span class="type">NSIndexPath</span> *indexPath = array[i];</span><br><span class="line">        <span class="type">UITableViewCell</span> *cell = [<span class="keyword">self</span>.tableView cellForRowAtIndexPath:indexPath];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// setup CATransform3D</span></span><br><span class="line">        <span class="type">CATransform3D</span> transform;</span><br><span class="line">        transform = <span class="type">CATransform3DMakeRotation</span>( (<span class="number">90.0</span>*<span class="type">M_PI</span>)/<span class="number">180</span>, <span class="number">0.0</span>, <span class="number">0.7</span>, <span class="number">0.4</span>);</span><br><span class="line">        transform.m34 = <span class="number">1.0</span>/ -<span class="number">600</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// setup cell's layer</span></span><br><span class="line">        cell.layer.shadowColor = [[<span class="type">UIColor</span> blackColor]<span class="type">CGColor</span>];</span><br><span class="line">        cell.layer.shadowOffset = <span class="type">CGSizeMake</span>(<span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">        cell.alpha = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        cell.layer.transform = transform;</span><br><span class="line">        cell.layer.anchorPoint = <span class="type">CGPointMake</span>(<span class="number">0</span>, <span class="number">0.5</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// animation</span></span><br><span class="line">        [<span class="type">UIView</span> beginAnimations:@<span class="string">"transform"</span> context:<span class="type">NULL</span>];</span><br><span class="line">        [<span class="type">UIView</span> setAnimationDuration:<span class="number">0.5</span>];</span><br><span class="line">        cell.layer.transform = <span class="type">CATransform3DIdentity</span>;</span><br><span class="line">        cell.alpha = <span class="number">1</span>;</span><br><span class="line">        cell.layer.shadowOffset = <span class="type">CGSizeMake</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        cell.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);</span><br><span class="line">        [<span class="type">UIView</span> commitAnimations];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)animateCell3</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">NSArray</span> *array = _tableView.indexPathsForVisibleRows;</span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; array.<span class="built_in">count</span>; i++) &#123;</span><br><span class="line">        <span class="type">NSIndexPath</span> *indexPath = array[i];</span><br><span class="line">        <span class="type">UITableViewCell</span> *cell = [_tableView cellForRowAtIndexPath:indexPath];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//setup CATransform3D</span></span><br><span class="line">        <span class="type">CATransform3D</span> transform;</span><br><span class="line">        <span class="comment">//        transform = CATransform3DMakeRotation( (90.0*M_PI)/180, 0.0, 0.7, 0.4);</span></span><br><span class="line">        transform = <span class="type">CATransform3DMakeTranslation</span>( <span class="number">0</span>, <span class="number">150</span> * (i + <span class="number">1</span>), <span class="number">0</span>);</span><br><span class="line">        <span class="comment">//        transform.m34 = 1.0/ -600;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// setup cell's layer</span></span><br><span class="line">        cell.layer.shadowColor = [[<span class="type">UIColor</span> blackColor] <span class="type">CGColor</span>];</span><br><span class="line">        cell.layer.shadowOffset = <span class="type">CGSizeMake</span>(<span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">        cell.alpha = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        cell.layer.transform = transform;</span><br><span class="line">        cell.layer.anchorPoint = <span class="type">CGPointMake</span>(<span class="number">0</span>, <span class="number">0.5</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// animation</span></span><br><span class="line">        [<span class="type">UIView</span> beginAnimations:@<span class="string">"transform"</span> context:<span class="type">NULL</span>];</span><br><span class="line">        [<span class="type">UIView</span> setAnimationDuration:<span class="number">0.5</span> * (<span class="number">0.2</span> * i + <span class="number">1</span>)];</span><br><span class="line">        cell.layer.transform = <span class="type">CATransform3DIdentity</span>;</span><br><span class="line">        cell.alpha = <span class="number">1</span>;</span><br><span class="line">        cell.layer.shadowOffset = <span class="type">CGSizeMake</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        cell.frame = <span class="type">CGRectMake</span>(<span class="number">0</span>, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height);</span><br><span class="line">        [<span class="type">UIView</span> commitAnimations];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-weakify-strongify" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/19/weakify-strongify/">weakify &amp; strongify</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/09/19/weakify-strongify/" class="article-date">
+  <time datetime="2016-09-19T12:27:28.000Z" itemprop="datePublished">2016-09-19</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>here are two kinds of weakify and strongify solutions for preventing memory leak in ARC.</p>
+<p>firstly is a chinese iOS developer with his great job which is named <code>YYKit</code></p>
+<h4 id="YYKit">YYKit</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#ifndef weakify</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define weakify(object) autoreleasepool&#123;&#125; __weak __typeof__(object) <span class="keyword">weak</span>##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define weakify(object) autoreleasepool&#123;&#125; __block __typeof__(object) block##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define weakify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; &#123;&#125; __weak __typeof__(object) <span class="keyword">weak</span>##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define weakify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; &#123;&#125; __block __typeof__(object) block##<span class="number">_</span>##object = object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#ifndef strongify</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">if</span> <span class="type">DEBUG</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define strongify(object) autoreleasepool&#123;&#125; __typeof__(object) object = <span class="keyword">weak</span>##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define strongify(object) autoreleasepool&#123;&#125; __typeof__(object) object = block##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #<span class="keyword">if</span> __has_feature(objc_arc)</span><br><span class="line"></span><br><span class="line">        #define strongify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; __typeof__(object) object = <span class="keyword">weak</span>##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #<span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        #define strongify(object) <span class="keyword">try</span>&#123;&#125; @finally&#123;&#125; __typeof__(object) object = block##<span class="number">_</span>##object;</span><br><span class="line"></span><br><span class="line">        #endif</span><br><span class="line"></span><br><span class="line">    #endif</span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>secondly, the famous lib : <code>libextobjc</code></p>
+<h4 id="libextobjc">libextobjc</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#define weakify(...) \\</span><br><span class="line"></span><br><span class="line">    autoreleasepool &#123;&#125; \\</span><br><span class="line"></span><br><span class="line">    metamacro_foreach_cxt(rac_weakify_,, __weak, __VA_ARGS__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#define strongify(...) \\</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;&#125; @finally &#123;&#125; \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic push"</span>) \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic ignored \\"</span>-<span class="type">Wshadow</span>\\<span class="string">""</span>) \\</span><br><span class="line"></span><br><span class="line">    metamacro_foreach(rac_strongify_,, __VA_ARGS__) \\</span><br><span class="line"></span><br><span class="line">    _Pragma(<span class="string">"clang diagnostic pop"</span>)</span><br></pre></td></tr></table></figure>
+<p>all of them can be used in friendly and simply way, enjoy them! 🎉</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"></span><br><span class="line"> Example:</span><br><span class="line"></span><br><span class="line">    @weakify(self)</span><br><span class="line"></span><br><span class="line">    [self doSomething^&#123;</span><br><span class="line"></span><br><span class="line">        @strongify(self)</span><br><span class="line"></span><br><span class="line">        if (!self) return;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line"> */</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
@@ -283,314 +486,6 @@
 <li>for UIAlertAction<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertAction</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">customAppearance</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Cancel</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            <span class="comment">//custom titleTextColor</span></span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//custom left image</span></span><br><span class="line">            <span class="keyword">let</span> img = <span class="type">UIImage</span>(named: <span class="string">"yourImageFileName"</span>)?.imageWithRenderingMode(.<span class="type">AlwaysOriginal</span>)</span><br><span class="line">            setValue(img, forKey: <span class="string">"image"</span>)</span><br><span class="line">            <span class="comment">//custom titleTextAlignment with NSTextAlignment.enum rawValue(Int: 64-bit integer)</span></span><br><span class="line">            setValue(<span class="type">NSNumber</span>(integer: <span class="type">NSTextAlignment</span>.<span class="type">Left</span>.rawValue), forKey: <span class="string">"titleTextAlignment"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//so By that analogy, custom the other styles as your want   </span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Default</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> style == .<span class="type">Destructive</span> &amp;&amp; title?.characters.<span class="built_in">count</span> &gt; <span class="number">0</span> &#123;</span><br><span class="line">            setValue(yourCustomColor, forKey: <span class="string">"titleTextColor"</span>)</span><br><span class="line">            <span class="comment">//......</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Definition-of-Deprecated-Unavailable" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/07/Definition-of-Deprecated-Unavailable/">Definition of Deprecated &amp; Unavailable</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/07/07/Definition-of-Deprecated-Unavailable/" class="article-date">
-  <time datetime="2016-07-07T12:14:06.000Z" itemprop="datePublished">2016-07-07</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>1 <code>mark for unavailable function</code></li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">__attribute__((unavailable(<span class="string">"It is not available, Use other function instead"</span>)));</span><br></pre></td></tr></table></figure>
-<h3 id="Notice">Notice</h3><p><code>__attribute__((unavailable(...) can not pass Xcode buid</code></p>
-<ul>
-<li>2 <code>mark for deprecated function</code></li>
-</ul>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">NS_DEPRECATED_IOS</span>(<span class="number">2_0</span>, <span class="number">6_0</span>, <span class="string">"Use other function instead"</span>)</span><br><span class="line"><span class="comment">//2_0 &amp; 6_0 means that the function can only run on iOS2~6.0</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>if you want get more infomation for deprecated definitions, check Apple’s official documents</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define <span class="type">NS_DEPRECATED</span>(_macIntro, _macDep, _iosIntro, _iosDep, ...) <span class="type">CF_DEPRECATED</span>(_macIntro, _macDep, _iosIntro, _iosDep, __VA_ARGS__)</span><br><span class="line">#define <span class="type">NS_DEPRECATED_MAC</span>(_macIntro, _macDep, ...) <span class="type">CF_DEPRECATED_MAC</span>(_macIntro, _macDep, __VA_ARGS__)</span><br><span class="line">#define <span class="type">NS_DEPRECATED_IOS</span>(_iosIntro, _iosDep, ...) <span class="type">CF_DEPRECATED_IOS</span>(_iosIntro, _iosDep, __VA_ARGS__)</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-LiftCycle" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/04/LiftCycle/">LiftCycle</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/07/04/LiftCycle/" class="article-date">
-  <time datetime="2016-07-04T14:17:13.000Z" itemprop="datePublished">2016-07-04</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="生命周期">生命周期</h2><h4 id="load方法和initialize">load方法和initialize</h4><ul>
-<li><code>load</code></li>
-</ul>
-<p>被程序装载时调用，main之前</p>
-<p><code>父类 -&gt; 子类 -&gt; 分类</code></p>
-<p>如果一个类没有实现load方法，那么就不会调用它父类的load方法<br>根据编译顺序</p>
-<ul>
-<li><code>initializez</code></li>
-</ul>
-<p>第一次给某个类发送消息时调用，惰性调用<br>如果子类实现了initialize方法，就不会执行父类的了，直接执行子类本身的。如果分类实现了initialize方法，也不会再执行主类的。所以initialize方法的执行覆盖顺序是</p>
-<p><code>分类 -&gt; 子类 -&gt;类</code></p>
-<p>且只会有一个initialize方法被执行</p>
-<h6 id="总结">总结</h6><table>
-<thead>
-<tr>
-<th></th>
-<th>+ load</th>
-<th>+ initialize</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>调用时机</td>
-<td>被添加到 runtime 时, 通常就是App启动时进行加载</td>
-<td>收到第一条消息前(主动使用该类时)，可能永远不调用</td>
-</tr>
-<tr>
-<td>调用顺序</td>
-<td>父类-&gt;子类-&gt;分类</td>
-<td>父类-&gt;子类</td>
-</tr>
-<tr>
-<td>调用次数</td>
-<td>1次</td>
-<td>多次</td>
-</tr>
-<tr>
-<td>是否需要显式调用父类实现</td>
-<td>否</td>
-<td>否</td>
-</tr>
-<tr>
-<td>是否沿用父类的实现</td>
-<td>否</td>
-<td>是</td>
-</tr>
-<tr>
-<td>分类中的实现</td>
-<td>类和分类都执行</td>
-<td>覆盖类中的方法，只执行分类的实现</td>
-</tr>
-<tr>
-<td>常见应用</td>
-<td>runtime method swizzling</td>
-<td>可用来做一些初始化工作，如单例模式。</td>
-</tr>
-</tbody>
-</table>
-<h4 id="UIViewController_的生命周期">UIViewController 的生命周期</h4><ol>
-<li><p><code>-[ViewController initWithCoder:]</code>或<code>-[ViewController initWithNibName:Bundle]</code>:首先从归档文件中加载UIViewController对象。即使是纯代码，也会把nil作为参数传给后者。</p>
-</li>
-<li><p><code>-[UIView awakeFromNib]</code>:作为第一个方法的助手，方便处理一些额外的设置。</p>
-</li>
-<li><p><code>-[ViewController loadView]</code>:创建或加载一个view并把它赋值给UIViewController的view属性</p>
-</li>
-<li><p><code>-[ViewController viewDidLoad]</code>:此时整个视图层次(view hierarchy)已经被放到内存中，可以移除一些视图，修改约束，加载数据等</p>
-</li>
-<li><p><code>-[ViewController viewWillAppear:]</code>:视图加载完成，并即将显示在屏幕上,还没有设置动画，可以改变当前屏幕方向或状态栏的风格等。</p>
-</li>
-<li><p><code>-[ViewController viewWillLayoutSubviews]</code>：即将开始子视图位置布局</p>
-</li>
-<li><p><code>-[ViewController viewDidLayoutSubviews]</code>：用于通知视图的位置布局已经完成</p>
-</li>
-<li><p><code>-[ViewController viewDidAppear:]</code>：视图已经展示在屏幕上，可以对视图做一些关于展示效果方面的修改。</p>
-</li>
-<li><p><code>-[ViewController viewWillDisappear:]</code>：视图即将消失。</p>
-</li>
-<li><p><code>-[ViewController viewDidDisappear:]</code>：视图已经消失。</p>
-</li>
-</ol>
-<h4 id="UIView的加载和生命周期">UIView的加载和生命周期</h4><ul>
-<li>通过Storyboard加载</li>
-</ul>
-<p>通过这种方式创建UIViewController对象的话，首先生成UIStoryboard类型的对象，然后调用这个对象的<code>instantiateViewControllerWithIdentifier:</code>方法</p>
-<ul>
-<li>通过Nib文件加载：</li>
-</ul>
-<p>Nib文件其实就是xib文件，Storyboard相当于是聚合了多个nib文件，并且添加了对不同的UIViewController之间的segue和relationship的管理。但总的实现原理非常类似，通过这种方式加载视图,需要调用UIViewController类的<code>initWithNibName:bundle:</code>方法。<code>awakeFromNib</code>方法在视图控制器的生命周期内只会被调用一次。因为它和视图控制器从nib文件中的解档密切相关，和view的关系却不大。+</p>
-<ul>
-<li>通过loadview方法加载：</li>
-</ul>
-<p>这就是通过代码加载。这需要我们在<code>loadView</code>方法中，通过编程创建自己的视图层次，并且把把根视图赋值给UIViewController的view属性。loadView方法在UIViewController对象的view属性被访问到且为空的时候调用。 注意在重写loadView方法的时候，不要调用父类的方法。</p>
-<h4 id="UIApplication生命周期">UIApplication生命周期</h4><p><img src="http://i.stack.imgur.com/c2d1D.jpg" alt=""></p>
-<p>常见的代理方法有</p>
-<ul>
-<li><code>(void)applicationWillResignActive:(UIApplication *)application</code></li>
-</ul>
-<p>说明：当应用程序将要入非活动状态执行，在此期间，应用程序不接收消息或事件，比如来电话了</p>
-<ul>
-<li><code>(void)applicationDidBecomeActive:(UIApplication *)application</code></li>
-</ul>
-<p>说明：当应用程序入活动状态执行，这个刚好跟上面那个方法相反</p>
-<ul>
-<li><code>(void)applicationDidEnterBackground:(UIApplication *)application</code></li>
-</ul>
-<p>说明：当程序被推送到后台的时候调用。所以要设置后台继续运行，则在这个函数里面设置即可</p>
-<ul>
-<li><code>(void)applicationWillEnterForeground:(UIApplication *)application</code></li>
-</ul>
-<p>说明：当程序从后台将要重新回到前台时候调用，这个刚好跟上面的那个方法相反。</p>
-<ul>
-<li><code>(void)applicationWillTerminate:(UIApplication *)application</code></li>
-</ul>
-<p>说明：当程序将要退出是被调用，通常是用来保存数据和一些退出前的清理工作。这个需要设置 UIApplicationExitsOnSuspend 的键值。</p>
-<ul>
-<li><code>(void)applicationDidReceiveMemoryWarning:(UIApplication *)application</code></li>
-</ul>
-<p>说明：iPhone 设备只有有限的内存，如果为应用程序分配了太多内存操作系统会终止应用程序的运行，在终止前会执行这个方法，通常可以在这里进行内存清理工作防止程序被终止</p>
-<ul>
-<li><code>(void)applicationSignificantTimeChange:(UIApplication*)application</code></li>
-</ul>
-<p>说明：当系统时间发生改变时执行</p>
-<ul>
-<li><code>(void)applicationDidFinishLaunching:(UIApplication*)application</code></li>
-</ul>
-<p>说明：当程序载入后执行</p>
-<h4 id="源码到可执行程序的过程">源码到可执行程序的过程</h4><p>预编译</p>
-<p>i. 预编译器负责</p>
-<p>在这一步主要简单替换宏定义和和其他预编译指令，这一步之后的 .c 文件变成了 .i 文件。</p>
-<p>ii. 编译</p>
-<p>编译器负责。</p>
-<ul>
-<li><p>词法分析，识别源代码中的各种括号、数字、标点等。比如有(但没有)，这一步就能发现错误。</p>
-</li>
-<li><p>语法分析，这一步会生成语法树，在这一步就会报错。</p>
-</li>
-<li><p>语义分析，这一步主要考虑类型声明、匹配和转换。比如你写2 * “3”在这一步就会报错。</p>
-</li>
-<li><p>三地址码，优化，这一步会生成平台无关的三地址码，同时也会把这样在编译期就可以确定的表达式进行优化。</p>
-</li>
-<li><p>生成汇编代码，编译器根据三地址码生成依赖于目标机器的目标机器代码，也就是汇编语言。<br><code>.i</code>文件经过编译，得到汇编文件，后缀是<code>.s</code>。</p>
-</li>
-</ul>
-<p>iii. 汇编</p>
-<p>汇编器负责。将汇编语言转换成机器可以执行的语言，汇编文件经过汇编，变成目标文件，后缀为<code>.o</code>。</p>
-<p>iiii. 链接</p>
-<p>链接器负责。主要负责地址重分配、符号名称绑定和重定位。链接过程一般分为两步，首先地址分配，然后符号解析并重定位。</p>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-UIRefreshControl-Trigger" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/04/UIRefreshControl-Trigger/">UIRefreshControl Trigger</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/07/04/UIRefreshControl-Trigger/" class="article-date">
-  <time datetime="2016-07-04T13:22:46.000Z" itemprop="datePublished">2016-07-04</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Sometimes we want to trigger the UIRefreshControl auto beginRefreshing with scrollView or its subView pulling down effects.</p>
-<p>here it is a extension for it</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIRefreshControl</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">triggerRefresh</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> scrollView = superview <span class="keyword">as</span>? <span class="type">UIScrollView</span> &#123;</span><br><span class="line">            scrollView.setContentOffset(<span class="type">CGPoint</span>(x: <span class="number">0</span>, y: scrollView.contentOffset.y - frame.height), animated: <span class="literal">true</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        beginRefreshing()</span><br><span class="line">        <span class="keyword">self</span>.sendActionsForControlEvents(<span class="type">UIControlEvents</span>.<span class="type">ValueChanged</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Usage">Usage</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">tableView.triggerRefresh()</span><br><span class="line"></span><br><span class="line">collectionView.triggerRefresh()</span><br><span class="line"></span><br><span class="line">scrollView.triggerRefresh()</span><br></pre></td></tr></table></figure>
-<h3 id="done_🎉🎉">done 🎉🎉</h3>
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Selector-in-Swift" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/24/Selector-in-Swift/">Selector in Swift</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/06/24/Selector-in-Swift/" class="article-date">
-  <time datetime="2016-06-24T15:47:13.000Z" itemprop="datePublished">2016-06-24</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#selector in Swift.md</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// func</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">optional</span> <span class="keyword">public</span> <span class="func"><span class="keyword">func</span> <span class="title">collectionView</span><span class="params">(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">CGSize</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// selector</span></span><br><span class="line"></span><br><span class="line">#selector(<span class="type">UICollectionViewDelegateFlowLayout</span>.collectionView(<span class="number">_</span>:layout:sizeForItemAtIndexPath:))</span><br><span class="line"></span><br><span class="line"><span class="comment">// in a word</span></span><br><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>(<span class="type">ParamA</span>:<span class="type">ParamB</span>:...))</span><br></pre></td></tr></table></figure>
-<h4 id="Notice">Notice</h4><p>if func does not have params</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#selector((className or protocolName).<span class="type">MethodName</span>)</span><br></pre></td></tr></table></figure>
 
       
 
