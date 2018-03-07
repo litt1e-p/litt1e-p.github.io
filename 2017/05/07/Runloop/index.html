@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Runloop | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="什么是RunLoop？从字面意义看：运行循环，其实它内部就是do-while循环，在这个循环内部不断地处理各种任务（比如Source、Timer、Observer）一个线程对应一个RunLoop，主线程的RunLoop默认已经启动，子线程的RunLoop得手动启动（调用run方法）RunLoop只能选择一个Mode启动，如果当前Mode中没有任何Source(Sources0、Sources1)、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Runloop">
+<meta property="og:url" content="https://litt1e-p.github.io/2017/05/07/Runloop/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="什么是RunLoop？从字面意义看：运行循环，其实它内部就是do-while循环，在这个循环内部不断地处理各种任务（比如Source、Timer、Observer）一个线程对应一个RunLoop，主线程的RunLoop默认已经启动，子线程的RunLoop得手动启动（调用run方法）RunLoop只能选择一个Mode启动，如果当前Mode中没有任何Source(Sources0、Sources1)、">
+<meta property="og:updated_time" content="2018-03-07T12:02:48.148Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Runloop">
+<meta name="twitter:description" content="什么是RunLoop？从字面意义看：运行循环，其实它内部就是do-while循环，在这个循环内部不断地处理各种任务（比如Source、Timer、Observer）一个线程对应一个RunLoop，主线程的RunLoop默认已经启动，子线程的RunLoop得手动启动（调用run方法）RunLoop只能选择一个Mode启动，如果当前Mode中没有任何Source(Sources0、Sources1)、">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-Runloop" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Runloop
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/05/07/Runloop/" class="article-date">
+  <time datetime="2017-05-07T12:01:37.000Z" itemprop="datePublished">2017-05-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="什么是RunLoop？">什么是RunLoop？</h5><p>从字面意义看：运行循环，其实它内部就是do-while循环，在这个循环内部不断地处理各种任务（比如Source、Timer、Observer）<br>一个线程对应一个RunLoop，主线程的RunLoop默认已经启动，子线程的RunLoop得手动启动（调用run方法）<br>RunLoop只能选择一个Mode启动，如果当前Mode中没有任何Source(Sources0、Sources1)、Timer，那么就直接退出RunLoop</p>
+<h4 id="基本作用">基本作用</h4><p>保持程序的运行循环<br>处理app中的各种时间（比如触摸事件、定时器事件、selector事件）<br>节省CPU资源，提高程序性能：该做事时做事，该休息时休息</p>
+<h4 id="RunLoop对象">RunLoop对象</h4><p>iOS中有2套API来访问和使用RunLoop</p>
+<ul>
+<li>Foundation</li>
+</ul>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">- </span>NSRunLoop</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Core Foundation</li>
+</ul>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">- </span>CFRunLoopRef</span><br></pre></td></tr></table></figure>
+<p>NSRunLoop和CFRunLoopRef都代表着RunLoop对象<br>NSRunLoop是基于CFRunLoopRef的一层OC包装，所以要了解RunLoop内部结构，需要多研究CFRunLoopRef层面的API（Core Foundation层面）</p>
+<h4 id="RunLoop与线程间关系">RunLoop与线程间关系</h4><p>每条线程都有唯一的一个与之对应的RunLoop对象<br>主线程的RunLoop已经自动创建好了，子线程的RunLoop需要主动创建<br>RunLoop在第一次获取时创建，在线程结束时销毁</p>
+<h4 id="获得RunLoop对象的方法">获得RunLoop对象的方法</h4><ul>
+<li>Foundation</li>
+</ul>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr_selector">[NSRunLoop currentRunLoop]</span>;  <span class="comment">//获得当前线程的RunLoop对象</span></span><br><span class="line"><span class="attr_selector">[NSRunLoop mainRunLoop]</span>;  <span class="comment">//获得主线程的RunLoop对象</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Core Foundation</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CFRunLoopGetCurrent</span>();  <span class="comment">//获得当前线程的RunLoop对象</span></span><br><span class="line"><span class="built_in">CFRunLoopGetMain</span>();  <span class="comment">//获得主线程的RunLoop对象</span></span><br></pre></td></tr></table></figure>
+<h4 id="RunLoop的结构组成">RunLoop的结构组成</h4><p>Core Foundation中关于RunLoop的5个类<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CFRunLoopRef</span>          <span class="comment">// RunLoop对象自身</span></span><br><span class="line"><span class="built_in">CFRunLoopModeRef</span>      <span class="comment">// RunLoop的运行模式</span></span><br><span class="line"><span class="built_in">CFRunLoopSourceRef</span>    <span class="comment">// 数据源、事件源</span></span><br><span class="line"><span class="built_in">CFRunLoopTimerRef</span>     <span class="comment">// NSTimer</span></span><br><span class="line"><span class="built_in">CFRunLoopObserverRef</span>  <span class="comment">// 观察、监听RunLoop</span></span><br></pre></td></tr></table></figure></p>
+<p>在RunLoop中有多个运行模式，但是RunLoop只能选择一种模式运行<br>mode里面至少要有一个timer或者source，observer可有可无（只是用来观察／监听RunLoop）</p>
+<h4 id="RunLoop的运行模式Mode">RunLoop的运行模式Mode</h4><p>一个RunLoop包含若干个Mode，每个Mode又包含若干个Source/Timer/Observer<br>每次RunLoop启动时，只能指定其中一个Mode，这个Mode被称作CurrentMode<br>这样做主要是为了分隔开不同组的Source/Timer/Observer，让其互不影响</p>
+<p>系统默认注册了5个Mode</p>
+<ul>
+<li>kCFRunLoopDefaultMode：App的默认Mode，通常主线程是在这个Mode下运行（常用）</li>
+<li>UITrackingRunLoopMode: 界面追踪Mode，用于tableView、ScrollView追踪触摸滑动，保证界面滑动时不受其他Mode影响（常用）</li>
+<li>UIInitializationRunLoopMode：在刚启动App时，进入的第一个mode，启动后就不再使用</li>
+<li>GSEventReceiveRunLoopMode：接受系统事件的内部Mode，通常用不到</li>
+<li>kCFRunLoopCommonModes：这是一个占位用的Mode，不是真正的Mode</li>
+</ul>
+<h4 id="主线程中(main函数)的runLoop">主线程中(main函数)的runLoop</h4><p>1.Objective-C中<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>UIApplicationMain函数内部就启动了一个RunLoop<br>所以UIApplication函数一直没有返回，保持了程序的持续运行<br>这个默认启动的RunLoop是跟主线程相关联的</p>
+<p>2.Swift中<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@UIApplicationMain</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppDelegate</span>: <span class="typename">UIResponder</span>, <span class="typename">UIApplicationDelegate &#123;&#125;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>Swift在AppDelegate.swift中用标签<code>@UIApplicationMain</code>来取代了main函数，也可以自行创建main.swift来当做程序的入口，这时候要将标签@UIApplicationMain注释，main.swift代码如下<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIApplicationMain<span class="list">(<span class="keyword">CommandLine</span>.argc, UnsafeMutableRawPointer<span class="list">(<span class="keyword">CommandLine</span>.unsafeArgv)</span>.bindMemory<span class="list">(<span class="keyword">to</span>: UnsafeMutablePointer&lt;Int8&gt;.self, capacity: Int<span class="list">(<span class="keyword">CommandLine</span>.argc)</span>)</span>, <span class="literal">nil</span>, NSStringFromClass<span class="list">(<span class="keyword">AppDelegate</span>.self)</span>)</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="子线程中的runloop">子线程中的runloop</h4><p>eg.timer: 需要手动创建runloop并附加到当前子线程运行</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">NSThread</span> detachNewThreadSelector:<span class="keyword">@selector</span>(timer) toTarget:<span class="keyword">self</span> withObject:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)timer &#123;</span><br><span class="line">    <span class="comment">// 如果是在子线程中使用此timer创建方式，则需要手动创建runLoop</span></span><br><span class="line">    <span class="built_in">NSRunLoop</span> *currentRunLoop = [<span class="built_in">NSRunLoop</span> currentRunLoop];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 该方法内部自动添加到runLoop中，并且设置运行模式为默认</span></span><br><span class="line">    [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">2.0</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(run) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 子线程中创建runLoop之后不会执行，需要手动开启runLoop</span></span><br><span class="line">    [currentRunLoop run];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若在主线程的runloop创建timer：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSTimer *timer = [NSTimer <span class="string">timerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(run) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>YES];</span><br><span class="line"></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSDefaultRunLoopMode];<span class="comment">//默认模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>UITrackingRunLoopMode];<span class="comment">//页面追踪模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSRunLoopCommonModes]; <span class="comment">//common模式</span></span><br></pre></td></tr></table></figure></p>
+<p><code>*注意：NSRunLoopCommonModes = NSDefaultRunLoopMode + UITrackingRunLoopMode</code></p>
+<h4 id="在开发中如何使用RunLoop？什么应用场景？">在开发中如何使用RunLoop？什么应用场景？</h4><ul>
+<li>开启一个常驻线程（让一个子线程不进入消亡状态，等待其他线程发来消息，处理其他事件）</li>
+<li>在子线程中开启一个定时器</li>
+<li>在子线程中进行一些长期监控</li>
+<li>可以控制定时器在特定模式下执行</li>
+<li>可以让某些事件（行为、任务）在特定模式下执行</li>
+<li>可以添加Observer监听RunLoop的状态，比如监听点击事件的处理（在所有点击事件之前做一些事情）</li>
+</ul>
+<h4 id="自动释放池什么时候创建？什么时候释放？">自动释放池什么时候创建？什么时候释放？</h4><ul>
+<li>第一次创建在：启动runLoop的时候</li>
+<li>最后一次销毁在：runLoop退出的时候</li>
+<li>其他时候的创建和销毁：当runLoop即将睡眠的时候销毁之前的释放池，并重新创建一个新的</li>
+</ul>
+<hr>
+<h6 id="参考资料">参考资料</h6><blockquote>
+<p><a href="http://www.bijishequ.com/detail/228372" target="_blank" rel="external">http://www.bijishequ.com/detail/228372</a><br><a href="http://www.bijishequ.com/detail/234634" target="_blank" rel="external">http://www.bijishequ.com/detail/234634</a></p>
+</blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/03/06/Runtime/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Runtime</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2017/05/07/Runloop/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
