@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2018-03-07T13:00:53.142Z</updated>
+  <updated>2018-03-07T13:05:43.542Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="https://litt1e-p.github.io/2018/03/07/Elegant-Swift-Use-autoclosure-to-simplify-swift-syntax/"/>
     <id>https://litt1e-p.github.io/2018/03/07/Elegant-Swift-Use-autoclosure-to-simplify-swift-syntax/</id>
     <published>2018-03-07T10:07:10.000Z</published>
-    <updated>2018-03-07T13:00:53.142Z</updated>
-    <content type="html"><![CDATA[<h2 id="使用@autoclosure简化语法">使用@autoclosure简化语法</h2><p>在swift中，@autoclosure属性常用于closure闭包中参数传递值时的简化表达，简而言之，可以在闭包参数传递时不用再使用花括号{}。</p>
+    <updated>2018-03-07T13:05:43.542Z</updated>
+    <content type="html"><![CDATA[<h2 id="优雅的Swift-使用@autoclosure简化语法">优雅的Swift-使用@autoclosure简化语法</h2><p>在swift中，@autoclosure属性常用于closure闭包中参数传递值时的简化表达，简而言之，可以在闭包参数传递时不用再使用花括号{}。</p>
 <p>举个简单的例子：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">foo1</span><span class="params">(<span class="number">_</span> lhs: <span class="params">()</span></span></span> -&gt; <span class="type">Int</span>, <span class="number">_</span> rhs: () -&gt; <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(lhs)</span> &amp; <span class="subst">\(rhs)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">foo2</span><span class="params">(<span class="number">_</span> lhs: @autoclosure <span class="params">()</span></span></span> -&gt; <span class="type">String</span>, <span class="number">_</span> rhs: <span class="preprocessor">@autoclosure</span> () -&gt; <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"<span class="subst">\(lhs)</span> &amp; <span class="subst">\(rhs)</span>"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>若不使用<code>@autoclosure</code>属性，如foo1, 调用时：</p>
@@ -45,8 +45,7 @@
 </blockquote>
 ]]></content>
     <summary type="html">
-    <![CDATA[<h2 id="使用@autoclosure简化语法">使用@autoclosure简化语法</h2><p>在swift中，@autoclosure属性常用于closure闭包中参数传递值时的简化表达，简而言之，可以在闭包参数传递时不用再使用花括号{}。</p>
-<p>举个简单的]]>
+    <![CDATA[<h2 id="优雅的Swift-使用@autoclosure简化语法">优雅的Swift-使用@autoclosure简化语法</h2><p>在swift中，@autoclosure属性常用于closure闭包中参数传递值时的简化表达，简而言之，可以在闭包参数传递时不用再使用花]]>
     </summary>
     
       <category term="elegant swift" scheme="https://litt1e-p.github.io/tags/elegant-swift/"/>
