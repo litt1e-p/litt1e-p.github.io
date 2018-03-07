@@ -31,7 +31,7 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-Timer" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Event" class="article article-type-post" itemscope itemprop="blogPost">
   
   <div class="article-inner">
     
@@ -39,54 +39,83 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/04/Timer/">Timer</a>
+      <a class="article-title" href="/2017/01/28/Event/">Event</a>
     </h1>
   
 
       </header>
     
     <div class="article-meta">
-      <a href="/2017/03/04/Timer/" class="article-date">
-  <time datetime="2017-03-04T11:17:57.000Z" itemprop="datePublished">2017-03-04</time>
+      <a href="/2017/01/28/Event/" class="article-date">
+  <time datetime="2017-01-28T10:19:35.000Z" itemprop="datePublished">2017-01-28</time>
 </a>
       
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="定时器">定时器</h2><h4 id="1-_RunLoop定时器">1. RunLoop定时器</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种方法 手动加入runloop</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">timerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(action) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>YES];</span><br><span class="line"></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSDefaultRunLoopMode];<span class="comment">//默认模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>UITrackingRunLoopMode];<span class="comment">//页面追踪模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSRunLoopCommonModes]; <span class="comment">//common模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种方法 自动加入runloop(NSDefaultRunLoopMode)</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">scheduledTimerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>NO];</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">[timer invalidate];</span><br></pre></td></tr></table></figure>
-<h6 id="特点">特点</h6><ul>
-<li>存在延迟</li>
-</ul>
-<p>不管是一次性的还是周期性的timer的实际触发事件的时间，都会与所加入的RunLoop和RunLoop Mode有关，如果此RunLoop正在执行一个连续性的运算，timer就会被延时出发。重复性的timer遇到这种情况，如果延迟超过了一个周期，则会在延时结束后立刻执行，并按照之前指定的周期继续执行。</p>
+        <h2 id="事件">事件</h2><p>iOS中事件一共有四种类型，包含触摸事件，运动事件(如晃动手机)，远程控制事件(如耳机控制)，按压事件(如3D Touch)</p>
+<h4 id="UIEvent">UIEvent</h4><p>UIEvent对象中记录了事件发生的时间，类型，对于触摸事件，还记录了一组UITouch对象</p>
+<h4 id="UITouch">UITouch</h4><p>UITouch记录了手指在屏幕上触摸时产生的一组信息，包含触摸的时间，位置，所在的窗口或视图，触摸的状态，力度等信息</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">NSTimeInterval</span>      timestamp;  <span class="comment">//时间</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">UITouchPhase</span>        phase;  <span class="comment">//状态，例如begin，move，end,cancel</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">NSUInteger</span>          tapCount;   <span class="comment">// 短时间内单击的次数</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">UITouchType</span>         type <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);  <span class="comment">//类型</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> majorRadius <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">8</span>_0);  <span class="comment">//触摸半径</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> majorRadiusTolerance <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">8</span>_0);</span><br><span class="line"><span class="keyword">@property</span>(nullable,<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>,<span class="keyword">strong</span>) <span class="built_in">UIWindow</span>                        *window;  <span class="comment">//触摸所在窗口</span></span><br><span class="line"><span class="keyword">@property</span>(nullable,<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>,<span class="keyword">strong</span>) <span class="built_in">UIView</span>                          *view;  <span class="comment">//触摸所在视图</span></span><br><span class="line"><span class="keyword">@property</span>(nullable,<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>,<span class="keyword">copy</span>)   <span class="built_in">NSArray</span> &lt;<span class="built_in">UIGestureRecognizer</span> *&gt; *gestureRecognizers <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">3</span>_2);  <span class="comment">//正在接收该触摸对象的手势识别器</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> force <span class="built_in">NS_AVAILABLE_IOS</span>(<span class="number">9</span>_0);  <span class="comment">//触摸的力度</span></span><br></pre></td></tr></table></figure>
+<p>每一根手指的触摸都会产生一个UITouch对象，多个手指触摸便会有多个UITouch对象，当手指在屏幕上移动时，系统会更新UITouch的部分属性值，在触摸结束后系统会释放UITouch对象。</p>
+<p>当事件产生后，系统会寻找可以响应该事件的对象来处理事件，如果找不到可以响应的对象，事件就会被丢弃。那么哪些对象可以响应事件呢？只有继承于UIResponder的对象才能够响应事件，UIApplication，UIView，UIViewcontroller均继承于UIResponder，因此它们均能够响应事件。UIResponder提供了响应事件的一组方法：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event;  <span class="comment">//手指触摸到屏幕</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesMoved:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event; <span class="comment">//手指在屏幕上移动或按压</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesEnded:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event; <span class="comment">//手指离开屏幕</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesCancelled:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(nullable <span class="built_in">UIEvent</span> *)event; <span class="comment">//触摸被中断，例如触摸时电话呼入</span></span><br></pre></td></tr></table></figure>
+<h4 id="事件传递">事件传递</h4><p>事件产生之后，会被加入到由UIApplication管理的事件队列里，接下来开始自UIApplication往下传递，首先会传递给主window，然后按照view的层级结构一层层往下传递，一直找到最合适的view（发生touch的那个view）来处理事件</p>
+<p>查找最合适的view的过程是一个递归的过程，其中涉及到两个重要的方法 <code>hitTest:withEvent:</code>和<code>pointInside:withEvent:</code></p>
 <ul>
-<li>必须加入Runloop(手动或自动)</li>
+<li><p><code>hitTest:withEvent:</code>返回：self，代表这个view会接受用户的操作事件，返回：nil，则代表这个view不会接受用户的操作事件</p>
+</li>
+<li><p><code>pointInside:withEvent:</code>方法作用是判断点是否在视图内，是则返回YES，否则返回NO</p>
+</li>
+<li><p>判断一个view是否能够接收事件有三个条件，分别是，是否禁止用户交互（userInteractionEnabled = NO），是否被隐藏（hidden = YES）以及透明度是否小于等于0.01（alpha &lt;=0.01）</p>
+</li>
+<li><p>从递归的逻辑我们知道，如果触摸的点不在父view上，那么其上的所有子view的hitTest都不会被调用，需要指出的是，如果子view尺寸超出了父view，并且属性clipsToBounds设置为NO（也就是子view超出部分不被裁剪），触摸发生在子view超出父view的区域内，依旧不返回子view。反过来，如果触摸的点在父view上并且父view就是最合适的view，那么它的所有子view的hitTest还是会被调用，因为如果不调用就无法知道是否还有比父view更合适的子view存在。</p>
+</li>
 </ul>
-<h4 id="2-_GCD定时器">2. GCD定时器</h4><ul>
-<li>循环timer</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> 1.创建GCD中的定时器</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_SOURCE_TYPE_TIMER source的类型，表示是定时器</span><br><span class="line"> <span class="doctag">@param</span> 0 描述信息，线程ID</span><br><span class="line"> <span class="doctag">@param</span> 0 更详细的描述信息</span><br><span class="line"> <span class="doctag">@param</span> dispatchQueue 队列，确定GCD定时器中的任务在哪个线程中执行</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, <span class="number">0</span>, <span class="number">0</span>, dispatch_get_global_queue(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> 2.设置定时器（起始时间|间隔时间|精准度）</span><br><span class="line"> <span class="doctag">@param</span> timer 定时器对象</span><br><span class="line"> <span class="doctag">@param</span> DISPATCH_TIME_NOW 起始时间，DISPATCH_TIME_NOW 从现在开始计时</span><br><span class="line"> <span class="doctag">@param</span> intervalInSeconds * NSEC_PER_SEC 间隔时间</span><br><span class="line"> <span class="doctag">@param</span> leewayInSeconds * NSEC_PER_SEC 精准度，绝对精准0</span><br><span class="line"> */</span></span><br><span class="line">dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, <span class="number">2.0</span> * NSEC_PER_SEC, <span class="number">0</span> * NSEC_PER_SEC);</span><br><span class="line"></span><br><span class="line"><span class="comment">//3.设置定时器执行的任务</span></span><br><span class="line">dispatch_source_set_event_handler(timer, ^&#123;</span><br><span class="line">    NSLog(@<span class="string">"------------%@"</span>, [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4.启动执行</span></span><br><span class="line">dispatch_resume(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5.暂停</span></span><br><span class="line">dispatch_suspend(timer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 6.释放</span></span><br><span class="line">dispatch_source_cancel(timer);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>单次timer</li>
-</ul>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">dispatch_after</span>(<span class="function">dispatch_time</span>(DISPATCH_TIME_NOW, (int64_t)(<span class="number">2</span> * NSEC_PER_SEC)), <span class="tag">dispatch_get_main_queue</span>(), ^(void)&#123;</span><br><span class="line">    <span class="attr_selector">[self action]</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h6 id="特点-1">特点</h6><p>GCD定时器和NSTimer是不一样的，NSTimer受RunLoop影响，但是GCD的定时器不受影响，因为通过源码可知RunLoop也是基于GCD的实现的，所以GCD定时器有非常高的精度</p>
-<h4 id="3-_CADisplayLink">3. CADisplayLink</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CADisplayLink *displayLink = [CADisplayLink <span class="string">displayLinkWithTarget:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>)];  </span><br><span class="line"></span><br><span class="line"><span class="comment">// 每隔2帧调用一次</span></span><br><span class="line">displayLink.frameInterval = <span class="number">2</span>;  </span><br><span class="line"></span><br><span class="line">[displayLink <span class="string">addToRunLoop:</span>[NSRunLoop currentRunLoop] <span class="string">forMode:</span>NSDefaultRunLoopMode];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">[displayLink invalidate];</span><br></pre></td></tr></table></figure>
-<h6 id="特点-2">特点</h6><ul>
-<li>刷新频率固定</li>
-</ul>
-<p>正常情况iOS设备的屏幕刷新频率是固定60Hz,如果CPU过于繁忙，无法保证屏幕60次/秒的刷新率，就会导致跳过若干次调用回调方法的机会，跳过次数取决CPU的忙碌程度。</p>
-<ul>
-<li>屏幕刷新时调用</li>
-</ul>
-<p>CADisplayLink在正常情况下会在每次刷新结束都被调用，精确度相当高。但如果调用的方法比较耗时，超过了屏幕刷新周期，就会导致跳过若干次回调调用机会</p>
-<ul>
-<li>适合做界面渲染</li>
-</ul>
-<p>CADisplayLink可以确保系统渲染每一帧的时候我们的方法都被调用，从而保证了动画的流畅性</p>
-<hr>
+<h4 id="事件穿透">事件穿透</h4><p>示例：<a href="https://www.ianisme.com/ios/2565.html" target="_blank" rel="external">淘宝app雪花动画层穿透</a> 、 <a href="http://www.cnblogs.com/ficow/p/5936288.html" target="_blank" rel="external">浮动按钮透明背景穿透</a></p>
 <h6 id="参考资料">参考资料</h6><blockquote>
-<p><a href="https://www.jianshu.com/p/21d351116587" target="_blank" rel="external">https://www.jianshu.com/p/21d351116587</a><br><a href="http://www.bijishequ.com/detail/234634" target="_blank" rel="external">http://www.bijishequ.com/detail/234634</a></p>
+<p><a href="https://www.ianisme.com/ios/2565.html" target="_blank" rel="external">https://www.ianisme.com/ios/2565.html</a><br><a href="http://www.cnblogs.com/ficow/p/5936288.html" target="_blank" rel="external">http://www.cnblogs.com/ficow/p/5936288.html</a><br><a href="https://juejin.im/post/5a6abaff5188257350516efe" target="_blank" rel="external">https://juejin.im/post/5a6abaff5188257350516efe</a></p>
 </blockquote>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Singleton" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/05/Singleton/">Singleton</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/01/05/Singleton/" class="article-date">
+  <time datetime="2017-01-05T12:52:38.000Z" itemprop="datePublished">2017-01-05</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="Objective-C">Objective-C</h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Singleton.h</span></span><br><span class="line"><span class="preprocessor">#import <span class="title">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Singleton</span> : <span class="title">NSObject</span>&lt;<span class="title">NSCopying</span>&gt;</span></span><br><span class="line"></span><br><span class="line">+(instancetype)shared;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//Singleton.m</span></span><br><span class="line"><span class="preprocessor">#import <span class="title">"Singleton.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> Singleton *_instance = <span class="literal">nil</span>;</span><br><span class="line"></span><br><span class="line">+ (instancetype)shared &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken,^&#123;</span><br><span class="line">        _instance = [[<span class="keyword">super</span> allocWithZone:<span class="literal">NULL</span>]init];</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> _instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">id</span>)allocWithZone:(<span class="keyword">struct</span> _<span class="built_in">NSZone</span> *)zone &#123;</span><br><span class="line">    <span class="keyword">return</span> [Singleton shared];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone &#123;</span><br><span class="line">    <span class="keyword">return</span> [Singleton shared];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>记得遵循NSCopying协议</p>
+</blockquote>
+<h4 id="Swift">Swift</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Can't init is singleton</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">init</span>() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> shared = <span class="type">Singleton</span>()</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Singleton_宏">Singleton 宏</h4><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">//for .h</span><br><span class="line"><span class="comment">#define SYNTHESIZE_SINGLETON_FOR_HEADER(classname)\</span></span><br><span class="line">+ (classname *)shared<span class="comment">##classname;</span></span><br><span class="line"></span><br><span class="line">//</span><span class="keyword">for</span> .m</span><br><span class="line"><span class="comment">#define SYNTHESIZE_SINGLETON_FOR_CLASS(classname) \</span></span><br><span class="line"><span class="string">\</span></span><br><span class="line">static classname *shared<span class="comment">##classname = nil; \</span></span><br><span class="line"><span class="string">\</span></span><br><span class="line">+ (classname *)shared<span class="comment">##classname \</span></span><br><span class="line">&#123; <span class="string">\</span></span><br><span class="line"><span class="property">@synchronized</span>(self) <span class="string">\</span></span><br><span class="line">&#123; <span class="string">\</span></span><br><span class="line"><span class="keyword">if</span> (shared<span class="comment">##classname == nil) \</span></span><br><span class="line">&#123; <span class="string">\</span></span><br><span class="line">shared<span class="comment">##classname = [[super allocWithZone:NULL] init]; \</span></span><br><span class="line">&#125; <span class="string">\</span></span><br><span class="line">&#125; <span class="string">\</span></span><br><span class="line"><span class="string">\</span></span><br><span class="line"><span class="keyword">return</span> shared<span class="comment">##classname; \</span></span><br><span class="line">&#125; <span class="string">\</span></span><br><span class="line"><span class="string">\</span></span><br><span class="line">+ (id)<span class="attribute">allocWithZone</span>:(NSZone *)zone <span class="string">\</span></span><br><span class="line">&#123; <span class="string">\</span></span><br><span class="line"><span class="keyword">return</span> [self shared<span class="comment">##classname];\</span></span><br><span class="line">&#125; <span class="string">\</span></span><br><span class="line"><span class="string">\</span></span><br><span class="line">- (id)<span class="attribute">copyWithZone</span>:(NSZone *)zone <span class="string">\</span></span><br><span class="line">&#123; <span class="string">\</span></span><br><span class="line"><span class="keyword">return</span> self; <span class="string">\</span></span><br><span class="line">&#125; <span class="string">\</span></span><br><span class="line"><span class="string">\</span></span><br></pre></td></tr></table></figure>
 
       
 
@@ -488,56 +517,9 @@
 
 
   
-    <article id="post-Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/">Collection &lt;CALayerArray: 0xxxxxxxxx&gt; was mutated while being enumerated</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/09/07/Collection-CALayerArray-0xxxxxxxxx-was-mutated-while-being-enumerated/" class="article-date">
-  <time datetime="2016-09-07T12:43:46.000Z" itemprop="datePublished">2016-09-07</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p><strong><em> Collection <calayerarray: 0xxxxxxxxx=""> was mutated while being enumerated</calayerarray:></em></strong></p>
-</blockquote>
-<p>an error occured when I trying to remove a gradient layer from CALayer.sublayers:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> cell.imageView.layer.sublayers) &#123;</span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>The exception is thrown because changing the contents of the sublayers array while enumerating it with foreach loop. This is not something special to layers, a similar exception is thrown when you add/remove objects while enumerating any NSMutableArray.</p>
-<p>we have various options to solve this issue</p>
-<h4 id="Solution_1:_Stop_enumerating_as_soon_as_you_modify_the_array-">Solution 1: Stop enumerating as soon as you modify the array.</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> yourView.layer.sublayers) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="Solution_2:_Do_not_enumerate_the_real_array,_instead_use_its_copy-">Solution 2: Do not enumerate the real array, instead use its copy.</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">NSArray</span>* sublayers = [<span class="type">NSArray</span> arrayWithArray:yourView.layer.sublayers];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">CALayer</span> *layer <span class="keyword">in</span> sublayers) &#123;  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([layer.name isEqualToString:@<span class="string">"Gradient"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [layer removeFromSuperlayer];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<h4 id="Solution_3:_Use_key_value_coding_to_keep_a_reference_to_the_gradient_layer-">Solution 3: Use key value coding to keep a reference to the gradient layer.</h4><p>Set it after inserting:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[yourView.layer insertSublayer:layer atIndex:<span class="number">0</span>]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:layer forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
-<p>Retrieve and remove it</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">CALayer</span>* layer = [yourView.layer valueForKey:@<span class="string">"GradientLayer"</span>];</span><br><span class="line"></span><br><span class="line"> [layer removeFromSuperlayer]; </span><br><span class="line"></span><br><span class="line">[yourView.layer setValue:<span class="literal">nil</span> forKey:@<span class="string">"GradientLayer"</span>];</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-        
-    </div>
-  </div>
-  
-</article>
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 </section>
