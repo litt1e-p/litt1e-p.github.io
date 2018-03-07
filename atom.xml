@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2018-03-07T12:14:18.729Z</updated>
+  <updated>2018-03-07T12:16:29.916Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[git hooks 实现自动部署]]></title>
+    <link href="https://litt1e-p.github.io/2017/09/07/git-hooks-%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2/"/>
+    <id>https://litt1e-p.github.io/2017/09/07/git-hooks-实现自动部署/</id>
+    <published>2017-09-07T14:55:47.000Z</published>
+    <updated>2018-03-07T12:16:29.916Z</updated>
+    <content type="html"><![CDATA[<h4 id="git_hooks_实现自动部署">git hooks 实现自动部署</h4><p>当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。</p>
+<p>假如有一个git服务器仓库目录 例如: /home/git/test.git<br>和一个web服务器目录，例如: /home/wwwroot/default/testRoot</p>
+<p>先在web目录里clone一份仓库<br>cd /home/wwwroot/default/testRoot<br>git clone /home/git/test.git</p>
+<p>然后使用服务端git钩子 post-receive，它位于/home/git/test.git/hooks<br>cd /home/git/test.git/hooks/<br>这里有post-receive.sample<br>cp post-receive.sample post-receive<br>vi post-receive<br>写入如下代码:</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">unset GIT_DIR </span><br><span class="line">echo <span class="string">'copying to web deploy directory...'</span></span><br><span class="line">CurrentPath=`pwd`</span><br><span class="line">echo <span class="variable">$CurrentPath</span></span><br><span class="line">DeployPath=<span class="string">"/home/wwwroot/default/testRoot"</span></span><br><span class="line">cd <span class="variable">$DeployPath</span> || exit</span><br><span class="line">git pull origin master</span><br><span class="line">echo <span class="string">"update will be completed soon"</span></span><br><span class="line">cd <span class="variable">$CurrentPath</span></span><br><span class="line">exit <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>如果不加 unset GIT_DIR #还原环境变量 就会报出 remote: fatal: not git respository:’.’ 错误</code><br>保存后赋予可执行权限<br>chmod +x /home/git/test.git/hooks/post-receive</p>
+<p>修改web服务器根目录的权限<br>因为执行拉取的时候是git用户所以要把web服务器根目录(/home/wwwroot/default/testRoot) 的权限设定为git用户</p>
+<p>chown -R git:git /home/wwwroot/default/testRoot</p>
+<p>参考网址：<br><a href="http://www.jianshu.com/p/f9312b51e011" target="_blank" rel="external">git hooks 实现自动部署</a><br><a href="http://robin-front.github.io/2016/08/11/%E7%94%A8Git-Hooks%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2-%E8%AE%A9%E6%8F%90%E4%BA%A4%E5%8F%91%E5%B8%83%E8%87%AA%E5%8A%A8%E5%8C%96/" target="_blank" rel="external">用Git-Hooks进行自动部署,让提交发布自动化</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h4 id="git_hooks_实现自动部署">git hooks 实现自动部署</h4><p>当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。</p>
+<p>假如有一个git服务器仓库目录 例如: /home/git/test]]>
+    </summary>
+    
+      <category term="git" scheme="https://litt1e-p.github.io/tags/git/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Build a git repo server]]></title>
@@ -1009,24 +1034,6 @@
     </summary>
     
       <category term="UIStatusBar" scheme="https://litt1e-p.github.io/tags/UIStatusBar/"/>
-    
-      <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Reduce animated effect of UICollectionView while reloading section]]></title>
-    <link href="https://litt1e-p.github.io/2016/07/27/Reduce-animated-effect-of-UICollectionView-while-reloading-section/"/>
-    <id>https://litt1e-p.github.io/2016/07/27/Reduce-animated-effect-of-UICollectionView-while-reloading-section/</id>
-    <published>2016-07-27T15:06:06.000Z</published>
-    <updated>2016-07-27T15:19:50.000Z</updated>
-    <content type="html"><![CDATA[<p>the animated effect is quite werid while reloading UICollectionView’s section which is base on our custom flowLayout, to reduce or avoid that, here is a solution to it. </p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.0</span>, animations: &#123;</span><br><span class="line"></span><br><span class="line">     [<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">     <span class="keyword">self</span>!.collectionView.performBatchUpdates(&#123; </span><br><span class="line"></span><br><span class="line">           <span class="keyword">self</span>?.collectionView.reloadSections(<span class="type">NSIndexSet</span>(index: yourIndex))</span><br><span class="line"></span><br><span class="line">      &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>its animation duration sets to <code>0.0</code> so that it can reduces or avoids the bug happening. </p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>the animated effect is quite werid while reloading UICollectionView’s section which is base on our custom flowLayout, to reduce or avoid ]]>
-    </summary>
     
       <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
     

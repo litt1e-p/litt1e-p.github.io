@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>git hooks 实现自动部署 | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="git hooks 实现自动部署当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。
+假如有一个git服务器仓库目录 例如: /home/git/test.git和一个web服务器目录，例如: /home/wwwroot/default/testRoot
+先在web目录里clone一份仓库cd /home/wwwroot/default/testRoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git hooks 实现自动部署">
+<meta property="og:url" content="https://litt1e-p.github.io/2017/09/07/git-hooks-实现自动部署/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="git hooks 实现自动部署当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。
+假如有一个git服务器仓库目录 例如: /home/git/test.git和一个web服务器目录，例如: /home/wwwroot/default/testRoot
+先在web目录里clone一份仓库cd /home/wwwroot/default/testRoot">
+<meta property="og:updated_time" content="2018-03-07T12:16:29.916Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git hooks 实现自动部署">
+<meta name="twitter:description" content="git hooks 实现自动部署当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。
+假如有一个git服务器仓库目录 例如: /home/git/test.git和一个web服务器目录，例如: /home/wwwroot/default/testRoot
+先在web目录里clone一份仓库cd /home/wwwroot/default/testRoot">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-git-hooks-实现自动部署" class="article article-type-post" itemscope itemprop="blogPost">
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git hooks 实现自动部署
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/09/07/git-hooks-实现自动部署/" class="article-date">
+  <time datetime="2017-09-07T14:55:47.000Z" itemprop="datePublished">2017-09-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="git_hooks_实现自动部署">git hooks 实现自动部署</h4><p>当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。</p>
+<p>假如有一个git服务器仓库目录 例如: /home/git/test.git<br>和一个web服务器目录，例如: /home/wwwroot/default/testRoot</p>
+<p>先在web目录里clone一份仓库<br>cd /home/wwwroot/default/testRoot<br>git clone /home/git/test.git</p>
+<p>然后使用服务端git钩子 post-receive，它位于/home/git/test.git/hooks<br>cd /home/git/test.git/hooks/<br>这里有post-receive.sample<br>cp post-receive.sample post-receive<br>vi post-receive<br>写入如下代码:</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">unset GIT_DIR </span><br><span class="line">echo <span class="string">'copying to web deploy directory...'</span></span><br><span class="line">CurrentPath=`pwd`</span><br><span class="line">echo <span class="variable">$CurrentPath</span></span><br><span class="line">DeployPath=<span class="string">"/home/wwwroot/default/testRoot"</span></span><br><span class="line">cd <span class="variable">$DeployPath</span> || exit</span><br><span class="line">git pull origin master</span><br><span class="line">echo <span class="string">"update will be completed soon"</span></span><br><span class="line">cd <span class="variable">$CurrentPath</span></span><br><span class="line">exit <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>如果不加 unset GIT_DIR #还原环境变量 就会报出 remote: fatal: not git respository:’.’ 错误</code><br>保存后赋予可执行权限<br>chmod +x /home/git/test.git/hooks/post-receive</p>
+<p>修改web服务器根目录的权限<br>因为执行拉取的时候是git用户所以要把web服务器根目录(/home/wwwroot/default/testRoot) 的权限设定为git用户</p>
+<p>chown -R git:git /home/wwwroot/default/testRoot</p>
+<p>参考网址：<br><a href="http://www.jianshu.com/p/f9312b51e011" target="_blank" rel="external">git hooks 实现自动部署</a><br><a href="http://robin-front.github.io/2016/08/11/%E7%94%A8Git-Hooks%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2-%E8%AE%A9%E6%8F%90%E4%BA%A4%E5%8F%91%E5%B8%83%E8%87%AA%E5%8A%A8%E5%8C%96/" target="_blank" rel="external">用Git-Hooks进行自动部署,让提交发布自动化</a></p>
+
+      
+
+      
+        
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/08/25/Build-a-git-repo-server/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Build a git repo server</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <div id="disqus_thread">
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'litt1ep'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>
+    Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+</section>
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2018 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/Alex-fun/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2017/09/07/git-hooks-实现自动部署/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
