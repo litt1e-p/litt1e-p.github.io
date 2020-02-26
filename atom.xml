@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2018-03-07T13:05:43.542Z</updated>
+  <updated>2020-02-26T11:03:49.120Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,53 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Download files in wechat]]></title>
+    <link href="https://litt1e-p.github.io/2019/02/26/Download-files-in-wechat/"/>
+    <id>https://litt1e-p.github.io/2019/02/26/Download-files-in-wechat/</id>
+    <published>2019-02-26T03:43:49.000Z</published>
+    <updated>2020-02-26T11:03:49.120Z</updated>
+    <content type="html"><![CDATA[<h2 id="在企业微信网页里触发文件下载及兼容性问题">在企业微信网页里触发文件下载及兼容性问题</h2><p>在企业微信自定义网页开发文件预览功能时，官方提供了<code>wx.previewFile</code>接口可以实现。原理是<code>下载-&gt;本地预览</code>。不过对接官方的接口需要一系列的注册申请等操作，给的时间极短，直接触发文件下载应该是可行的。</p>
+<p>首先考虑文件的类型，有常见的jpg/png图片和pdf，这两类都很常见，可以直接渲染或者使用pdfjs等一些插件预览，问题不大。比较麻烦的是还有Office类的word、excel、ppt等，直接触发网页下载了。</p>
+<p>先判断一下文件类型：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span>.prototype.getExt = <span class="function"><span class="keyword">function</span> (<span class="params">filename</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> filename.substring(filename.lastIndexOf(<span class="string">'.'</span>) + <span class="number">1</span>, filename.length) || filename</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们知道，一般触发浏览器下载的方法有好几种。先试试<code>a</code>元素超链接下载：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">attachments (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!url) &#123;</span><br><span class="line">    <span class="keyword">this</span>.$message.error(<span class="string">'附件参数有误'</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ([<span class="string">'pdf'</span>, <span class="string">'jpg'</span>, <span class="string">'png'</span>, <span class="string">'bmp'</span>, <span class="string">'gif'</span>, <span class="string">'webp'</span>].includes(fileName.getExt())) &#123;</span><br><span class="line">    <span class="keyword">this</span>.preview(url, attachName)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.download(url, attachName)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">download (url = <span class="string">''</span>, attachName) &#123;</span><br><span class="line">  <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">  <span class="keyword">let</span> src = <span class="string">`<span class="subst">$&#123;window.location.origin&#125;</span><span class="subst">$&#123;url&#125;</span>`</span></span><br><span class="line">  el.download = attachName</span><br><span class="line">  el.href = src</span><br><span class="line">  el.click()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写完测试一看。不管是iOS还是android，都可以提示下载，但都下载失败…</p>
+<p>再试试iframe下载：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">  iframe.style.display = <span class="string">'none'</span></span><br><span class="line">  iframe.src = url</span><br><span class="line">  <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再用微信试试打开附件，结果：android可以弹出下载并可以调用手机的app进行预览，但是iOS却仍然毫无反应。为啥？难道要用<code>blob</code>下载?</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">download(url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> accepts = &#123;</span><br><span class="line">    <span class="string">'doc'</span>: <span class="string">'application/msword'</span>,</span><br><span class="line">    <span class="string">'xls'</span>: <span class="string">'application/vnd.ms-excel'</span>,</span><br><span class="line">    <span class="string">'xlsx'</span>: <span class="string">'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'</span></span><br><span class="line">  &#125;</span><br><span class="line">  fetch(url).then(resp =&gt; resp.arrayBuffer()).then(resp =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> blob = <span class="keyword">new</span> Blob([resp], &#123;type: accepts[url.getExt()]&#125;)</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">window</span>.navigator.msSaveOrOpenBlob) &#123;</span><br><span class="line">      <span class="built_in">window</span>.navigator.msSaveOrOpenBlob(blob, attachName)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">      <span class="built_in">document</span>.body.appendChild(el)</span><br><span class="line">      <span class="keyword">const</span> url = <span class="built_in">window</span>.URL.createObjectURL(blob)</span><br><span class="line">      el.href = url</span><br><span class="line">      el.download = attachName</span><br><span class="line">      el.click()</span><br><span class="line">      setTimeout(() =&gt; &#123;</span><br><span class="line">        <span class="built_in">window</span>.URL.revokeObjectURL(url)</span><br><span class="line">        <span class="built_in">document</span>.body.removeChild(el)</span><br><span class="line">      &#125;, <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再试，还是不行，这下是android和iOS都没反应了。<br>看来需要区分android和iOS，android调用iframe，iOS另外处理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/iphone/i</span>.test(<span class="built_in">window</span>.navigator.userAgent)) &#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">    iframe.style.display = <span class="string">'none'</span></span><br><span class="line">    iframe.src = url</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 再试试a链接下载</span></span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">    el.download = attachName</span><br><span class="line">    <span class="keyword">let</span> src = <span class="string">`<span class="subst">$&#123;window.location.origin&#125;</span><span class="subst">$&#123;url&#125;</span>`</span></span><br><span class="line">    el.href = src</span><br><span class="line">    el.click()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果还是iOS不行，换个文件看看，居然有些文件可以，这就有点奇怪了，调试看看：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/iphone/i</span>.test(<span class="built_in">window</span>.navigator.userAgent)) &#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">    iframe.style.display = <span class="string">'none'</span></span><br><span class="line">    iframe.src = url</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    alert(url, attachName)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一刷新，终于看出差别，有些attachName是中文，有些很长很长的名字。干脆全部处理一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/iphone/i</span>.test(<span class="built_in">window</span>.navigator.userAgent)) &#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">    iframe.style.display = <span class="string">'none'</span></span><br><span class="line">    iframe.src = url</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> fileName = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() + url.getExt()</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">    el.download = fileName</span><br><span class="line">    <span class="keyword">let</span> src = <span class="string">`<span class="subst">$&#123;window.location.origin&#125;</span><span class="subst">$&#123;url&#125;</span>`</span></span><br><span class="line">    el.href = src</span><br><span class="line">    el.click()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这次为a元素的download也赋个值，iOS终于弹出下载和提示用什么app开启预览了。</p>
+<h2 id="总结">总结</h2><p>因为在企业微信环境里，跟常见的浏览器不太同，根据以前做原生app的经验，猜测出错的原因有两个：</p>
+<ul>
+<li>iOS本身的UIWebView(也可能是WKWebView)对中文文件名编码解析出错了</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType &#123;&#10;  // &#36825;&#37324;&#21487;&#20197;debug&#30475;&#30475;&#20250;&#19981;&#20250;throw error&#20986;&#26469;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>企业微信对附件的拦截</li>
+</ul>
+<p>这种无解，老老实实使用官方提供的api:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wx.previewImage()</span><br><span class="line">wx.previewFile()</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="在企业微信网页里触发文件下载及兼容性问题">在企业微信网页里触发文件下载及兼容性问题</h2><p>在企业微信自定义网页开发文件预览功能时，官方提供了<code>wx.previewFile</code>接口可以实现。原理是<code>下载-&gt;本地预览</c]]>
+    </summary>
+    
+      <category term="javascript" scheme="https://litt1e-p.github.io/tags/javascript/"/>
+    
+      <category term="vue" scheme="https://litt1e-p.github.io/tags/vue/"/>
+    
+      <category term="wechat app" scheme="https://litt1e-p.github.io/tags/wechat-app/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Elegant Swift -- Use @autoclosure to simplify swift syntax]]></title>
@@ -59,7 +106,7 @@
     <link href="https://litt1e-p.github.io/2018/02/18/Elegant-Swift-URL/"/>
     <id>https://litt1e-p.github.io/2018/02/18/Elegant-Swift-URL/</id>
     <published>2018-02-18T11:29:13.000Z</published>
-    <updated>2018-03-07T12:59:44.060Z</updated>
+    <updated>2018-03-07T12:59:44.061Z</updated>
     <content type="html"><![CDATA[<h2 id="优雅的Swift_–_烦人的URL">优雅的Swift – 烦人的URL</h2><p>在日常coding中，对于URL传参，时常会误传了string类型的url，如：</p>
 <figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> url = <span class="string">"https://www.github.com"</span></span><br><span class="line"><span class="keyword">let</span> task = URLSession.<span class="keyword">shared</span>.dataTask(<span class="keyword">with</span>: url)</span><br></pre></td></tr></table></figure>
 <p>然后是编译器报错，然后又悻悻加上<code>URL(string: &quot;url address&quot;)</code></p>
@@ -92,7 +139,7 @@
     <link href="https://litt1e-p.github.io/2018/02/01/Elegant-Swift-UnWrapped-or-Default-Value/"/>
     <id>https://litt1e-p.github.io/2018/02/01/Elegant-Swift-UnWrapped-or-Default-Value/</id>
     <published>2018-02-01T14:18:10.000Z</published>
-    <updated>2018-03-07T12:58:52.626Z</updated>
+    <updated>2018-03-07T12:58:52.627Z</updated>
     <content type="html"><![CDATA[<h2 id="优雅的Swift–解包">优雅的Swift–解包</h2><p>通常我们在swift中对可选值类型(optional)进行解包(unwrapped)操作时，<br>会进行一些常规的判断，如：</p>
 <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a: <span class="built_in">String</span>?</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> _ = a &#123;</span><br><span class="line">    <span class="attribute">...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>然后再进行解包操作。那么有没有更加优雅的方式呢？</p>
@@ -251,7 +298,7 @@
     <link href="https://litt1e-p.github.io/2018/01/09/Elegant-Swift-Generic-typealias-in-closure/"/>
     <id>https://litt1e-p.github.io/2018/01/09/Elegant-Swift-Generic-typealias-in-closure/</id>
     <published>2018-01-09T12:33:39.000Z</published>
-    <updated>2018-03-07T12:34:40.868Z</updated>
+    <updated>2018-03-07T12:34:40.869Z</updated>
     <content type="html"><![CDATA[<h2 id="优雅的Swift_–_闭包中的范型">优雅的Swift – 闭包中的范型</h2><p>从swift 3开始有了范型(Generic type), 范型除了常用在方法里作参数的声明之外，其实还可以使用于闭包(Closure)回调中，据此可以使用任何类型在closure中。</p>
 <h4 id="示例">示例</h4><p>我们可以先定义一个简单的closure:</p>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typealias Closure&lt;T&gt; = <span class="function"><span class="params">(T)</span> -&gt;</span> Void</span><br><span class="line"><span class="regexp">//</span>返回值为空</span><br></pre></td></tr></table></figure>
@@ -398,7 +445,7 @@
     <link href="https://litt1e-p.github.io/2017/09/07/Use%20git%20hooks%20to%20deploy%20automatically/"/>
     <id>https://litt1e-p.github.io/2017/09/07/Use git hooks to deploy automatically/</id>
     <published>2017-09-07T14:55:47.000Z</published>
-    <updated>2018-03-07T12:51:47.410Z</updated>
+    <updated>2018-03-07T12:51:47.411Z</updated>
     <content type="html"><![CDATA[<h4 id="git_hooks_实现自动部署">git hooks 实现自动部署</h4><p>当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。</p>
 <p>假如有一个git服务器仓库目录 例如: /home/git/test.git<br>和一个web服务器目录，例如: /home/wwwroot/default/testRoot</p>
 <p>先在web目录里clone一份仓库<br>cd /home/wwwroot/default/testRoot<br>git clone /home/git/test.git</p>
@@ -610,7 +657,7 @@
     <link href="https://litt1e-p.github.io/2017/03/06/Runtime/"/>
     <id>https://litt1e-p.github.io/2017/03/06/Runtime/</id>
     <published>2017-03-06T12:32:31.000Z</published>
-    <updated>2018-04-09T03:56:54.902Z</updated>
+    <updated>2018-04-09T03:56:54.903Z</updated>
     <content type="html"><![CDATA[<h4 id="简介">简介</h4><p>Objective-C 是一门动态语言，它的动态性体现在它将很多编译和链接时做的事推延到运行时处理，而这一机制主要依赖系统提供的 runtime 库。利用 runtime 库，我们能在运行时做很多事，例如 objc_setAssociatedObject 动态绑定属性、method swizzling、class_copyIvarList 动态获取属性实现 ORM（Object Relational Mapping）、消息转发等。</p>
 <h4 id="消息转发">消息转发</h4><p>Objective-C 中的方法调用最终都是执行消息发送，如</p>
 <p><code>[receiver message]</code></p>
@@ -778,7 +825,7 @@
     <link href="https://litt1e-p.github.io/2017/03/04/Timer/"/>
     <id>https://litt1e-p.github.io/2017/03/04/Timer/</id>
     <published>2017-03-04T11:17:57.000Z</published>
-    <updated>2018-03-04T11:19:36.812Z</updated>
+    <updated>2018-03-04T11:19:36.813Z</updated>
     <content type="html"><![CDATA[<h2 id="定时器">定时器</h2><h4 id="1-_RunLoop定时器">1. RunLoop定时器</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种方法 手动加入runloop</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">timerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(action) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>YES];</span><br><span class="line"></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSDefaultRunLoopMode];<span class="comment">//默认模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>UITrackingRunLoopMode];<span class="comment">//页面追踪模式</span></span><br><span class="line">[[NSRunLoop currentRunLoop] <span class="string">addTimer:</span>timer <span class="string">forMode:</span>NSRunLoopCommonModes]; <span class="comment">//common模式</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种方法 自动加入runloop(NSDefaultRunLoopMode)</span></span><br><span class="line">NSTimer *timer = [NSTimer <span class="string">scheduledTimerWithTimeInterval:</span><span class="number">2.0</span> <span class="string">target:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">action:</span>) <span class="string">userInfo:</span>nil <span class="string">repeats:</span>NO];</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">[timer invalidate];</span><br></pre></td></tr></table></figure>
 <h6 id="特点">特点</h6><ul>
 <li>存在延迟</li>
@@ -852,7 +899,7 @@
     <link href="https://litt1e-p.github.io/2016/12/29/GCD/"/>
     <id>https://litt1e-p.github.io/2016/12/29/GCD/</id>
     <published>2016-12-29T13:18:27.000Z</published>
-    <updated>2018-03-07T12:53:05.893Z</updated>
+    <updated>2018-03-07T12:53:05.894Z</updated>
     <content type="html"><![CDATA[<h4 id="队列_Dispatch_Queue">队列 Dispatch Queue</h4><ul>
 <li>串行队列 Serial Dispatch Queue, 先进先出执行(FIFO)</li>
 <li>并行队列 Concurrent Dispatch Queue</li>
@@ -1045,52 +1092,6 @@
       <category term="Note" scheme="https://litt1e-p.github.io/tags/Note/"/>
     
       <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[build a https server for localhost]]></title>
-    <link href="https://litt1e-p.github.io/2016/10/20/build-a-https-server-for-localhost/"/>
-    <id>https://litt1e-p.github.io/2016/10/20/build-a-https-server-for-localhost/</id>
-    <published>2016-10-20T13:48:08.000Z</published>
-    <updated>2016-10-20T14:09:59.000Z</updated>
-    <content type="html"><![CDATA[<blockquote>
-<p>we need a local https server when https is required in product environment</p>
-</blockquote>
-<p>let us do it now 🔨</p>
-<h3 id="0-_install_openssl_firstly!">0. install openssl firstly!</h3><h3 id="1-prepare_a_CA_request_files">1.prepare a CA request files</h3><h4 id="1-1_generate_a_RSA_server_key">1.1 generate a RSA server key</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out server<span class="class">.key</span> <span class="number">2048</span></span><br></pre></td></tr></table></figure>
-<h4 id="1-2_generate_a_CA_request_file">1.2 generate a CA request file</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -out server<span class="class">.req</span> -key server<span class="class">.key</span> -subj</span><br><span class="line"> <span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=127.0.0.1"</span></span><br></pre></td></tr></table></figure>
-<p><code>ps. &#39;-subj&#39; can be ignored and you can type them all in the command tool</code></p>
-<p>now notice there are two files(server.key, server.req) in current directory, the <code>.key</code> is server private key and the <code>.req</code> is CA request file.</p>
-<p>let us get CA signature with <code>server.req</code> if there is no error occured</p>
-<h3 id="2-make_an_our_own_CA">2.make an our own CA</h3><h4 id="2-1_generate_a_RSA_key">2.1 generate a RSA key</h4><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -<span class="keyword">out</span> <span class="keyword">ca</span>.key 2048</span><br></pre></td></tr></table></figure>
-<h4 id="2-2_root_signature_for_self">2.2 root signature for self</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -x509 -days <span class="number">1000</span> -key ca<span class="class">.key</span> -out ca<span class="class">.crt</span> -sha256 -subj </span><br><span class="line"><span class="string">"/C=US/ST=LosAngeles/L=LA/O=Namido/CN=Namido CA"</span></span><br></pre></td></tr></table></figure>
-<p>notice: <code>value of CN in -subj is the name of CA</code></p>
-<h4 id="2-3_generate_a_server_certificate_with_this_root_signature">2.3 generate a server certificate with this root signature</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -req -<span class="keyword">in</span> server<span class="class">.req</span> -out server<span class="class">.crt</span> -CAkey ca<span class="class">.key</span> -CA ca<span class="class">.crt</span> -days <span class="number">1000</span> </span><br><span class="line">-sha256 -CAcreateserial -CAserial server.serial</span><br></pre></td></tr></table></figure>
-<p>the <code>server.crt</code> file that via our own CA generated will exists in current directory if no error occur. </p>
-<h3 id="3-0_finally_process">3.0 finally process</h3><h4 id="3-1_add_them_to_server_configuration">3.1 add them to server configuration</h4><p>copy <code>ca.crt</code>, <code>server.crt</code>, <code>server.key</code> three files to HTTPS server such as Nginx/Apache or other server by using <code>server.crt</code> as server certificate, <code>server.key</code> as server private key, <code>ca.crt</code> as keychain certificate.</p>
-<p>for example:</p>
-<p>this is a node.js server souce code</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> https = <span class="built_in">require</span>(<span class="string">'https'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line"></span><br><span class="line">	key: fs.readFileSync(<span class="string">'./keys/server.key'</span>),</span><br><span class="line"></span><br><span class="line">	ca: [fs.readFileSync(<span class="string">'./keys/ca.crt'</span>)],</span><br><span class="line"></span><br><span class="line">	cert: fs.readFileSync(<span class="string">'./keys/server.crt'</span>)</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">https.createServer(options, app).listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'server is running on port 3000'</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h4 id="3-2_make_it_valid">3.2 make it valid</h4><p>copy  <code>ca.crt</code> to your local computer somewhere and double click it and modify <code>always trust</code> in your keychain to make it valid.</p>
-<p><img src="http://ww2.sinaimg.cn/large/006y8lVagw1f8mcm69ot9j30n60csq3i.jpg" alt=""></p>
-<p>done! 🎉</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<blockquote>
-<p>we need a local https server when https is required in product environment</p>
-</blockquote>
-<p>let us do it now 🔨</p>
-<h3 ]]>
-    </summary>
-    
-      <category term="Node.js" scheme="https://litt1e-p.github.io/tags/Node-js/"/>
-    
-      <category term="RSA" scheme="https://litt1e-p.github.io/tags/RSA/"/>
-    
-      <category term="https" scheme="https://litt1e-p.github.io/tags/https/"/>
-    
-      <category term="openssl" scheme="https://litt1e-p.github.io/tags/openssl/"/>
     
   </entry>
   

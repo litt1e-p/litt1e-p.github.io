@@ -31,6 +31,69 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Download-files-in-wechat" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/26/Download-files-in-wechat/">Download files in wechat</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2019/02/26/Download-files-in-wechat/" class="article-date">
+  <time datetime="2019-02-26T03:43:49.000Z" itemprop="datePublished">2019-02-26</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="在企业微信网页里触发文件下载及兼容性问题">在企业微信网页里触发文件下载及兼容性问题</h2><p>在企业微信自定义网页开发文件预览功能时，官方提供了<code>wx.previewFile</code>接口可以实现。原理是<code>下载-&gt;本地预览</code>。不过对接官方的接口需要一系列的注册申请等操作，给的时间极短，直接触发文件下载应该是可行的。</p>
+<p>首先考虑文件的类型，有常见的jpg/png图片和pdf，这两类都很常见，可以直接渲染或者使用pdfjs等一些插件预览，问题不大。比较麻烦的是还有Office类的word、excel、ppt等，直接触发网页下载了。</p>
+<p>先判断一下文件类型：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">String</span>.prototype.getExt = <span class="function"><span class="keyword">function</span> (<span class="params">filename</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> filename.substring(filename.lastIndexOf(<span class="string">'.'</span>) + <span class="number">1</span>, filename.length) || filename</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们知道，一般触发浏览器下载的方法有好几种。先试试<code>a</code>元素超链接下载：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">attachments (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!url) &#123;</span><br><span class="line">    <span class="keyword">this</span>.$message.error(<span class="string">'附件参数有误'</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ([<span class="string">'pdf'</span>, <span class="string">'jpg'</span>, <span class="string">'png'</span>, <span class="string">'bmp'</span>, <span class="string">'gif'</span>, <span class="string">'webp'</span>].includes(fileName.getExt())) &#123;</span><br><span class="line">    <span class="keyword">this</span>.preview(url, attachName)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.download(url, attachName)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">download (url = <span class="string">''</span>, attachName) &#123;</span><br><span class="line">  <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">  <span class="keyword">let</span> src = <span class="string">`<span class="subst">$&#123;window.location.origin&#125;</span><span class="subst">$&#123;url&#125;</span>`</span></span><br><span class="line">  el.download = attachName</span><br><span class="line">  el.href = src</span><br><span class="line">  el.click()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写完测试一看。不管是iOS还是android，都可以提示下载，但都下载失败…</p>
+<p>再试试iframe下载：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">  iframe.style.display = <span class="string">'none'</span></span><br><span class="line">  iframe.src = url</span><br><span class="line">  <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再用微信试试打开附件，结果：android可以弹出下载并可以调用手机的app进行预览，但是iOS却仍然毫无反应。为啥？难道要用<code>blob</code>下载?</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">download(url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> accepts = &#123;</span><br><span class="line">    <span class="string">'doc'</span>: <span class="string">'application/msword'</span>,</span><br><span class="line">    <span class="string">'xls'</span>: <span class="string">'application/vnd.ms-excel'</span>,</span><br><span class="line">    <span class="string">'xlsx'</span>: <span class="string">'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'</span></span><br><span class="line">  &#125;</span><br><span class="line">  fetch(url).then(resp =&gt; resp.arrayBuffer()).then(resp =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> blob = <span class="keyword">new</span> Blob([resp], &#123;type: accepts[url.getExt()]&#125;)</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">window</span>.navigator.msSaveOrOpenBlob) &#123;</span><br><span class="line">      <span class="built_in">window</span>.navigator.msSaveOrOpenBlob(blob, attachName)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">      <span class="built_in">document</span>.body.appendChild(el)</span><br><span class="line">      <span class="keyword">const</span> url = <span class="built_in">window</span>.URL.createObjectURL(blob)</span><br><span class="line">      el.href = url</span><br><span class="line">      el.download = attachName</span><br><span class="line">      el.click()</span><br><span class="line">      setTimeout(() =&gt; &#123;</span><br><span class="line">        <span class="built_in">window</span>.URL.revokeObjectURL(url)</span><br><span class="line">        <span class="built_in">document</span>.body.removeChild(el)</span><br><span class="line">      &#125;, <span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再试，还是不行，这下是android和iOS都没反应了。<br>看来需要区分android和iOS，android调用iframe，iOS另外处理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/iphone/i</span>.test(<span class="built_in">window</span>.navigator.userAgent)) &#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">    iframe.style.display = <span class="string">'none'</span></span><br><span class="line">    iframe.src = url</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 再试试a链接下载</span></span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">    el.download = attachName</span><br><span class="line">    <span class="keyword">let</span> src = <span class="string">`<span class="subst">$&#123;window.location.origin&#125;</span><span class="subst">$&#123;url&#125;</span>`</span></span><br><span class="line">    el.href = src</span><br><span class="line">    el.click()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果还是iOS不行，换个文件看看，居然有些文件可以，这就有点奇怪了，调试看看：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/iphone/i</span>.test(<span class="built_in">window</span>.navigator.userAgent)) &#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">    iframe.style.display = <span class="string">'none'</span></span><br><span class="line">    iframe.src = url</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    alert(url, attachName)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一刷新，终于看出差别，有些attachName是中文，有些很长很长的名字。干脆全部处理一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">download (url = <span class="string">''</span>, attachName = <span class="string">''</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/iphone/i</span>.test(<span class="built_in">window</span>.navigator.userAgent)) &#123;</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line">    iframe.style.display = <span class="string">'none'</span></span><br><span class="line">    iframe.src = url</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'body'</span>)[<span class="number">0</span>].appendChild(iframe)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> fileName = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime() + url.getExt()</span><br><span class="line">    <span class="keyword">const</span> el = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</span><br><span class="line">    el.download = fileName</span><br><span class="line">    <span class="keyword">let</span> src = <span class="string">`<span class="subst">$&#123;window.location.origin&#125;</span><span class="subst">$&#123;url&#125;</span>`</span></span><br><span class="line">    el.href = src</span><br><span class="line">    el.click()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这次为a元素的download也赋个值，iOS终于弹出下载和提示用什么app开启预览了。</p>
+<h2 id="总结">总结</h2><p>因为在企业微信环境里，跟常见的浏览器不太同，根据以前做原生app的经验，猜测出错的原因有两个：</p>
+<ul>
+<li>iOS本身的UIWebView(也可能是WKWebView)对中文文件名编码解析出错了</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType &#123;&#10;  // &#36825;&#37324;&#21487;&#20197;debug&#30475;&#30475;&#20250;&#19981;&#20250;throw error&#20986;&#26469;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>企业微信对附件的拦截</li>
+</ul>
+<p>这种无解，老老实实使用官方提供的api:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wx.previewImage()</span><br><span class="line">wx.previewFile()</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Elegant-Swift-Use-autoclosure-to-simplify-swift-syntax" class="article article-type-post" itemscope itemprop="blogPost">
 
   <div class="article-inner">
@@ -585,53 +648,6 @@
 
 
   
-    <article id="post-Build-a-git-repo-server" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/25/Build-a-git-repo-server/">Build a git repo server</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2017/08/25/Build-a-git-repo-server/" class="article-date">
-  <time datetime="2017-08-25T13:12:54.000Z" itemprop="datePublished">2017-08-25</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="步骤">步骤</h4><p>yum install git</p>
-<p>groupadd git<br>adduser git -g git<br>passwd git //设置密码</p>
-<p>// git用户的～目录: /home/git</p>
-<p>mkdir /home/git/.ssh &amp;&amp; touch /home/git/.ssh/authorized_keys<br>chmod 700 /home/git/.ssh<br>chmod 600 /home/git/.ssh/authorized_keys</p>
-<p>//把本地电脑的.ssh/id_rsa.pub里的内容复制并粘贴到远程的/home/git/.ssh/authorized_keys, 若有多个则一行一个</p>
-<p>//初始化一个叫做test的仓库<br>cd /home/git &amp; git init –bare test.git</p>
-<p>chown -R git:git test.git</p>
-<p>//禁用shell登录<br>//1.先找到git-shell的路径<br>grep git-shell /etc/shells || su -c “echo <code>which git-shell</code> &gt;&gt; /etc/shells”<br>eg.控制台输出：/usr/bin/git-shell<br>//2.修改git用户的shell登录<br>vi /etc/passwd<br>//找到类似下面的一行：<br>git:x:1001:1001:,,,:/home/git:/bin/bash<br>//改成<br>git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell<br>//这样，git用户可以正常通过ssh使用git，但无法登录shell，因为我们为git用户指定的git-shell每次一登录就自动退出<br>//测试：<br>ssh git@your-server-name-or-ip<br>//输入密码后显示如下信息即成功<br>fatal: What do you think I am? A shell?<br>Connection to <code>your-server-name-or-ip</code> closed.<br>//给git用户增加push权限<br>usermod -s /bin/bash git</p>
-<p>//在本地电脑中clone仓库<br>git clone git@your-server-name-or-ip:test.git</p>
-<p>//ps. 这里若服务器改了默认的ssh 22端口, 可以在本地电脑中(~/.ssh/)新建config文件<br>vi ~/.ssh/config<br>//config内容：<br>host your-server-name-or-ip<br>hostname  your-server-name-or-ip<br>port your-server-port</p>
-<p>假设windows上已经有个本地仓库，并且与别名叫origin的远程仓库进行了关联，那么，我们只需要将origin所指向的远程仓库的链接改为我们刚搭建的git服务器：<br>git remote set-url origin git@your-server-name-or-ip:my-project.git<br>如果是本地还没有仓库，可以执行下面的命令，并将其与远程仓库进行关联：<br>git init &amp;&amp; git remote add origin git@your-server-name-or-ip:my-project.git</p>
-<p>参考网址：<br><a href="https://git-scm.com/book/zh/v1/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84-Git-%E6%9E%B6%E8%AE%BE%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="external">服务器上的 Git - 架设服务器</a><br><a href="http://www.dabu.info/vps-set-private-git-server.html" target="_blank" rel="external">用vps搭建私有的git服务器</a><br><a href="http://www.pubyun.com/blog/deveops/%E6%9C%AC%E5%9C%B0ssh%E9%9D%9E%E6%A0%87%E5%87%86%E7%AB%AF%E5%8F%A3%E6%97%B6%EF%BC%8C%E8%BF%9E%E6%8E%A5github-com/" target="_blank" rel="external">本地ssh非标准端口时，连接github.com</a></p>
-
-      
-
-      
-
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -660,7 +676,7 @@
       <footer id="footer">
   
 	<div id="footer-info" class="inner">
-	  &copy; 2018 litt1e-p 
+	  &copy; 2020 litt1e-p 
 	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
 	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
 	</div>
