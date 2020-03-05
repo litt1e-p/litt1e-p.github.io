@@ -31,6 +31,45 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/">Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/" class="article-date">
+  <time datetime="2016-11-17T14:58:33.000Z" itemprop="datePublished">2016-11-17</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’</p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//error example: </span></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>(rawValue: <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//solution:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for other enum values</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let unspecified = SecTrustResultType(rawValue: SecTrustResultType.Unspecified)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let proceed = SecTrustResultType(rawValue: SecTrustResultType.Proceed)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> unspecified = <span class="type">SecTrustResultType</span>.<span class="type">Unspecified</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> proceed = <span class="type">SecTrustResultType</span>.<span class="type">Proceed</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-build-a-https-server-for-localhost" class="article article-type-post" itemscope itemprop="blogPost">
 
   <div class="article-inner">
@@ -461,44 +500,6 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
 <p>the end it works well now!</p>
 <p><img src="https://raw.githubusercontent.com/litt1e-p/LPStatusBarBackgroundColor-swift/master/screenshot.gif" alt=""></p>
-
-      
-
-      
-
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Reduce-animated-effect-of-UICollectionView-while-reloading-section" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/27/Reduce-animated-effect-of-UICollectionView-while-reloading-section/">Reduce animated effect of UICollectionView while reloading section</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/07/27/Reduce-animated-effect-of-UICollectionView-while-reloading-section/" class="article-date">
-  <time datetime="2016-07-27T15:06:06.000Z" itemprop="datePublished">2016-07-27</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>the animated effect is quite werid while reloading UICollectionView’s section which is base on our custom flowLayout, to reduce or avoid that, here is a solution to it. </p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.0</span>, animations: &#123;</span><br><span class="line"></span><br><span class="line">     [<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="keyword">in</span></span><br><span class="line"></span><br><span class="line">     <span class="keyword">self</span>!.collectionView.performBatchUpdates(&#123; </span><br><span class="line"></span><br><span class="line">           <span class="keyword">self</span>?.collectionView.reloadSections(<span class="type">NSIndexSet</span>(index: yourIndex))</span><br><span class="line"></span><br><span class="line">      &#125;, completion: <span class="literal">nil</span>)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>its animation duration sets to <code>0.0</code> so that it can reduces or avoids the bug happening. </p>
 
       
 

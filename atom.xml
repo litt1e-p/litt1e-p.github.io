@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://litt1e-p.github.io/"/>
-  <updated>2020-02-26T11:03:49.120Z</updated>
+  <updated>2020-03-05T09:40:14.434Z</updated>
   <id>https://litt1e-p.github.io/</id>
   
   <author>
@@ -13,6 +13,83 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Create a dynamic color list for nth-child with SCSS and SASS]]></title>
+    <link href="https://litt1e-p.github.io/2019/03/15/Create-a-dynamic-color-list-for-nth-child-with-SCSS-and-SASS/"/>
+    <id>https://litt1e-p.github.io/2019/03/15/Create-a-dynamic-color-list-for-nth-child-with-SCSS-and-SASS/</id>
+    <published>2019-03-15T08:27:58.000Z</published>
+    <updated>2020-03-05T09:40:14.434Z</updated>
+    <content type="html"><![CDATA[<h2 id="使用SASS或SCSS为nth-child元素设置动态颜色">使用SASS或SCSS为nth-child元素设置动态颜色</h2><h3 id="需求">需求</h3><blockquote>
+<p>接到产品的需求，要求做带百分比高度的动态柱状图。</p>
+</blockquote>
+<p>产品原型设计图：<br><img src="https://wx1.sinaimg.cn/large/005wcR5Jgy1gcj5p6axl3j302u088t8o" alt=""></p>
+<h3 id="分析">分析</h3><p>一开始的思路是用常用echarts/g2/highcharts/d3，但感觉都不太适合，干脆自己写一个。最终效果也大致还原了需求。</p>
+<hr>
+<p>其实这个东西也不难，主要是要利用好SACC/SCSS提供的方法，去动态生成各个nth-child的css值，这篇文章虽然只涉及到颜色，实际上每个css样式都可以动态去生成。</p>
+<h3 id="实现">实现</h3><p>这里我使用的是Vue+SCSS，React什么的也可以参考。</p>
+<ol>
+<li>先写html。由于是动态的高度，这里给每个<code>wrap-item</code>设置动态的style</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"wrap"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"wrap-item"</span> <span class="attribute">:style</span>=<span class="value">"&#123;height: '12%'&#125;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vl"</span>&gt;</span>12%<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"wrap-item"</span> <span class="attribute">:style</span>=<span class="value">"&#123;height: '32%'&#125;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vl"</span>&gt;</span>32%<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"wrap-item"</span> <span class="attribute">:style</span>=<span class="value">"&#123;height: '56%'&#125;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"vl"</span>&gt;</span>56%<span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>css</li>
+</ol>
+<p>这里有两个地方需要注意，第一个由于每一个柱块都是百分比的动态不定高度，所以为了里面的文字能够垂直居中。我使用了table display的布局方法，还能兼容一下老IE。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.wrap-item &#123;</span><br><span class="line">  display: table;</span><br><span class="line">  color: #fff;</span><br><span class="line">  text-align: center;</span><br><span class="line">  .vl &#123;</span><br><span class="line">    vertical-align: middle;</span><br><span class="line">    display: table-cell;</span><br><span class="line">    font-size: 12px;</span><br><span class="line">    font-weight: 450;</span><br><span class="line">    padding: 0px 6px;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二点是我们要做的重点，如何利用SCSS的遍历方法去动态生成柱块颜色。假设我们有5块柱块，那么我们可以用<code>@for</code>从1-5遍历，再利用<code>darken()</code>方法让每个子项都与我们的基调色<code>$color</code>进行计算，生成不同浓度的颜色。要注意的是这些计算值只能是0-100，不然就会报错了。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$color: rgba(207, 206, 240, 1);</span><br><span class="line">.wrap-item &#123;</span><br><span class="line">  @for $i from 1 through 5 &#123;</span><br><span class="line">    &amp;:nth-child(#&#123;$i&#125;) &#123;</span><br><span class="line">      background-color: darken($color, ($i - 1) * 8%);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>再加上一些hover动画效果，整个百分比动态柱块就完成了。</p>
+<p>最终效果图：</p>
+<p><img src="https://wx1.sinaimg.cn/large/005wcR5Jgy1gcj5r6mb0dj303q08wweg" alt=""></p>
+<p>完整代码如下：</p>
+<pre><code class="css">$color: rgba(207, 206, 240, 1);
+.wrap-item {
+  display: table;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: scale .25s cubic-bezier(0.175, 0.885, 0.32, 1.155);
+  @for $i from 1 through 7 {
+    &amp;:nth-child(#{$i}) {
+      background-color: darken($color, ($i - 1) * 8%);
+      &amp;:hover {
+        transform: scale(1.3);
+      }
+    }
+  }
+  .vl {
+    vertical-align: middle;
+    display: table-cell;
+    font-size: 12px;
+    font-weight: 450;
+    padding: 0px 6px;
+    pointer-events: none;
+  }
+}
+</code></pre>
+<h3 id="思考">思考</h3><p>如果我们使用<code>lighten()</code>方法或者换成<code>less</code>来写的话，又该怎么做呢?</p>
+<h3 id="参考">参考</h3><ul>
+<li><a href="https://sass-lang.com/documentation/values/lists" target="_blank" rel="external">sass lists</a></li>
+<li><a href="https://css-tricks.com/snippets/sass/deep-getset-maps/" target="_blank" rel="external">deep-getset-maps</a></li>
+<li><a href="https://stackoverflow.com/questions/44144513/how-to-create-a-dynamic-color-list-with-sass" target="_blank" rel="external">stackoverflow</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="使用SASS或SCSS为nth-child元素设置动态颜色">使用SASS或SCSS为nth-child元素设置动态颜色</h2><h3 id="需求">需求</h3><blockquote>
+<p>接到产品的需求，要求做带百分比高度的动态柱状图。</p>
+</b]]>
+    </summary>
+    
+      <category term="css" scheme="https://litt1e-p.github.io/tags/css/"/>
+    
+      <category term="sass" scheme="https://litt1e-p.github.io/tags/sass/"/>
+    
+      <category term="scss" scheme="https://litt1e-p.github.io/tags/scss/"/>
+    
+      <category term="vue" scheme="https://litt1e-p.github.io/tags/vue/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Download files in wechat]]></title>
@@ -1068,30 +1145,6 @@
     </summary>
     
       <category term="Note" scheme="https://litt1e-p.github.io/tags/Note/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`]]></title>
-    <link href="https://litt1e-p.github.io/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/"/>
-    <id>https://litt1e-p.github.io/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/</id>
-    <published>2016-11-17T14:58:33.000Z</published>
-    <updated>2016-11-17T15:00:06.000Z</updated>
-    <content type="html"><![CDATA[<blockquote>
-<p>Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//error example: </span></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>(rawValue: <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//solution:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for other enum values</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let unspecified = SecTrustResultType(rawValue: SecTrustResultType.Unspecified)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let proceed = SecTrustResultType(rawValue: SecTrustResultType.Proceed)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> unspecified = <span class="type">SecTrustResultType</span>.<span class="type">Unspecified</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> proceed = <span class="type">SecTrustResultType</span>.<span class="type">Proceed</span></span><br></pre></td></tr></table></figure>
-]]></content>
-    <summary type="html">
-    <![CDATA[<blockquote>
-<p>Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’</p>
-</blockquote>
-<figure class="highli]]>
-    </summary>
-    
-      <category term="Note" scheme="https://litt1e-p.github.io/tags/Note/"/>
-    
-      <category term="swift" scheme="https://litt1e-p.github.io/tags/swift/"/>
     
   </entry>
   

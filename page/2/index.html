@@ -31,6 +31,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Use git hooks to deploy automatically" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/07/Use git hooks to deploy automatically/">Use git hooks to deploy automatically</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/09/07/Use git hooks to deploy automatically/" class="article-date">
+  <time datetime="2017-09-07T14:55:47.000Z" itemprop="datePublished">2017-09-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="git_hooks_实现自动部署">git hooks 实现自动部署</h4><p>当我们在本地执行push命令到git服务器的时候，服务器会自动触发post-receive钩子。</p>
+<p>假如有一个git服务器仓库目录 例如: /home/git/test.git<br>和一个web服务器目录，例如: /home/wwwroot/default/testRoot</p>
+<p>先在web目录里clone一份仓库<br>cd /home/wwwroot/default/testRoot<br>git clone /home/git/test.git</p>
+<p>然后使用服务端git钩子 post-receive，它位于/home/git/test.git/hooks<br>cd /home/git/test.git/hooks/<br>这里有post-receive.sample<br>cp post-receive.sample post-receive<br>vi post-receive<br>写入如下代码:</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">unset GIT_DIR </span><br><span class="line">echo <span class="string">'copying to web deploy directory...'</span></span><br><span class="line">CurrentPath=`pwd`</span><br><span class="line">echo <span class="variable">$CurrentPath</span></span><br><span class="line">DeployPath=<span class="string">"/home/wwwroot/default/testRoot"</span></span><br><span class="line">cd <span class="variable">$DeployPath</span> || exit</span><br><span class="line">git pull origin master</span><br><span class="line">echo <span class="string">"update will be completed soon"</span></span><br><span class="line">cd <span class="variable">$CurrentPath</span></span><br><span class="line">exit <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>如果不加 unset GIT_DIR #还原环境变量 就会报出 remote: fatal: not git respository:’.’ 错误</code><br>保存后赋予可执行权限<br>chmod +x /home/git/test.git/hooks/post-receive</p>
+<p>修改web服务器根目录的权限<br>因为执行拉取的时候是git用户所以要把web服务器根目录(/home/wwwroot/default/testRoot) 的权限设定为git用户</p>
+<p>chown -R git:git /home/wwwroot/default/testRoot</p>
+<p>参考网址：<br><a href="http://www.jianshu.com/p/f9312b51e011" target="_blank" rel="external">git hooks 实现自动部署</a><br><a href="http://robin-front.github.io/2016/08/11/%E7%94%A8Git-Hooks%E8%BF%9B%E8%A1%8C%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2-%E8%AE%A9%E6%8F%90%E4%BA%A4%E5%8F%91%E5%B8%83%E8%87%AA%E5%8A%A8%E5%8C%96/" target="_blank" rel="external">用Git-Hooks进行自动部署,让提交发布自动化</a></p>
+
+      
+
+      
+
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Build-a-git-repo-server" class="article article-type-post" itemscope itemprop="blogPost">
 
   <div class="article-inner">
@@ -778,45 +822,6 @@
 <p>for horizontal scroll direction: add a <code>width</code> constraint for <code>containView</code></p>
 <p>for vertical scroll direction: add a <code>height</code> constraint for <code>containView</code></p>
 <p>and done! 🎉🎉</p>
-
-      
-
-      
-
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/">Cannot convert value of type `SecTrustResultType` to expected argument type `UInt32`</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/11/17/Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32/" class="article-date">
-  <time datetime="2016-11-17T14:58:33.000Z" itemprop="datePublished">2016-11-17</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>Cannot convert value of type ‘SecTrustResultType’ to expected argument type ‘UInt32’</p>
-</blockquote>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//error example: </span></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>(rawValue: <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//solution:</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> result = <span class="type">SecTrustResultType</span>.<span class="type">Invalid</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for other enum values</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let unspecified = SecTrustResultType(rawValue: SecTrustResultType.Unspecified)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//let proceed = SecTrustResultType(rawValue: SecTrustResultType.Proceed)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> unspecified = <span class="type">SecTrustResultType</span>.<span class="type">Unspecified</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> proceed = <span class="type">SecTrustResultType</span>.<span class="type">Proceed</span></span><br></pre></td></tr></table></figure>
 
       
 
