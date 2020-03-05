@@ -582,7 +582,7 @@
 <p>是不是优雅多了。跟callback hell say byebye.</p>
 <h4 id="配置">配置</h4><p>那么又该如何实现呢？微信MINA自带了Babel转换工具，但不够强大，这里我们自己来配置一个Babel来转换编译我们的代码。</p>
 <p>所以，我们先把MINA里的<code>开启ES6转ES5</code>关闭，我们用自己的Babel。</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tKfTcgy1fp32ylaplyj311c0ak75l.jpg" alt=""></p>
+<p><img src="https://wx1.sinaimg.cn/large/006tKfTcgy1fp32ylaplyj311c0ak75l.jpg" alt=""></p>
 <p>然后用Gulp来写我的脚本，从Gulp中调用Babel来编译我的代码。z在调用Babel时，需要给我们的Babel配置插件以支持async/await，比如async-to-generator，async-generator-functions等插件。</p>
 <ol>
 <li><p>Babel的配置</p>
@@ -597,7 +597,7 @@
 <h4 id="使用">使用</h4><ol>
 <li>项目目录结构</li>
 </ol>
-<p><img src="http://ww2.sinaimg.cn/large/006tKfTcgy1fp3384dryfj30mu0e675n.jpg" alt=""></p>
+<p>![](<a href="https://wx1.sinaimg.cn/large/006tKfTcgy1fp3384dryfj30mu0e675n.jpg" target="_blank" rel="external">https://wx1.sinaimg.cn/large/006tKfTcgy1fp3384dryfj30mu0e675n.jpg</a></p>
 <p>如图，这里dist目录正是Gulp编译输出目录，在微信MINA中直接用这个目录即可，而src目录则为我们愉快编写ES7的async&amp;await的目录啦。</p>
 <ol>
 <li>依赖库</li>
