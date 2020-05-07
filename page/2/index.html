@@ -31,6 +31,73 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Build-a-notification-center-for-wechat-app" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/30/Build-a-notification-center-for-wechat-app/">Build a notification center for wechat app</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2017/12/30/Build-a-notification-center-for-wechat-app/" class="article-date">
+  <time datetime="2017-12-30T02:30:15.000Z" itemprop="datePublished">2017-12-30</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="为微信小程序建立通知中心">为微信小程序建立通知中心</h2><p>微信小程序目前为止，页面传值的方式主要有：</p>
+<ul>
+<li>globalData 全局共享变量</li>
+<li>wx.navigateTo等页面之间跳转的url传值，在目标页<code>onLoad</code>中获取</li>
+<li>wx.setStorage缓存变量</li>
+<li>其他？(欢迎补充)</li>
+</ul>
+<p>做过app，特别是iOS app的同学肯定知道原生app除了上述的方式还有众多的传值甚至反向传值方式，如block，delegate传值，kvo等，其中最少不了的是一对多的<code>NotificationCenter/NSNotificationCenter</code>，做WeChat app时怎么可以没有通知中心呢，GitHub上也有一位<br>国内的程序员写一个类似通知中心的js库叫<a href="https://github.com/binnng/broadcast.js" target="_blank" rel="external">broadcast.js</a>，原理也是大致相同，从注册通知到通知中心发送通知、收到通知，源码比较简单，只有30行左右，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> WIN, broadcast;</span><br><span class="line"></span><br><span class="line">WIN = <span class="built_in">window</span>;</span><br><span class="line"></span><br><span class="line">broadcast = &#123;</span><br><span class="line">  on: <span class="function"><span class="keyword">function</span>(<span class="params">name, fn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> eventData;</span><br><span class="line">    eventData = broadcast.data;</span><br><span class="line">    <span class="keyword">if</span> (eventData.hasOwnProperty(name)) &#123;</span><br><span class="line">      eventData[name].push(fn);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      eventData[name] = [fn];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  fire: <span class="function"><span class="keyword">function</span>(<span class="params">name, data, thisArg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> fn, fnList, i, len;</span><br><span class="line">    thisArg = thisArg || WIN;</span><br><span class="line">    fnList = broadcast.data[name];</span><br><span class="line">    <span class="keyword">if</span> (!fnList.length) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Cannot find broadcast event "</span> + name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>, len = fnList.length; i &lt; len; i++) &#123;</span><br><span class="line">      fn = fnList[i];</span><br><span class="line">      fn.apply(thisArg, [data, name]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  data: &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">"undefined"</span> &amp;&amp; <span class="built_in">module</span>.exports) &#123;</span><br><span class="line">  <span class="built_in">module</span>.exports = broadcast;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  WIN.broadcast = broadcast;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大体上思路是正确的，但存在bug，在判断待通知的事件数组fnList时，源码直接判断<code>if (!fnList.length)</code>就throw error，在实际使用中会crash，因为可能找不到对应事件的名字，也就是说发送通知时如果发送一个未注册的通知的话，fnList都还是null或者undefined的。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在调用发送通知前，必须先注册该通知</span></span><br><span class="line">broadcast.reg(config.kAppTestNotificationKey, <span class="function"><span class="keyword">function</span> <span class="params">(cb)</span> </span>&#123;&#125;)</span><br></pre></td></tr></table></figure>
+<p>这其实相当尴尬，我决定把它修改一下，顺便把方法名也一起修改一下:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">"use strict"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> WIN, notificationCenter;</span><br><span class="line">WIN = <span class="built_in">window</span>;</span><br><span class="line"></span><br><span class="line">notificationCenter = &#123;</span><br><span class="line">    addObserver: <span class="function"><span class="keyword">function</span>(<span class="params">name, fn</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> eventData;</span><br><span class="line">        eventData = notificationCenter.data;</span><br><span class="line">        <span class="keyword">if</span> (eventData.hasOwnProperty(name)) &#123;</span><br><span class="line">            eventData[name].push(fn);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            eventData[name] = [fn];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    post: <span class="function"><span class="keyword">function</span>(<span class="params">name, data, thisArg</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> fn, fnList, i, len;</span><br><span class="line">        thisArg = thisArg || WIN;</span><br><span class="line">        fnList = notificationCenter.data[name];</span><br><span class="line">        <span class="keyword">if</span> (!fnList || !fnList.length) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Cannot find notificationCenter event "</span> + name);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>, len = fnList.length; i &lt; len; i++) &#123;</span><br><span class="line">            fn = fnList[i];</span><br><span class="line">            fn.apply(thisArg, [data, name]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    data: &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">"undefined"</span> &amp;&amp; <span class="built_in">module</span>.exports) &#123;</span><br><span class="line">    <span class="built_in">module</span>.exports = notificationCenter;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    WIN.notificationCenter = notificationCenter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在发送一个未注册的通知时也不会throw error了，可是，这代码仍然还有bug：这个notificationCenter自身的事件对象<code>data</code>中储存着所有事件，其实数据结构为：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"noti1"</span>: [<span class="literal">k1</span>, <span class="literal">k2</span>, ...],</span><br><span class="line">    <span class="string">"noti2"</span>: [<span class="literal">k1</span>, <span class="literal">k2</span>, ...],</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>并没有提供removeObserver移除事件通知的方法，其造成对象内部数组的无限增加，在每一次发送通知时遍历时间会无限增加，时间复杂度O(n)会随着通知对象及其内部事件数组数量增加而增加。为此应该再修改一下，增加一个移除事件通知的方法：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">removeObserver: <span class="function"><span class="keyword">function</span><span class="params">(name, fn)</span> &#123;</span></span><br><span class="line">    var eventData, fnList, <span class="built_in">i</span>, len;</span><br><span class="line">    eventData = notificationCenter.data;</span><br><span class="line">    fnList = notificationCenter.data<span class="matrix">[name]</span>;</span><br><span class="line">    <span class="keyword">if</span> (!fnList || !fnList.<span class="built_in">length</span>) <span class="cell">&#123;</span><br><span class="line">        return this;</span><br><span class="line">    &#125;</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">i</span> = <span class="number">0</span>, len = fnList.<span class="built_in">length</span>; <span class="built_in">i</span> &lt; len; <span class="built_in">i</span>++) <span class="cell">&#123;</span><br><span class="line">        if (fnList[i] == fn) &#123;</span><br><span class="line">            fnList.splice(i, <span class="number">1</span>)</span><br><span class="line">        &#125;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> this;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>现在好了，有<code>addObserver</code>、<code>post</code>、<code>removeObserver</code>方法了，大体上满足了我们的使用要求，是否已经完美了呢？</p>
+<p>答案是否定的，为什么呢？不妨想想看，这个通知中心库，在每一个需要使用的page里都需要进行一次引入操作：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">var</span> notificationCenter = <span class="function"><span class="title">require</span><span class="params">(<span class="string">"./lib/notificationCenter"</span>)</span></span></span><br></pre></td></tr></table></figure>
+<p>有些人就会疑虑了：这每require一次，是不是都new了一次这个notificationCenter？如果是的话，意味着这个notificationCenter并不是一个单例，然后不同地方require生成不同的对象，甚至还有线程争夺的问题……</p>
+<p>事实真的如此吗？其实在node.js官方文档中，说明了require是引入一个单例</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Every call <span class="built_in">to</span> <span class="built_in">require</span>(<span class="string">'foo'</span>) will <span class="built_in">get</span> exactly <span class="operator">the</span> same object returned, <span class="keyword">if</span> <span class="keyword">it</span> would <span class="built_in">resolve</span> <span class="built_in">to</span> <span class="operator">the</span> same <span class="built_in">file</span>.</span><br></pre></td></tr></table></figure>
+<p>举个<a href="https://medium.com/@lazlojuly/are-node-js-modules-singletons-764ae97519af" target="_blank" rel="external">medium</a>例子：</p>
+<p>定义一个类</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">//</span> counter.js</span><br><span class="line"></span><br><span class="line">let value = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="attribute">increment</span>: <span class="function"><span class="params">()</span> =&gt;</span> value++,</span><br><span class="line">  <span class="attribute">get</span>: <span class="function"><span class="params">()</span> =&gt;</span> value,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再require测试：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app-singleton.js</span></span><br><span class="line"></span><br><span class="line">const counter1 = <span class="function"><span class="title">require</span><span class="params">(‘./counter.js’)</span></span></span><br><span class="line">const counter2 = <span class="function"><span class="title">require</span><span class="params">(‘./counter.js’)</span></span></span><br><span class="line"></span><br><span class="line">counter1.<span class="function"><span class="title">increment</span><span class="params">()</span></span></span><br><span class="line">counter1.<span class="function"><span class="title">increment</span><span class="params">()</span></span></span><br><span class="line">counter2.<span class="function"><span class="title">increment</span><span class="params">()</span></span></span><br><span class="line"></span><br><span class="line">console.<span class="function"><span class="title">log</span><span class="params">(counter1.get()</span></span>) <span class="comment">// prints 3</span></span><br><span class="line">console.<span class="function"><span class="title">log</span><span class="params">(counter2.get()</span></span>) <span class="comment">// also prints 3</span></span><br></pre></td></tr></table></figure>
+<p>证明了require是单次引入，本质上跟单例一致。所以不用担心这个notificationCenter非全局单例的疑虑。至此，这个通知中心也差不多完成了。</p>
+<h5 id="参考资料">参考资料</h5><blockquote>
+<p><a href="http://imweb.io/topic/582293894067ce9726778be9" target="_blank" rel="external">http://imweb.io/topic/582293894067ce9726778be9</a><br><a href="https://github.com/binnng/broadcast.js/blob/master/broadcast.js" target="_blank" rel="external">https://github.com/binnng/broadcast.js/blob/master/broadcast.js</a><br><a href="https://medium.com/@lazlojuly/are-node-js-modules-singletons-764ae97519af" target="_blank" rel="external">https://medium.com/@lazlojuly/are-node-js-modules-singletons-764ae97519af</a></p>
+</blockquote>
+
+      
+
+      
+
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Use git hooks to deploy automatically" class="article article-type-post" itemscope itemprop="blogPost">
 
   <div class="article-inner">
@@ -759,69 +826,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//for swift</span></span><br><span class="line"></span><br><span class="line">let statWindow = <span class="built_in">UIApplication</span><span class="variable">.shared</span><span class="variable">.value</span>(forKey:<span class="string">"statusBarWindow"</span>) as! <span class="built_in">UIView</span></span><br><span class="line"></span><br><span class="line">let statusBar = statWindow<span class="variable">.subviews</span>[<span class="number">0</span>] as <span class="built_in">UIView</span></span><br><span class="line"></span><br><span class="line">statusBar<span class="variable">.backgroundColor</span> = <span class="built_in">UIColor</span><span class="variable">.red</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//for Objective-C</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *statusWindow = [[<span class="built_in">UIApplication</span> sharedApplication] valueForKey:<span class="string">@"statusBarWindow"</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *statusBar = statusWindow<span class="variable">.subviews</span><span class="variable">.firstObject</span>;</span><br><span class="line"></span><br><span class="line">statusBar<span class="variable">.backgroundColor</span> = <span class="keyword">self</span><span class="variable">.statusBarBackgroundColor</span>;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-autoLayout-for-UIScrollView-in-Xib" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/">autoLayout for UIScrollView in Xib</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/" class="article-date">
-  <time datetime="2016-11-26T07:31:27.000Z" itemprop="datePublished">2016-11-26</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets</p>
-</blockquote>
-<p>let’s begin</p>
-<h4 id="1-0_initial_a_scrollView">1.0 initial a scrollView</h4><ul>
-<li>new a project, drag a UIScrollView into Storyboard or Xib and make some constraints:</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1418424-8450a58e55abcf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1418424-5881ada668a2f949.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h4 id="2-0_add_a_contenView">2.0 add a contenView</h4><ul>
-<li>2.1 drag an UIView named: <code>containView</code> into scrollView and add the edge constraints. the contentSize of scrollView depend on this <code>containView</code> </li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1418424-21e23d2a8f18d687.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>by the way, Xcode interface builder will show some errors, just ignore them.</p>
-<ul>
-<li>2.2 add some extral constraints to <code>containView</code>  according to the scroll direction</li>
-</ul>
-<p>so firstly you should make sure that which scroll direction you want</p>
-<p>you should not add the constraints like below shows if horizontal and vertical scroll direction are both wanted:</p>
-<ul>
-<li><p>2.2.1 add a <code>Horizontally in Container</code> and a <code>Vertically in Container</code> constraints</p>
-</li>
-<li><p>2.2.2 height or width constraints:</p>
-</li>
-</ul>
-<p>for horizontal scroll direction: add a <code>width</code> constraint for <code>containView</code></p>
-<p>for vertical scroll direction: add a <code>height</code> constraint for <code>containView</code></p>
-<p>and done! 🎉🎉</p>
 
       
 
