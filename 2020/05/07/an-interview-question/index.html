@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>an interview question | litt1e-p</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="QuestionGiven an array of integers, you can only delete one element per time. You can get a score by A[i - 1] * A[i] * A[i + 1] after the element has been deleted. return the max score when the array">
+<meta property="og:type" content="article">
+<meta property="og:title" content="an interview question">
+<meta property="og:url" content="https://litt1e-p.github.io/2020/05/07/an-interview-question/index.html">
+<meta property="og:site_name" content="litt1e-p">
+<meta property="og:description" content="QuestionGiven an array of integers, you can only delete one element per time. You can get a score by A[i - 1] * A[i] * A[i + 1] after the element has been deleted. return the max score when the array">
+<meta property="og:updated_time" content="2020-05-07T14:55:50.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="an interview question">
+<meta name="twitter:description" content="QuestionGiven an array of integers, you can only delete one element per time. You can get a score by A[i - 1] * A[i] * A[i + 1] after the element has been deleted. return the max score when the array">
+  
+    <link rel="alternative" href="/atom.xml" title="litt1e-p" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <section id="main"><article id="post-an-interview-question" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      an interview question
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2020/05/07/an-interview-question/" class="article-date">
+  <time datetime="2020-05-07T14:20:02.000Z" itemprop="datePublished">2020-05-07</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Question">Question</h2><p>Given an array of integers, you can only delete one element per time. You can get a score by <code>A[i - 1] * A[i] * A[i + 1]</code> after the element has been deleted. return the max score when the array become empty.</p>
+<blockquote>
+<p>ps.  when <code>A[i - 1]</code> or <code>A[i + 1]</code> does not exists, <code>A[i - 1] = 1, A[i + 1] = 1</code></p>
+</blockquote>
+<h3 id="Example:">Example:</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">input: [<span class="number">3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">8</span>]</span><br><span class="line">output: <span class="number">167</span></span><br><span class="line">because nums = [<span class="number">3</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">8</span>] -&gt; [<span class="number">3</span>, <span class="number">5</span>, <span class="number">8</span>] -&gt; [<span class="number">3</span>, <span class="number">8</span>] -&gt; [<span class="number">8</span>] -&gt; []</span><br><span class="line">points = <span class="number">3</span> * <span class="number">1</span> * <span class="number">5</span> + <span class="number">3</span> * <span class="number">5</span> * <span class="number">8</span> +  <span class="number">1</span> * <span class="number">3</span> * <span class="number">8</span> + <span class="number">1</span> * <span class="number">8</span> * <span class="number">1</span> = <span class="number">167</span></span><br></pre></td></tr></table></figure>
+<h2 id="Solutions">Solutions</h2><h3 id="1-_violence_solution">1. violence solution</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">calc</span> (<span class="params">arr, j</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">let</span> rs = <span class="number">0</span></span><br><span class="line">   <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(arr) || arr.length &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">     <span class="keyword">return</span> rs</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">if</span> (j &lt; <span class="number">0</span> || j &gt; arr.length - <span class="number">1</span>) &#123;</span><br><span class="line">     <span class="keyword">return</span> rs</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">let</span> curr = arr[j]</span><br><span class="line">   <span class="keyword">let</span> prev = (j - <span class="number">1</span>) &gt;= <span class="number">0</span> &amp;&amp; (j - <span class="number">1</span>) &lt;= arr.length -<span class="number">1</span> ? arr[j - <span class="number">1</span>] : <span class="number">1</span></span><br><span class="line">   <span class="keyword">let</span> next = (j + <span class="number">1</span>) &lt;= arr.length - <span class="number">1</span> ? arr[j + <span class="number">1</span>] : <span class="number">1</span></span><br><span class="line">   rs = prev * curr * next</span><br><span class="line">   <span class="keyword">return</span> rs</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span>(<span class="params">d</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(d));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params">arr = []</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> rs = <span class="number">0</span></span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(arr) || arr.length &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> rs</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (arr.length &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= arr.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">      rs += calc(arr, i)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> temp = clone(arr)</span><br><span class="line">    <span class="keyword">let</span> mid = temp.splice(<span class="number">1</span>, arr.length - <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">let</span> rest = temp</span><br><span class="line">    <span class="keyword">let</span> midSort = mid</span><br><span class="line">    midSort.sort((a, b) =&gt; a - b)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= midSort.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">let</span> index = arr.indexOf(midSort[i])</span><br><span class="line">      rs += calc(arr, index)</span><br><span class="line">      arr.splice(index, <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    rs += calc(rest, <span class="number">0</span>)</span><br><span class="line">    rest.splice(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    rs += calc(rest, <span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> rs</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">main([<span class="number">3</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">8</span>]) <span class="comment">/// 167</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-_other_solution">2. other solution</h3><p>…</p>
+
+      
+
+      
+
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/03/15/Create-a-dynamic-color-list-for-nth-child-with-SCSS-and-SASS/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Create a dynamic color list for nth-child with SCSS and SASS</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<section id="comments">
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src='https://imsun.github.io/gitment/dist/gitment.browser.js'></script>
+  <script>
+    var gitment = new Gitment({
+      id: 'Thu May 07 2020 22:20:02 GMT+0800',
+      owner: 'litt1e-p',
+      repo: 'litt1e-p.github.io',
+      oauth: {
+        client_id: '9c322023e341566fda8e',
+        client_secret: '2f7e965734d39f19928f7bd3d1a77f9b8f032837',
+      },
+    })
+    gitment.render('comments')
+  </script>
+</section>
+
+</section>
+        <aside id="sidebar">
+  <nav class="menus">
+  	<ul>
+  		<li><a href="/"><i class="icon icon-home"></i></a></li>
+  		
+			<li><a href="/archives"><i class="icon icon-fenlei"></i></a></li>
+  		
+  		
+			<li><a href="/tags"><i class="icon icon-tag"></i></a></li>
+  		
+  		
+  			<li><a href="https://github.com/litt1e-p" target="_blank"><i class="icon icon-github"></i></a></li>
+  		
+  	</ul>
+  </nav>
+  <a id="go-top" href="#"><i class="icon icon-up"></i></a>
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+	<div id="footer-info" class="inner">
+	  &copy; 2020 litt1e-p 
+	  - Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	  - Theme <a href="https://github.com/hejianxian/hexo-theme-jane/" target="_blank">Jane</a>
+	</div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tag</a>
+  
+    <a href="https://github.com/litt1e-p" class="mobile-nav-link">Github</a>
+  
+</nav>
+    
+<script>
+  var disqus_shortname = 'litt1ep';
+  
+  var disqus_url = 'https://litt1e-p.github.io/2020/05/07/an-interview-question/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="//cdn.bootcss.com/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

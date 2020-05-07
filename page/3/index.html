@@ -31,6 +31,69 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-autoLayout-for-UIScrollView-in-Xib" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/">autoLayout for UIScrollView in Xib</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      <a href="/2016/11/26/autoLayout-for-UIScrollView-in-Xib/" class="article-date">
+  <time datetime="2016-11-26T07:31:27.000Z" itemprop="datePublished">2016-11-26</time>
+</a>
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>Using UIScrollView in Xib or storyBoard is quite normal and frequent, but it is a little complicated by using autoLayout because of the complicated scrollView’s contentSize and contentInsets</p>
+</blockquote>
+<p>let’s begin</p>
+<h4 id="1-0_initial_a_scrollView">1.0 initial a scrollView</h4><ul>
+<li>new a project, drag a UIScrollView into Storyboard or Xib and make some constraints:</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-8450a58e55abcf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-5881ada668a2f949.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h4 id="2-0_add_a_contenView">2.0 add a contenView</h4><ul>
+<li>2.1 drag an UIView named: <code>containView</code> into scrollView and add the edge constraints. the contentSize of scrollView depend on this <code>containView</code> </li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1418424-21e23d2a8f18d687.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>by the way, Xcode interface builder will show some errors, just ignore them.</p>
+<ul>
+<li>2.2 add some extral constraints to <code>containView</code>  according to the scroll direction</li>
+</ul>
+<p>so firstly you should make sure that which scroll direction you want</p>
+<p>you should not add the constraints like below shows if horizontal and vertical scroll direction are both wanted:</p>
+<ul>
+<li><p>2.2.1 add a <code>Horizontally in Container</code> and a <code>Vertically in Container</code> constraints</p>
+</li>
+<li><p>2.2.2 height or width constraints:</p>
+</li>
+</ul>
+<p>for horizontal scroll direction: add a <code>width</code> constraint for <code>containView</code></p>
+<p>for vertical scroll direction: add a <code>height</code> constraint for <code>containView</code></p>
+<p>and done! 🎉🎉</p>
+
+      
+
+      
+
+    </div>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Cannot-convert-value-of-type-SecTrustResultType-to-expected-argument-type-UInt32" class="article article-type-post" itemscope itemprop="blogPost">
 
   <div class="article-inner">
@@ -454,52 +517,6 @@
 <p>in Swift: <code>define a closure macro</code></p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="type">RGBA</span>: (<span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>, <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> = &#123;</span><br><span class="line">    (r: <span class="type">CGFloat</span>, g: <span class="type">CGFloat</span>, b: <span class="type">CGFloat</span>, a: <span class="type">CGFloat</span>) -&gt; <span class="type">UIColor</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIColor</span>(red: r/<span class="number">255.0</span>, green: g/<span class="number">255.0</span>, blue: b/<span class="number">255.0</span>, alpha: a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="Usage">Usage</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">RGBA</span>(<span class="number">101</span>, <span class="number">101</span>, <span class="number">101</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-
-    </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Change-UIStatusBar-backgroundColor" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/07/Change-UIStatusBar-backgroundColor/">Change UIStatusBar backgroundColor</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      <a href="/2016/08/07/Change-UIStatusBar-backgroundColor/" class="article-date">
-  <time datetime="2016-08-07T14:40:06.000Z" itemprop="datePublished">2016-08-07</time>
-</a>
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>how to change the color of UIStatusBar? there are two solutions to it</p>
-<h4 id="Solution_1">Solution 1</h4><p>just set a backgroundImage for navigationBar which size’s height is 64.0, because the image will overlay the statusBar</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">64</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
-<p>if your don’t want to set navigationBar’s backgroundImage with height 64, such as you just set it to 44, you can try it out with solution 2 below.</p>
-<h4 id="Solution_2">Solution 2</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//set navigationBar's backgroundImage with height 44</span></span><br><span class="line"></span><br><span class="line">navigationController!.navigationBar.setBackgroundImage(<span class="type">UIImage</span>.imageWithColor(yourColor, size: <span class="type">CGSizeMake</span>(</span><br><span class="line"><span class="type">UIScreen</span>.mainScreen().bounds.size.width</span><br><span class="line">, <span class="number">44</span>)), forBarPosition: <span class="type">UIBarPosition</span>.<span class="type">Any</span>, barMetrics: <span class="type">UIBarMetrics</span>.<span class="type">Default</span>)</span><br></pre></td></tr></table></figure>
-<p><code>tricky time</code></p>
-<p>use <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor-swift" target="_blank" rel="external">LPStatusBarBackgroundColor-swift</a> or <a href="https://github.com/litt1e-p/LPStatusBarBackgroundColor" target="_blank" rel="external">LPStatusBarBackgroundColor</a> and they are quite simple</p>
-<p>let’s take LPStatusBarBackgroundColor-swift for example:</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//import</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> LPStatusBarBackgroundColor_swift</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.blackColor() <span class="comment">//any color you want</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/** in navigationController's rootViewController */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.navigationController?.navigationBar.statusBarBackgroundColor = <span class="type">UIColor</span>.brownColor <span class="comment">//any color you want</span></span><br></pre></td></tr></table></figure>
-<p>the end it works well now!</p>
-<p><img src="https://raw.githubusercontent.com/litt1e-p/LPStatusBarBackgroundColor-swift/master/screenshot.gif" alt=""></p>
 
       
 
